@@ -60,7 +60,7 @@ fd.append(
 
 fd.append('output_format', 'jpeg');
 
-fd.append('output_compression', '100');
+fd.append('output_compression', '5');
 
 		// Imagen original
 		fd.append(
