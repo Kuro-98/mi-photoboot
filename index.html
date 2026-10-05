@@ -433,6 +433,7 @@
         <div class="row">
             <button id="dl">Descargar</button>
             <button id="pr">Imprimir</button>
+            <button id="home">Volver al inicio</button>
             <button id="again" class="big" style="animation:none;font-size:1.15rem;padding:14px 28px">Otra foto</button>
         </div>
         <div class="timer" id="timer"></div>
@@ -748,6 +749,7 @@
         function home() { clearTimeout(resetT); show("s-idle") }
         $("start").onclick = session;
         $("again").onclick = session;
+        $("home").onclick = home;
         $("dl").onclick = () => { clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click() };
         $("pr").onclick = () => { clearTimeout(resetT); window.print() };
         $("fs").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen() } catch (e) { } };
