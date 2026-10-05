@@ -478,19 +478,26 @@
 
         /* ====== TEMÁTICA IA (cambia solo esto por evento) ====== */
         const THEME = {
-            scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; la persona de la foto es la protagonista y aparece sola sobre el primer lugar del podio, vistiendo un traje profesional de piloto de Fórmula 1; sostiene un trofeo de ganador y celebra su victoria, con confeti cayendo, cámaras y público al fondo, autos de Fórmula 1 y elementos del circuito visibles alrededor, ambiente auténtico de celebración de una carrera de Fórmula 1, fotografía deportiva profesional y realista",
+           scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; la persona original de la fotografía es el piloto ganador y protagonista absoluta de la escena, aparece sola en el primer lugar del podio, vistiendo un traje profesional de Fórmula 1 que se adapta naturalmente a su cuerpo, levantando un trofeo de campeón mientras celebra la victoria, con confeti cayendo a su alrededor, cámaras de televisión, público, boxes, pista y autos de Fórmula 1 al fondo, ambiente auténtico de celebración de un Gran Premio, fotografía deportiva profesional y extremadamente realista",
             loading: ["Calentando motores…", "Buscando tu lugar en el paddock…", "Acomodando las luces del circuito…", "Revelando tu foto…"]
         };
         const AI_ENDPOINT = "/api/ai";
-        const buildPrompt = () =>
-  "Edita esta foto de una persona real. Conserva exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y proporciones. No cambies ni reemplaces su cara y no la embellezcas artificialmente. La persona original debe seguir siendo claramente reconocible. " +
-  "Convierte a la persona de la foto en la protagonista absoluta de la escena. No agregues ninguna otra persona junto a ella. No agregues pilotos, acompañantes ni personajes adicionales. " +
+       const buildPrompt = () =>
+  "Edita esta foto de una persona real. Conserva exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y proporciones. " +
+  "La persona debe conservar lo más fielmente posible su apariencia física original. Respeta estrictamente su complexión, tipo de cuerpo, ancho de hombros, tamaño del torso, brazos, piernas y proporciones corporales. " +
+  "No hagas a la persona más musculosa, más delgada, más grande, más pequeña, más alta ni más baja de lo que aparenta en la fotografía original. " +
+  "No aumentes el volumen de sus músculos ni ensanches sus hombros o torso. No reduzcas su cuerpo ni alteres artificialmente su silueta. " +
+  "En el caso de mujeres, conserva igualmente su complexión, proporciones corporales, estatura aparente y silueta natural. No cambies artificialmente su cuerpo, estatura o proporciones. " +
+  "Si la fotografía permite apreciar la estatura o las proporciones corporales de la persona, respétalas y mantenlas lo más fielmente posible. Si alguna parte del cuerpo no es visible en la fotografía original, no inventes características físicas innecesarias. " +
+  "No embellezcas artificialmente a la persona ni cambies sus características físicas para hacerla parecer un modelo, atleta o persona diferente. " +
+  "La persona original debe seguir siendo claramente reconocible. " +
+  "La persona original debe ser la protagonista absoluta de la escena. No agregues ninguna otra persona junto a ella. No agregues pilotos, acompañantes ni personajes adicionales. " +
   "Coloca a la persona en esta escena: " +
   THEME.scene +
   ". " +
-  "Haz que el traje de Fórmula 1 se adapte naturalmente a su cuerpo y conserve su identidad facial. " +
+  "Haz que el traje de Fórmula 1 se adapte naturalmente a su cuerpo original, respetando completamente su complexión y proporciones. " +
   "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras y profundidad de campo coherentes. " +
-  "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad de la persona. " +
+  "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad o el cuerpo de la persona. " +
   "No agregues texto superpuesto ni logotipos inventados.";
         const DEF = { title: "¡Sonríe!", sub: "Toca el botón y vive la escena", footer: "Mi evento · 2026", stickers: "✨🎉📸", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#1b1340", accent: "#ff5a36", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
