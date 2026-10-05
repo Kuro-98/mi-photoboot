@@ -478,39 +478,20 @@
 
         /* ====== TEMÁTICA IA (cambia solo esto por evento) ====== */
         const THEME = {
-            scene: "el paddock de un Gran Premio de Fórmula 1, de pie junto a un piloto de carreras con overol de equipo (un piloto ficticio, no una persona real), con boxes y autos de F1 al fondo, ambiente de fin de semana de carrera; foto casual como si un fan se hubiera encontrado al piloto y le pidiera una foto",
+            scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; la persona de la foto es la protagonista y aparece sola sobre el primer lugar del podio, vistiendo un traje profesional de piloto de Fórmula 1; sostiene un trofeo de ganador y celebra su victoria, con confeti cayendo, cámaras y público al fondo, autos de Fórmula 1 y elementos del circuito visibles alrededor, ambiente auténtico de celebración de una carrera de Fórmula 1, fotografía deportiva profesional y realista",
             loading: ["Calentando motores…", "Buscando tu lugar en el paddock…", "Acomodando las luces del circuito…", "Revelando tu foto…"]
         };
         const AI_ENDPOINT = "/api/ai";
-        const buildPrompt = () => `EDITA ESTA FOTOGRAFÍA. PRIORIDAD ABSOLUTA: PRESERVAR LA IDENTIDAD DE LAS PERSONAS.
-
-Las personas de la fotografía original deben seguir siendo reconociblemente las mismas personas. No reconstruyas ni rediseñes sus rostros.
-
-PRESERVA, con la mayor fidelidad posible:
-- estructura y proporciones del rostro
-- forma y posición de los ojos
-- cejas
-- nariz
-- labios y boca
-- mandíbula, mentón y pómulos
-- tono y textura natural de la piel
-- edad aparente
-- cabello, línea del cabello y peinado
-- expresión facial
-- cuerpo, proporciones, postura y ropa
-
-NO embellezcas a las personas. NO las conviertas en modelos diferentes. NO cambies sus rasgos faciales para hacerlos "más atractivos". NO rejuvenezcas, envejezcas ni estilices sus caras. NO cambies su identidad.
-
-La transformación debe concentrarse principalmente en el ENTORNO. Mantén a las personas lo más parecidas posible a la fotografía de entrada y colócalas naturalmente dentro de esta escena:
-
-${THEME.scene}
-
-Integra las personas en la nueva escena mediante perspectiva, iluminación, sombras, reflejos, profundidad de campo y temperatura de color coherentes. El resultado debe parecer una fotografía real tomada en ese lugar, no una ilustración.
-
-Si existe conflicto entre mejorar la escena y preservar a una persona, SIEMPRE prioriza preservar a la persona.
-
-No agregues personas adicionales. No elimines a las personas originales. No cambies sus rostros. No añadas texto legible ni logotipos de marcas.`;
-
+        const buildPrompt = () =>
+  "Edita esta foto de una persona real. Conserva exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y proporciones. No cambies ni reemplaces su cara y no la embellezcas artificialmente. La persona original debe seguir siendo claramente reconocible. " +
+  "Convierte a la persona de la foto en la protagonista absoluta de la escena. No agregues ninguna otra persona junto a ella. No agregues pilotos, acompañantes ni personajes adicionales. " +
+  "Coloca a la persona en esta escena: " +
+  THEME.scene +
+  ". " +
+  "Haz que el traje de Fórmula 1 se adapte naturalmente a su cuerpo y conserve su identidad facial. " +
+  "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras y profundidad de campo coherentes. " +
+  "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad de la persona. " +
+  "No agregues texto superpuesto ni logotipos inventados.";
         const DEF = { title: "¡Sonríe!", sub: "Toca el botón y vive la escena", footer: "Mi evento · 2026", stickers: "✨🎉📸", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#1b1340", accent: "#ff5a36", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
         const FIELDS = [
