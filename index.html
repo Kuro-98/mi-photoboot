@@ -482,7 +482,34 @@
             loading: ["Calentando motores…", "Buscando tu lugar en el paddock…", "Acomodando las luces del circuito…", "Revelando tu foto…"]
         };
         const AI_ENDPOINT = "/api/ai";
-        const buildPrompt = () => "Edita esta foto de una persona real: conserva exactamente el rostro, los rasgos, el tono de piel, el peinado y la ropa de todas las personas que aparecen en primer plano; no las embellezcas ni cambies su identidad. Colócalas en esta escena: " + THEME.scene + ". Estilo fotográfico realista, iluminación coherente con la escena, sin texto legible ni logotipos de marcas.";
+        const buildPrompt = () => `EDITA ESTA FOTOGRAFÍA. PRIORIDAD ABSOLUTA: PRESERVAR LA IDENTIDAD DE LAS PERSONAS.
+
+Las personas de la fotografía original deben seguir siendo reconociblemente las mismas personas. No reconstruyas ni rediseñes sus rostros.
+
+PRESERVA, con la mayor fidelidad posible:
+- estructura y proporciones del rostro
+- forma y posición de los ojos
+- cejas
+- nariz
+- labios y boca
+- mandíbula, mentón y pómulos
+- tono y textura natural de la piel
+- edad aparente
+- cabello, línea del cabello y peinado
+- expresión facial
+- cuerpo, proporciones, postura y ropa
+
+NO embellezcas a las personas. NO las conviertas en modelos diferentes. NO cambies sus rasgos faciales para hacerlos "más atractivos". NO rejuvenezcas, envejezcas ni estilices sus caras. NO cambies su identidad.
+
+La transformación debe concentrarse principalmente en el ENTORNO. Mantén a las personas lo más parecidas posible a la fotografía de entrada y colócalas naturalmente dentro de esta escena:
+
+${THEME.scene}
+
+Integra las personas en la nueva escena mediante perspectiva, iluminación, sombras, reflejos, profundidad de campo y temperatura de color coherentes. El resultado debe parecer una fotografía real tomada en ese lugar, no una ilustración.
+
+Si existe conflicto entre mejorar la escena y preservar a una persona, SIEMPRE prioriza preservar a la persona.
+
+No agregues personas adicionales. No elimines a las personas originales. No cambies sus rostros. No añadas texto legible ni logotipos de marcas.`;
 
         const DEF = { title: "¡Sonríe!", sub: "Toca el botón y vive la escena", footer: "Mi evento · 2026", stickers: "✨🎉📸", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#1b1340", accent: "#ff5a36", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
@@ -625,17 +652,22 @@
         /* ---------- IA ---------- */
         async function runAI(shot, ar) {
             const size = ar > 1.2 ? "1536x1024" : ar < .83 ? "1024x1536" : "1024x1024";
-            const k = 1024 / Math.max(shot.width, shot.height), c = document.createElement("canvas");
-            c.width = Math.round(shot.width * k); c.height = Math.round(shot.height * k);
+            // Conserva la mayor resolución posible sin agrandar artificialmente la foto.
+            // La cámara normalmente entrega hasta 1280x960; evitamos reducirla a 1024.
+            const maxInput = 1536;
+            const scale = Math.min(1, maxInput / Math.max(shot.width, shot.height));
+            const c = document.createElement("canvas");
+            c.width = Math.max(16, Math.round(shot.width * scale / 16) * 16);
+            c.height = Math.max(16, Math.round(shot.height * scale / 16) * 16);
             c.getContext("2d").drawImage(shot, 0, 0, c.width, c.height);
-            const dataUrl = c.toDataURL("image/jpeg", .85);
+            const dataUrl = c.toDataURL("image/jpeg", .95);
             $("aipic").src = dataUrl; show("s-ai");
             while (true) {
                 $("aiact").hidden = true; $("aispin").hidden = false;
                 let i = 0; $("aimsg").textContent = THEME.loading[0];
                 const iv = setInterval(() => { $("aimsg").textContent = THEME.loading[++i % THEME.loading.length] }, 3500);
                 try {
-                    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 115000);
+                    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 175000);
                     const r = await fetch(AI_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, prompt: buildPrompt(), size }), signal: ac.signal });
                     clearTimeout(to);
                     const j = await r.json();
