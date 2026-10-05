@@ -7,30 +7,16 @@
     <title>Photobooth</title>
     <style>
         :root {
-            --bg: #ece8ff;
-            --ink: #1b1340;
-            --card: #fff;
-            --muted: #5d5690;
-            --accent: #ff5a36;
+            --bg: #08090b;
+            --ink: #ffffff;
+            --card: #15171b;
+            --muted: #a7abb2;
+            --accent: #e10600;
+            --accent-dark: #a80000;
+            --line: #292d33;
             box-sizing: border-box;
             padding-top: env(safe-area-inset-top, 0px);
             padding-bottom: env(safe-area-inset-bottom, 0px)
-        }
-
-        @media (prefers-color-scheme:dark) {
-            :root:not([data-theme="light"]) {
-                --bg: #1a1233;
-                --ink: #f1edff;
-                --card: #2a1f4d;
-                --muted: #b3a9e6
-            }
-        }
-
-        :root[data-theme="dark"] {
-            --bg: #1a1233;
-            --ink: #f1edff;
-            --card: #2a1f4d;
-            --muted: #b3a9e6
         }
 
         * {
@@ -39,14 +25,12 @@
 
         html,
         body {
-            height: 100%;
-            margin: 0
-        }
-
-        body {
-            background: var(--bg);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.025) 25%, transparent 25%) 0 0 / 32px 32px,
+                linear-gradient(315deg, rgba(255,255,255,.018) 25%, transparent 25%) 0 0 / 32px 32px,
+                var(--bg);
             color: var(--ink);
-            font-family: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+            font-family: "Trebuchet MS", system-ui, sans-serif;
             overflow: hidden
         }
 
@@ -59,7 +43,8 @@
             justify-content: center;
             padding: 24px;
             text-align: center;
-            gap: 18px
+            gap: 18px;
+            overflow: hidden
         }
 
         .screen.on {
@@ -67,10 +52,12 @@
         }
 
         h1 {
-            font-size: clamp(2.4rem, 8vw, 6rem);
+            font-size: clamp(2.8rem, 8vw, 6rem);
             margin: 0;
-            line-height: 1;
-            letter-spacing: -.02em
+            line-height: .95;
+            letter-spacing: -.04em;
+            text-transform: uppercase;
+            font-weight: 900
         }
 
         p.sub {
@@ -82,19 +69,21 @@
         button {
             font: inherit;
             cursor: pointer;
-            border: 0;
-            border-radius: 999px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
             padding: 14px 28px;
             font-size: 1.15rem;
-            font-weight: 600;
+            font-weight: 800;
             background: var(--card);
             color: var(--ink);
-            box-shadow: 0 2px 0 rgba(0, 0, 0, .15)
+            box-shadow: 0 4px 0 rgba(0,0,0,.35);
+            transition: transform .15s ease, background .15s ease, box-shadow .15s ease
         }
 
-        button:focus-visible,
-        input:focus-visible,
-        select:focus-visible {
+        button:hover { transform: translateY(-2px) }
+        button:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(0,0,0,.35) }
+
+        button:focus-visible, input:focus-visible, select:focus-visible {
             outline: 3px solid var(--accent);
             outline-offset: 3px
         }
@@ -102,22 +91,38 @@
         button.big {
             background: var(--accent);
             color: #fff;
+            border: 0;
+            border-radius: 8px;
             font-size: clamp(1.5rem, 4vw, 2.6rem);
-            padding: .6em 1.6em;
-            animation: pulse 2.4s ease-in-out infinite
+            font-weight: 900;
+            letter-spacing: .04em;
+            padding: .65em 1.6em;
+            text-transform: uppercase;
+            box-shadow: 0 5px 0 var(--accent-dark), 0 12px 35px rgba(225,6,0,.25);
+            animation: racePulse 2.4s ease-in-out infinite
         }
 
-        @keyframes pulse {
-            50% {
-                transform: scale(1.05)
-            }
+        @keyframes racePulse {
+            50% { transform: scale(1.035); box-shadow: 0 5px 0 var(--accent-dark), 0 15px 45px rgba(225,6,0,.38) }
         }
 
-        @media (prefers-reduced-motion:reduce) {
-            button.big {
-                animation: none
-            }
+        @media (prefers-reduced-motion: reduce) {
+            button.big { animation: none }
         }
+
+        #s-idle { position: relative; }
+        .start-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+        .brand-mark { position: absolute; top: 32px; left: 40px; font-weight: 900; font-size: 1rem; letter-spacing: .16em; color: #fff; }
+        .start-hint { margin: 0; color: #777d86; font-size: .75rem; font-weight: 800; letter-spacing: .2em; }
+        .checkered-line { width: 180px; height: 8px; background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 16px 16px; }
+        .race-lights { display: flex; gap: 14px; margin-bottom: 10px; }
+        .race-lights span { width: 24px; height: 24px; border-radius: 50%; background: #24272c; border: 2px solid #3b3f46; box-shadow: inset 0 0 8px #000; }
+        .race-lights span:nth-child(1) { animation: lightOn 2.5s infinite 0s }
+        .race-lights span:nth-child(2) { animation: lightOn 2.5s infinite .12s }
+        .race-lights span:nth-child(3) { animation: lightOn 2.5s infinite .24s }
+        .race-lights span:nth-child(4) { animation: lightOn 2.5s infinite .36s }
+        .race-lights span:nth-child(5) { animation: lightOn 2.5s infinite .48s }
+        @keyframes lightOn { 0%,70%,100% { background:#24272c; box-shadow:inset 0 0 8px #000 } 30%,55% { background:#e10600; box-shadow:0 0 16px rgba(225,6,0,.8), inset 0 0 5px #fff } }
 
         .row {
             display: flex;
@@ -135,10 +140,11 @@
             position: relative;
             width: min(92vw, calc((100vh - 170px)*.75), 1000px);
             aspect-ratio: 3/4;
-            border-radius: 24px;
+            border-radius: 8px;
             overflow: hidden;
             background: #000;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, .3)
+            border: 2px solid #3b3f46;
+            box-shadow: 0 20px 60px rgba(0,0,0,.55), 0 0 0 1px #111
         }
 
         #cam video {
@@ -174,6 +180,8 @@
             transition: none
         }
 
+        #s-ai { background: radial-gradient(circle at center, rgba(225,6,0,.08), transparent 45%), var(--bg) }
+
         #aipic {
             max-height: 42vh;
             max-width: 70vw;
@@ -181,20 +189,9 @@
             filter: blur(6px) brightness(.85)
         }
 
-        .spin {
-            width: 54px;
-            height: 54px;
-            border: 6px solid var(--muted);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: rot 1s linear infinite
-        }
-
-        @keyframes rot {
-            to {
-                transform: rotate(360deg)
-            }
-        }
+        .spin { width:min(420px,70vw); height:8px; border:0; border-radius:0; background:#292d33; overflow:hidden; position:relative; animation:none }
+        #s-ai .spin::after { content:""; position:absolute; inset:0; width:35%; background:var(--accent); box-shadow:0 0 18px rgba(225,6,0,.7); animation:raceProgress 1.2s ease-in-out infinite }
+        @keyframes raceProgress { 0%{transform:translateX(-120%)} 100%{transform:translateX(320%)} }
 
         .hint {
             font-size: .85rem;
@@ -213,8 +210,9 @@
         #result {
             max-height: calc(100vh - 210px);
             max-width: 92vw;
-            border-radius: 6px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+            border-radius: 4px;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 1px #333, 0 20px 60px rgba(0,0,0,.65);
             background: #fff;
             animation: drop .6s cubic-bezier(.2, 1.2, .4, 1)
         }
@@ -228,8 +226,9 @@
 
         #qrbox {
             background: #fff;
-            color: #1b1340;
-            border-radius: 20px;
+            color: #111;
+            border-radius: 8px;
+            border-top: 5px solid var(--accent);
             padding: 16px;
             width: min(260px, 80vw);
             display: grid;
@@ -247,10 +246,9 @@
             image-rendering: pixelated
         }
 
-        #qrmsg {
-            margin: 0;
-            font-weight: 600
-        }
+        #qrbox::before { content:"PIT STOP"; display:block; color:#e10600; font-size:.75rem; font-weight:900; letter-spacing:.18em }
+
+        #qrmsg { margin:0; font-weight:700 }
 
         #gear {
             position: fixed;
@@ -264,13 +262,17 @@
         #gear button {
             padding: 10px 14px;
             opacity: .4;
-            font-size: 1rem
+            font-size: 1rem;
+            background: #15171b;
+            border-color: #292d33
         }
 
         #gear button:hover,
         #gear button:focus-visible {
             opacity: 1
         }
+
+        #home { background: transparent; border-color:#3b3f46; color:#a7abb2 }
 
         dialog {
             border: 0;
@@ -343,8 +345,11 @@
         }
 
         .timer {
-            font-size: 1rem;
-            color: var(--muted)
+            font-size: .8rem;
+            color: #777d86;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase
         }
 
         #flist {
@@ -397,9 +402,15 @@
 <body>
 
     <section id="s-idle" class="screen on">
-        <h1 id="t-title"></h1>
-        <p class="sub" id="t-sub"></p>
-        <button class="big" id="start">Tomar foto</button>
+        <div class="race-lights" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="brand-mark">F1 PHOTOBOOTH</div>
+        <div class="start-content">
+            <div class="checkered-line"></div>
+            <h1 id="t-title"></h1>
+            <p class="sub" id="t-sub"></p>
+            <button class="big" id="start">TOMAR FOTO</button>
+            <p class="start-hint">PREPÁRATE PARA LA CARRERA</p>
+        </div>
     </section>
 
     <section id="s-cap" class="screen">
@@ -478,28 +489,54 @@
         const CLOUD = { name: "cgt2nq8m", preset: "creaxid" };
 
         /* ====== TEMÁTICA IA (cambia solo esto por evento) ====== */
+        const F1_TEAMS = [
+            "Ferrari",
+            "Mercedes",
+            "McLaren",
+            "Red Bull Racing",
+            "Aston Martin",
+            "Alpine",
+            "Williams",
+            "Haas",
+            "Audi",
+            "Cadillac"
+        ];
+
+        // Evita que dos fotos consecutivas reciban la misma escudería.
+        let lastF1Team = null;
+        let currentF1Team = null;
+
+        function pickF1Team() {
+            const available = F1_TEAMS.filter(team => team !== lastF1Team);
+            currentF1Team = available[Math.floor(Math.random() * available.length)];
+            lastF1Team = currentF1Team;
+            return currentF1Team;
+        }
+
         const THEME = {
-           scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; la persona original de la fotografía es el piloto ganador y protagonista absoluta de la escena, aparece sola en el primer lugar del podio, vistiendo un traje profesional de Fórmula 1 que se adapta naturalmente a su cuerpo, levantando un trofeo de campeón mientras celebra la victoria, con confeti cayendo a su alrededor, cámaras de televisión, público, boxes, pista y autos de Fórmula 1 al fondo, ambiente auténtico de celebración de un Gran Premio, fotografía deportiva profesional y extremadamente realista",
-            loading: ["Calentando motores…", "Buscando tu lugar en el paddock…", "Acomodando las luces del circuito…", "Revelando tu foto…"]
+            scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; la persona original de la fotografía es el piloto ganador y protagonista absoluta de la escena, aparece sola en el primer lugar del podio, vistiendo un traje profesional de Fórmula 1 de la escudería seleccionada, levantando un trofeo de campeón mientras celebra la victoria, con confeti cayendo a su alrededor, cámaras de televisión, público, boxes, pista y autos de Fórmula 1 al fondo, ambiente auténtico de celebración de un Gran Premio, fotografía deportiva profesional y extremadamente realista",
+            loading: ["Calentando motores…", "Preparando tu podio…", "Ajustando las luces del circuito…", "Revelando tu foto…"]
         };
         const AI_ENDPOINT = "/api/ai";
-       const buildPrompt = () =>
-  "Edita esta foto de una persona real. Conserva exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y proporciones. " +
-  "La persona debe conservar lo más fielmente posible su apariencia física original. Respeta estrictamente su complexión, tipo de cuerpo, ancho de hombros, tamaño del torso, brazos, piernas y proporciones corporales. " +
-  "No hagas a la persona más musculosa, más delgada, más grande, más pequeña, más alta ni más baja de lo que aparenta en la fotografía original. " +
-  "No aumentes el volumen de sus músculos ni ensanches sus hombros o torso. No reduzcas su cuerpo ni alteres artificialmente su silueta. " +
-  "En el caso de mujeres, conserva igualmente su complexión, proporciones corporales, estatura aparente y silueta natural. No cambies artificialmente su cuerpo, estatura o proporciones. " +
-  "Si la fotografía permite apreciar la estatura o las proporciones corporales de la persona, respétalas y mantenlas lo más fielmente posible. Si alguna parte del cuerpo no es visible en la fotografía original, no inventes características físicas innecesarias. " +
-  "No embellezcas artificialmente a la persona ni cambies sus características físicas para hacerla parecer un modelo, atleta o persona diferente. " +
-  "La persona original debe seguir siendo claramente reconocible. " +
-  "La persona original debe ser la protagonista absoluta de la escena. No agregues ninguna otra persona junto a ella. No agregues pilotos, acompañantes ni personajes adicionales. " +
-  "Coloca a la persona en esta escena: " +
-  THEME.scene +
-  ". " +
-  "Haz que el traje de Fórmula 1 se adapte naturalmente a su cuerpo original, respetando completamente su complexión y proporciones. " +
-  "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras y profundidad de campo coherentes. " +
-  "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad o el cuerpo de la persona. " +
-  "No agregues texto superpuesto ni logotipos inventados.";
+        const buildPrompt = () =>
+            "Edita esta foto de una persona real. Conserva exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y proporciones. " +
+            "La persona debe conservar lo más fielmente posible su apariencia física original. Respeta estrictamente su complexión, tipo de cuerpo, ancho de hombros, tamaño del torso, brazos, piernas y proporciones corporales. " +
+            "No hagas a la persona más musculosa, más delgada, más grande, más pequeña, más alta ni más baja de lo que aparenta en la fotografía original. " +
+            "No aumentes el volumen de sus músculos ni ensanches sus hombros o torso. No reduzcas su cuerpo ni alteres artificialmente su silueta. " +
+            "En el caso de mujeres, conserva igualmente su complexión, proporciones corporales, estatura aparente y silueta natural. No cambies artificialmente su cuerpo, estatura o proporciones. " +
+            "Si la fotografía permite apreciar la estatura o las proporciones corporales de la persona, respétalas y mantenlas lo más fielmente posible. Si alguna parte del cuerpo no es visible en la fotografía original, no inventes características físicas innecesarias. " +
+            "No embellezcas artificialmente a la persona ni cambies sus características físicas para hacerla parecer un modelo, atleta o persona diferente. " +
+            "La persona original debe seguir siendo claramente reconocible. " +
+            "La persona original debe ser la protagonista absoluta de la escena. No agregues ninguna otra persona junto a ella. No agregues pilotos, acompañantes ni personajes adicionales. " +
+            "Coloca a la persona en esta escena: " + THEME.scene + ". " +
+            "Haz que el traje de Fórmula 1 se adapte naturalmente a su cuerpo original, respetando completamente su complexión y proporciones. " +
+            "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras y profundidad de campo coherentes. " +
+            "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad o el cuerpo de la persona. " +
+            "La escudería asignada para ESTA fotografía es: " + currentF1Team + ". " +
+            "El traje debe corresponder visualmente a esa escudería, utilizando sus colores, diseño y estética de competición reconocibles. " +
+            "No sustituyas la escudería asignada por otra y no uses un uniforme genérico si puedes representar claramente la escudería seleccionada. " +
+            "No agregues texto superpuesto ni logotipos inventados.";
+
         const DEF = { title: "¡Sonríe!", sub: "Toca el botón y vive la escena", footer: "Mi evento · 2026", stickers: "✨🎉📸", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#1b1340", accent: "#ff5a36", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
         const FIELDS = [
@@ -641,22 +678,17 @@
         /* ---------- IA ---------- */
         async function runAI(shot, ar) {
             const size = ar > 1.2 ? "1536x1024" : ar < .83 ? "1024x1536" : "1024x1024";
-            // Conserva la mayor resolución posible sin agrandar artificialmente la foto.
-            // La cámara normalmente entrega hasta 1280x960; evitamos reducirla a 1024.
-            const maxInput = 1536;
-            const scale = Math.min(1, maxInput / Math.max(shot.width, shot.height));
-            const c = document.createElement("canvas");
-            c.width = Math.max(16, Math.round(shot.width * scale / 16) * 16);
-            c.height = Math.max(16, Math.round(shot.height * scale / 16) * 16);
+            const k = 1024 / Math.max(shot.width, shot.height), c = document.createElement("canvas");
+            c.width = Math.round(shot.width * k); c.height = Math.round(shot.height * k);
             c.getContext("2d").drawImage(shot, 0, 0, c.width, c.height);
-            const dataUrl = c.toDataURL("image/jpeg", .95);
+            const dataUrl = c.toDataURL("image/jpeg", .85);
             $("aipic").src = dataUrl; show("s-ai");
             while (true) {
                 $("aiact").hidden = true; $("aispin").hidden = false;
                 let i = 0; $("aimsg").textContent = THEME.loading[0];
                 const iv = setInterval(() => { $("aimsg").textContent = THEME.loading[++i % THEME.loading.length] }, 3500);
                 try {
-                    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 175000);
+                    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 115000);
                     const r = await fetch(AI_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, prompt: buildPrompt(), size }), signal: ac.signal });
                     clearTimeout(to);
                     const j = await r.json();
@@ -676,6 +708,8 @@
         /* ---------- Sesión ---------- */
         async function session() {
             if (busy) return; busy = true; clearTimeout(resetT);
+            // Se elige una escudería nueva al iniciar cada sesión.
+            pickF1Team();
             try {
                 if (!(await ensureCam())) return;
                 const f = curFrame(); let ar = 2 / 3;
@@ -719,8 +753,18 @@
             $("result").src = c.toDataURL("image/png");
             show("s-res");
             uploadQR(c);
-            if (cfg.reset > 0) { let t = cfg.reset; const tick = () => { $("timer").textContent = "Volviendo al inicio en " + t + " s"; if (t-- <= 0) return home(); resetT = setTimeout(tick, 1000) }; tick() }
-            else $("timer").textContent = "";
+            if (cfg.reset > 0) {
+                let t = cfg.reset;
+                const tick = () => {
+                    $("timer").textContent = "SIGUIENTE PILOTO EN " + t + " s";
+                    if (t <= 0) { home(); return; }
+                    t--;
+                    resetT = setTimeout(tick, 1000);
+                };
+                tick();
+            } else {
+                $("timer").textContent = "";
+            }
         }
 
         /* ---------- Subida + QR ---------- */
