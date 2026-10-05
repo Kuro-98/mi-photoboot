@@ -33,24 +33,34 @@ export default async function handler(req, res) {
 		// ---------------------------------------------------------
 		const fd = new FormData();
 
-		// Modelo de edición de alta fidelidad
-		fd.append('model', process.env.IMAGE_MODEL || 'gpt-image-2.5-sunburst');
+	fd.append(
+    'model',
+    process.env.IMAGE_MODEL || 'gpt-image-2.5-sunburst'
+);
 
-		// Prompt de edición
-		fd.append('prompt', String(prompt).slice(0, 32000));
+fd.append(
+    'prompt',
+    String(prompt).slice(0, 32000)
+);
 
-		// Tamaño solicitado por el frontend
-		const allowedSizes = ['1024x1024', '1536x1024', '1024x1536'];
+const allowedSizes = [
+    '1024x1024',
+    '1536x1024',
+    '1024x1536'
+];
 
-		fd.append('size', allowedSizes.includes(size) ? size : '1024x1536');
+fd.append(
+    'size',
+    allowedSizes.includes(size)
+        ? size
+        : '1024x1536'
+);
 
-		// Máxima calidad disponible para este flujo
 		fd.append('quality', 'max');
 
-		// JPEG para reducir el tamaño de la respuesta
-		fd.append('output_format', 'jpeg');
+fd.append('output_format', 'jpeg');
 
-		fd.append('output_compression', '5');
+fd.append('output_compression', '100');
 
 		// Imagen original
 		fd.append(
