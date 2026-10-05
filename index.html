@@ -645,27 +645,30 @@
         }
 
         const THEME = {
-            scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; la persona original de la fotografía es el piloto ganador y protagonista absoluta de la escena, aparece sola en el primer lugar del podio, vistiendo un traje profesional de Fórmula 1 de la escudería seleccionada, levantando un trofeo de campeón mientras celebra la victoria, con confeti cayendo a su alrededor, cámaras de televisión, público, boxes, pista y autos de Fórmula 1 al fondo, ambiente auténtico de celebración de un Gran Premio, fotografía deportiva profesional y extremadamente realista",
+            scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; todas las personas originales visibles en la fotografía son las protagonistas de la escena y aparecen juntas celebrando en el podio, cada una vistiendo un traje profesional de Fórmula 1 de la escudería seleccionada, con poses naturales de celebración y levantando trofeos de campeón cuando resulte coherente con la cantidad de personas, con confeti cayendo a su alrededor, cámaras de televisión, público, boxes, pista y autos de Fórmula 1 al fondo, ambiente auténtico de celebración de un Gran Premio, fotografía deportiva profesional y extremadamente realista",
             loading: ["Calentando motores…", "Preparando tu podio…", "Ajustando las luces del circuito…", "Revelando tu foto…"]
         };
         const AI_ENDPOINT = "/api/ai";
         const buildPrompt = () =>
-            "Edita esta foto de una persona real. Conserva exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y proporciones. " +
-            "La persona debe conservar lo más fielmente posible su apariencia física original. Respeta estrictamente su complexión, tipo de cuerpo, ancho de hombros, tamaño del torso, brazos, piernas y proporciones corporales. " +
-            "No hagas a la persona más musculosa, más delgada, más grande, más pequeña, más alta ni más baja de lo que aparenta en la fotografía original. " +
-            "No aumentes el volumen de sus músculos ni ensanches sus hombros o torso. No reduzcas su cuerpo ni alteres artificialmente su silueta. " +
-            "En el caso de mujeres, conserva igualmente su complexión, proporciones corporales, estatura aparente y silueta natural. No cambies artificialmente su cuerpo, estatura o proporciones. " +
-            "Si la fotografía permite apreciar la estatura o las proporciones corporales de la persona, respétalas y mantenlas lo más fielmente posible. Si alguna parte del cuerpo no es visible en la fotografía original, no inventes características físicas innecesarias. " +
-            "No embellezcas artificialmente a la persona ni cambies sus características físicas para hacerla parecer un modelo, atleta o persona diferente. " +
-            "La persona original debe seguir siendo claramente reconocible. " +
-            "La persona original debe ser la protagonista absoluta de la escena. No agregues ninguna otra persona junto a ella. No agregues pilotos, acompañantes ni personajes adicionales. " +
-            "Coloca a la persona en esta escena: " + THEME.scene + ". " +
-            "Haz que el traje de Fórmula 1 se adapte naturalmente a su cuerpo original, respetando completamente su complexión y proporciones. " +
-            "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras y profundidad de campo coherentes. " +
-            "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad o el cuerpo de la persona. " +
+            "Edita esta fotografía de una o varias personas reales. PRESERVA A TODAS LAS PERSONAS ORIGINALES QUE SEAN VISIBLES EN LA FOTOGRAFÍA. " +
+            "El número de personas debe mantenerse exactamente igual: no elimines personas, no combines dos personas en una, no dupliques personas y no agregues personas nuevas. " +
+            "Si hay una sola persona, transforma únicamente a esa persona. Si hay varias personas, transforma a CADA UNA de ellas y aplica la temática a todas por igual. " +
+            "Conserva individualmente la identidad de cada persona, incluyendo su rostro, rasgos faciales, tono de piel, edad aparente, peinado y características físicas. " +
+            "Cada persona debe seguir siendo claramente reconocible como la misma persona de la fotografía original. " +
+            "Respeta estrictamente la complexión, tipo de cuerpo, ancho de hombros, tamaño del torso, brazos, piernas, estatura aparente y proporciones corporales de CADA persona. " +
+            "No hagas a ninguna persona más musculosa, más delgada, más grande, más pequeña, más alta ni más baja de lo que aparenta en la fotografía original. " +
+            "No aumentes el volumen de los músculos ni ensanches hombros o torso. No reduzcas cuerpos ni alteres artificialmente sus siluetas. " +
+            "En el caso de mujeres, conserva igualmente su complexión, proporciones corporales, estatura aparente y silueta natural. " +
+            "Si alguna parte del cuerpo no es visible en la fotografía original, no inventes características físicas innecesarias. " +
+            "No embellezcas artificialmente a ninguna persona ni cambies sus características físicas para hacerlas parecer modelos, atletas o personas diferentes. " +
+            "Todas las personas originales deben conservarse y deben participar en la misma escena. No conviertas a una persona en un piloto adicional ni sustituyas a ninguna de las personas originales. " +
+            "Coloca a todas las personas originales en esta escena: " + THEME.scene + ". " +
+            "Haz que el traje de Fórmula 1 de cada persona se adapte naturalmente a SU propio cuerpo original, respetando completamente sus diferencias individuales de complexión y proporciones. " +
             "La escudería asignada para ESTA fotografía es: " + currentF1Team + ". " +
-            "El traje debe corresponder visualmente a esa escudería, utilizando sus colores, diseño y estética de competición reconocibles. " +
-            "No sustituyas la escudería asignada por otra y no uses un uniforme genérico si puedes representar claramente la escudería seleccionada. " +
+            "TODAS las personas deben vestir trajes de la MISMA escudería asignada, usando sus colores, diseño y estética de competición reconocibles. " +
+            "No sustituyas la escudería asignada por otra y no uses uniformes de diferentes escuderías dentro de la misma fotografía. " +
+            "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras, escala y profundidad de campo coherentes. " +
+            "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad o el cuerpo de ninguna persona. " +
             "No agregues texto superpuesto ni logotipos inventados.";
 
         const DEF = { title: "¡Sonríe!", sub: "Toca el botón y vive la escena", footer: "Mi evento · 2026", stickers: "✨🎉📸", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#1b1340", accent: "#ff5a36", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
