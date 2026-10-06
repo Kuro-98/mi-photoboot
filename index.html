@@ -527,7 +527,7 @@
 
 
 
-        /* ====== UX/UI — PANTALLA VERTICAL ====== /*
+        /* ====== UX/UI — PANTALLA VERTICAL ====== */
 
         @media (orientation: portrait) {
 
@@ -1665,13 +1665,13 @@
 
     <script>
 
-        /* ====== CLOUDINARY ====== /*
+        /* ====== CLOUDINARY ====== */
 
         const CLOUD = {name: "cgt2nq8m", preset: "creaxid"};
 
 
 
-        /* ====== TEMÁTICA IA (cambia solo esto por evento) ====== /*
+        /* ====== TEMÁTICA IA (cambia solo esto por evento) ====== */
 
         const F1_TEAMS = [
 
@@ -1805,7 +1805,7 @@
 
 
 
-        /* ---------- IndexedDB (marcos) ---------- /*
+        /* ---------- IndexedDB (marcos) ---------- */
 
         const idb = () => new Promise((res, rej) => {const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", {keyPath: "id"}); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error)});
 
@@ -1823,7 +1823,7 @@
 
 
 
-        /* ---------- Geometría ---------- /*
+        /* ---------- Geometría ---------- */
 
         const win = (f, W, H) => [f.x / 100 * W, f.y / 100 * H, f.w / 100 * W, f.h / 100 * H];
 
@@ -1857,7 +1857,7 @@
 
 
 
-        /* ---------- Ajustes ---------- /*
+        /* ---------- Ajustes ---------- */
 
         function apply() {
 
@@ -1905,7 +1905,7 @@
 
 
 
-        /* ---------- Gestor de marcos ---------- /*
+        /* ---------- Gestor de marcos ---------- */
 
         async function renderFrames() {
 
@@ -1999,7 +1999,7 @@
 
 
 
-        /* ---------- Cámara y captura ---------- /*
+        /* ---------- Cámara y captura ---------- */
 
         function show(id) {document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id))}
 
