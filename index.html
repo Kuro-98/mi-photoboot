@@ -110,6 +110,28 @@
             button.big { animation: none }
         }
 
+        /* ====== CARTOON FOOTBALL HOME ====== */
+        #s-idle { position: relative; overflow: hidden; background:
+            radial-gradient(circle at 50% 42%, rgba(45,125,74,.28), transparent 36%),
+            linear-gradient(180deg, #07140e 0%, #0b2417 55%, #06110b 100%); }
+        #s-idle::before { content:""; position:absolute; inset:0; opacity:.18; background: repeating-linear-gradient(90deg, transparent 0 9.8%, #fff 9.8% 10%); pointer-events:none; }
+        #s-idle::after { content:""; position:absolute; left:5%; right:5%; top:50%; height:2px; background:rgba(255,255,255,.25); box-shadow:0 -150px rgba(255,255,255,.12),0 150px rgba(255,255,255,.12); pointer-events:none; }
+        .football-home { gap:16px; max-width:760px; }
+        .brand-mark { color:#fff; }
+        .football-deco { position:absolute; right:7vw; top:12vh; font-size:clamp(3rem,8vw,7rem); transform:rotate(-18deg); filter:drop-shadow(0 12px 18px rgba(0,0,0,.45)); opacity:.9; z-index:1; }
+        .stadium-lights { display:flex; gap:12px; position:absolute; top:34px; left:50%; transform:translateX(-50%); z-index:2; }
+        .stadium-lights span { width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 0 18px rgba(255,255,255,.8); animation:stadiumPulse 2.2s infinite alternate; }
+        .stadium-lights span:nth-child(2){animation-delay:.2s}.stadium-lights span:nth-child(3){animation-delay:.4s}.stadium-lights span:nth-child(4){animation-delay:.6s}.stadium-lights span:nth-child(5){animation-delay:.8s}
+        @keyframes stadiumPulse { from{opacity:.45;transform:scale(.85)} to{opacity:1;transform:scale(1.12)} }
+        .yard-line { width:min(420px,70vw); height:24px; border-top:3px solid rgba(255,255,255,.75); border-bottom:3px solid rgba(255,255,255,.75); display:flex; align-items:center; justify-content:center; color:#fff; letter-spacing:.6em; font-size:.75rem; }
+        .team-picker { width:min(560px,88vw); padding:16px 18px; border:1px solid rgba(255,255,255,.22); border-radius:18px; background:rgba(4,15,9,.78); box-shadow:0 18px 50px rgba(0,0,0,.35); backdrop-filter:blur(8px); }
+        .team-picker label { display:block; color:#d9ffe5; font-size:.78rem; font-weight:900; letter-spacing:.18em; margin-bottom:8px; }
+        #teamSelect { width:100%; border:2px solid #fff; border-radius:12px; padding:14px 16px; background:#fff; color:#111; font:inherit; font-weight:800; font-size:clamp(1rem,2vw,1.2rem); cursor:pointer; }
+        #teamHint { margin:8px 0 0; color:#a9c5b2; font-size:.82rem; }
+        #start:disabled { opacity:.38; cursor:not-allowed; transform:none; animation:none; box-shadow:none; }
+        .start-hint { color:#b8cfc0; }
+        @media (max-width:700px) { .football-deco { right:3vw; top:10vh; opacity:.45; } .stadium-lights { top:24px; } .brand-mark { left:20px; top:64px; font-size:.72rem; } }
+
         #s-idle { position: relative; }
         .start-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 22px; }
         .brand-mark { position: absolute; top: 32px; left: 40px; font-weight: 900; font-size: 1rem; letter-spacing: .16em; color: #fff; }
@@ -123,137 +145,6 @@
         .race-lights span:nth-child(4) { animation: lightOn 2.5s infinite .36s }
         .race-lights span:nth-child(5) { animation: lightOn 2.5s infinite .48s }
         @keyframes lightOn { 0%,70%,100% { background:#24272c; box-shadow:inset 0 0 8px #000 } 30%,55% { background:#e10600; box-shadow:0 0 16px rgba(225,6,0,.8), inset 0 0 5px #fff } }
-
-        /* ====== UX/UI — PANTALLA VERTICAL ====== */
-        @media (orientation: portrait) {
-            html, body {
-                width: 100%;
-                height: 100%;
-                height: 100dvh;
-            }
-
-            #s-idle {
-                justify-content: flex-start;
-                padding: 0;
-                min-height: 100dvh;
-                isolation: isolate;
-            }
-
-            #s-idle::before,
-            #s-idle::after {
-                content: "";
-                position: absolute;
-                top: 14%;
-                bottom: 13%;
-                width: 2px;
-                background: linear-gradient(to bottom, transparent, rgba(225,6,0,.7) 25%, rgba(225,6,0,.12) 75%, transparent);
-                opacity: .65;
-                z-index: 0;
-            }
-
-            #s-idle::before { left: clamp(18px, 5vw, 52px); }
-            #s-idle::after { right: clamp(18px, 5vw, 52px); }
-
-            .brand-mark {
-                top: clamp(24px, 4.5vh, 58px);
-                left: clamp(24px, 5vw, 52px);
-                font-size: clamp(.82rem, 2.1vw, 1.1rem);
-                letter-spacing: .18em;
-                z-index: 3;
-            }
-
-            .race-lights {
-                position: absolute;
-                top: clamp(74px, 10vh, 150px);
-                left: 50%;
-                transform: translateX(-50%);
-                gap: clamp(9px, 1.5vw, 15px);
-                margin: 0;
-                z-index: 2;
-            }
-
-            .race-lights span {
-                width: clamp(18px, 3.1vw, 30px);
-                height: clamp(18px, 3.1vw, 30px);
-            }
-
-            .start-content {
-                position: absolute;
-                top: 19%;
-                left: 50%;
-                transform: translateX(-50%);
-                width: min(88vw, 820px);
-                height: 62%;
-                justify-content: center;
-                gap: clamp(20px, 3.1vh, 38px);
-                z-index: 2;
-            }
-
-            .checkered-line {
-                width: clamp(150px, 28vw, 230px);
-                height: clamp(7px, .65vh, 11px);
-                background-size: clamp(13px, 1.7vw, 18px) clamp(13px, 1.7vw, 18px);
-                box-shadow: 0 0 20px rgba(255,255,255,.05);
-            }
-
-            h1 {
-                font-size: clamp(3.4rem, 10vw, 7rem);
-                line-height: .88;
-                max-width: 100%;
-                text-shadow: 0 8px 35px rgba(0,0,0,.55);
-            }
-
-            p.sub {
-                font-size: clamp(1.05rem, 2.8vw, 1.65rem);
-                max-width: 90%;
-                line-height: 1.3;
-            }
-
-            #start {
-                width: min(72vw, 640px);
-                min-height: clamp(74px, 8vh, 112px);
-                padding: .55em 1em;
-                font-size: clamp(1.45rem, 4vw, 2.45rem);
-            }
-
-            .start-hint {
-                font-size: clamp(.62rem, 1.6vw, .82rem);
-                letter-spacing: .25em;
-            }
-
-            #gear {
-                left: 50%;
-                right: auto;
-                transform: translateX(-50%);
-                bottom: max(14px, env(safe-area-inset-bottom));
-                width: min(92vw, 560px);
-                justify-content: center;
-                padding: 6px;
-                background: rgba(8,9,11,.72);
-                border: 1px solid rgba(255,255,255,.06);
-                border-radius: 10px;
-                backdrop-filter: blur(10px);
-            }
-
-            #gear button {
-                flex: 1;
-                min-width: 0;
-                padding: 11px 12px;
-                font-size: clamp(.8rem, 2.2vw, 1rem);
-            }
-        }
-
-        @media (max-height: 700px) and (orientation: portrait) {
-            .race-lights { top: 8vh; }
-            .start-content { top: 16%; height: 67%; gap: 16px; }
-            h1 { font-size: clamp(2.7rem, 9vw, 4.8rem); }
-            #start { min-height: 64px; }
-        }
-
-        @media (min-width: 800px) and (orientation: portrait) {
-            .start-content { width: min(82vw, 900px); }
-            #start { width: min(58vw, 620px); }
-        }
 
         .row {
             display: flex;
@@ -533,14 +424,36 @@
 <body>
 
     <section id="s-idle" class="screen on">
-        <div class="race-lights" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="brand-mark">F1 PHOTOBOOTH</div>
-        <div class="start-content">
-            <div class="checkered-line"></div>
+        <div class="stadium-lights" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="brand-mark">CARTOON FOOTBALL PHOTOBOOTH</div>
+        <div class="football-deco" aria-hidden="true">🏈</div>
+        <div class="start-content football-home">
+            <div class="yard-line"><span>• • • • •</span></div>
             <h1 id="t-title"></h1>
             <p class="sub" id="t-sub"></p>
-            <button class="big" id="start">TOMAR FOTO</button>
-            <p class="start-hint">PREPÁRATE PARA LA CARRERA</p>
+
+            <div class="team-picker">
+                <label for="teamSelect">ELIGE TU EQUIPO</label>
+                <select id="teamSelect" aria-label="Selecciona tu equipo de fútbol americano">
+                    <option value="">Selecciona un equipo…</option>
+                    <option value="Kansas City Chiefs">Kansas City Chiefs</option>
+                    <option value="Dallas Cowboys">Dallas Cowboys</option>
+                    <option value="San Francisco 49ers">San Francisco 49ers</option>
+                    <option value="Green Bay Packers">Green Bay Packers</option>
+                    <option value="New England Patriots">New England Patriots</option>
+                    <option value="Philadelphia Eagles">Philadelphia Eagles</option>
+                    <option value="Buffalo Bills">Buffalo Bills</option>
+                    <option value="Baltimore Ravens">Baltimore Ravens</option>
+                    <option value="Pittsburgh Steelers">Pittsburgh Steelers</option>
+                    <option value="Miami Dolphins">Miami Dolphins</option>
+                    <option value="Las Vegas Raiders">Las Vegas Raiders</option>
+                    <option value="Chicago Bears">Chicago Bears</option>
+                </select>
+                <p id="teamHint">Primero elige el jersey. Después, ¡sonríe!</p>
+            </div>
+
+            <button class="big" id="start" disabled>TOMAR FOTO</button>
+            <p class="start-hint">TODOS LOS QUE APAREZCAN EN LA FOTO SE CONVIERTEN EN JUGADORES</p>
         </div>
     </section>
 
@@ -619,59 +532,41 @@
         /* ====== CLOUDINARY ====== */
         const CLOUD = { name: "cgt2nq8m", preset: "creaxid" };
 
-        /* ====== TEMÁTICA IA (cambia solo esto por evento) ====== */
-        const F1_TEAMS = [
-            "Ferrari",
-            "Mercedes",
-            "McLaren",
-            "Red Bull Racing",
-            "Aston Martin",
-            "Alpine",
-            "Williams",
-            "Haas",
-            "Audi",
-            "Cadillac"
-        ];
-
-        // Evita que dos fotos consecutivas reciban la misma escudería.
-        let lastF1Team = null;
-        let currentF1Team = null;
-
-        function pickF1Team() {
-            const available = F1_TEAMS.filter(team => team !== lastF1Team);
-            currentF1Team = available[Math.floor(Math.random() * available.length)];
-            lastF1Team = currentF1Team;
-            return currentF1Team;
-        }
-
+        /* ====== TEMÁTICA IA: CARTOON FOOTBALL ====== */
         const THEME = {
-            scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; todas las personas originales visibles en la fotografía son las protagonistas de la escena y aparecen juntas celebrando en el podio, cada una vistiendo un traje profesional de Fórmula 1 de la escudería seleccionada, con poses naturales de celebración y levantando trofeos de campeón cuando resulte coherente con la cantidad de personas, con confeti cayendo a su alrededor, cámaras de televisión, público, boxes, pista y autos de Fórmula 1 al fondo, ambiente auténtico de celebración de un Gran Premio, fotografía deportiva profesional y extremadamente realista",
-            loading: ["Calentando motores…", "Preparando tu podio…", "Ajustando las luces del circuito…", "Revelando tu foto…"]
+            loading: ["Preparando el estadio…", "Poniendo el jersey…", "Transformando la foto en cartoon…", "¡Listos para el touchdown!"],
+            style: "ilustración cartoon premium de fútbol americano, personajes claramente reconocibles, acabado limpio y profesional, colores vibrantes, iluminación cinematográfica, líneas suaves, volumen 3D estilizado, expresiones naturales y aspecto de póster deportivo; no fotorealista, no anime y no caricatura extrema"
         };
         const AI_ENDPOINT = "/api/ai";
-        const buildPrompt = () =>
-            "Edita esta fotografía de una o varias personas reales. PRESERVA A TODAS LAS PERSONAS ORIGINALES QUE SEAN VISIBLES EN LA FOTOGRAFÍA. " +
-            "El número de personas debe mantenerse exactamente igual: no elimines personas, no combines dos personas en una, no dupliques personas y no agregues personas nuevas. " +
-            "Si hay una sola persona, transforma únicamente a esa persona. Si hay varias personas, transforma a CADA UNA de ellas y aplica la temática a todas por igual. " +
-            "Conserva individualmente la identidad de cada persona, incluyendo su rostro, rasgos faciales, tono de piel, edad aparente, peinado y características físicas. " +
-            "Cada persona debe seguir siendo claramente reconocible como la misma persona de la fotografía original. " +
-            "Respeta estrictamente la complexión, tipo de cuerpo, ancho de hombros, tamaño del torso, brazos, piernas, estatura aparente y proporciones corporales de CADA persona. " +
-            "No hagas a ninguna persona más musculosa, más delgada, más grande, más pequeña, más alta ni más baja de lo que aparenta en la fotografía original. " +
-            "No aumentes el volumen de los músculos ni ensanches hombros o torso. No reduzcas cuerpos ni alteres artificialmente sus siluetas. " +
-            "En el caso de mujeres, conserva igualmente su complexión, proporciones corporales, estatura aparente y silueta natural. " +
-            "Si alguna parte del cuerpo no es visible en la fotografía original, no inventes características físicas innecesarias. " +
-            "No embellezcas artificialmente a ninguna persona ni cambies sus características físicas para hacerlas parecer modelos, atletas o personas diferentes. " +
-            "Todas las personas originales deben conservarse y deben participar en la misma escena. No conviertas a una persona en un piloto adicional ni sustituyas a ninguna de las personas originales. " +
-            "Coloca a todas las personas originales en esta escena: " + THEME.scene + ". " +
-            "Haz que el traje de Fórmula 1 de cada persona se adapte naturalmente a SU propio cuerpo original, respetando completamente sus diferencias individuales de complexión y proporciones. " +
-            "La escudería asignada para ESTA fotografía es: " + currentF1Team + ". " +
-            "TODAS las personas deben vestir trajes de la MISMA escudería asignada, usando sus colores, diseño y estética de competición reconocibles. " +
-            "No sustituyas la escudería asignada por otra y no uses uniformes de diferentes escuderías dentro de la misma fotografía. " +
-            "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras, escala y profundidad de campo coherentes. " +
-            "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad o el cuerpo de ninguna persona. " +
-            "No agregues texto superpuesto ni logotipos inventados.";
+        const TEAM_COLORS = {
+            "Kansas City Chiefs":"rojo, dorado y blanco", "Dallas Cowboys":"azul marino, plateado y blanco",
+            "San Francisco 49ers":"rojo escarlata y dorado", "Green Bay Packers":"verde oscuro y dorado",
+            "New England Patriots":"azul marino, rojo y plateado", "Philadelphia Eagles":"verde medianoche, gris y negro",
+            "Buffalo Bills":"azul, rojo y blanco", "Baltimore Ravens":"morado, negro y dorado",
+            "Pittsburgh Steelers":"negro y dorado", "Miami Dolphins":"aguamarina, naranja y blanco",
+            "Las Vegas Raiders":"negro y plateado", "Chicago Bears":"azul oscuro y naranja"
+        };
+        let selectedTeam = localStorage.getItem("pb-football-team") || "";
+        const buildPrompt = () => {
+            const team = selectedTeam || "un equipo famoso de fútbol americano";
+            const colors = TEAM_COLORS[team] || "colores oficiales del equipo";
+            return
+                "Transforma esta fotografía en una ilustración cartoon premium de fútbol americano. " +
+                "IMPORTANTE: conserva a TODAS las personas visibles de la fotografía, sin eliminar, duplicar, fusionar ni sustituir a ninguna. " +
+                "Cada persona que aparezca debe seguir siendo claramente reconocible y conservar exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y características distintivas. " +
+                "Conserva también la complexión y proporciones naturales de cada persona: no cambies artificialmente estatura, ancho de hombros, torso, brazos, piernas, silueta, peso aparente ni proporciones corporales. " +
+                "No conviertas a nadie en una persona diferente, modelo o atleta musculoso. Mantén las expresiones y poses originales tanto como sea posible. " +
+                "VISTE A TODAS LAS PERSONAS con jerseys profesionales de fútbol americano del equipo " + team + ". Usa como referencia visual los colores " + colors + " y el estilo reconocible del uniforme de ese equipo. " +
+                "Todas las personas de esta misma fotografía deben llevar el MISMO equipo. No mezcles equipos entre personas. " +
+                "Los jerseys deben adaptarse naturalmente al cuerpo original de cada persona, sin alterar sus proporciones. " +
+                "Crea una escena deportiva de fútbol americano con ambiente de estadio, césped, gradas y luces de partido, pero mantén a las personas originales como protagonistas. " +
+                "No agregues jugadores, mascotas, celebridades ni personas adicionales. No cambies el número de personas de la fotografía. " +
+                "Estilo: " + THEME.style + ". " +
+                "El resultado debe parecer una versión cartoon de la fotografía original, no una escena genérica con personajes nuevos. " +
+                "Evita texto grande, nombres inventados y logotipos deformados; si aparece un emblema del equipo, debe ser discreto y coherente con el uniforme.";
+        };
 
-        const DEF = { title: "¡Sonríe!", sub: "Toca el botón y vive la escena", footer: "Mi evento · 2026", stickers: "✨🎉📸", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#1b1340", accent: "#ff5a36", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
+        const DEF = { title: "¡DÍA DE PARTIDO!", sub: "Elige tu equipo y conviértete en jugador", footer: "Football Cartoon · 2026", stickers: "🏈🏆⭐", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#102018", accent: "#0b7a3b", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
         const FIELDS = [
             ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
@@ -841,9 +736,13 @@
 
         /* ---------- Sesión ---------- */
         async function session() {
-            if (busy) return; busy = true; clearTimeout(resetT);
-            // Se elige una escudería nueva al iniciar cada sesión.
-            pickF1Team();
+            if (busy) return;
+            if (!selectedTeam) {
+                $("teamSelect").focus();
+                $("teamHint").textContent = "Selecciona un equipo antes de tomar la foto.";
+                return;
+            }
+            busy = true; clearTimeout(resetT);
             try {
                 if (!(await ensureCam())) return;
                 const f = curFrame(); let ar = 2 / 3;
@@ -924,7 +823,21 @@
         $("qrretry").onclick = () => lastCanvas && uploadQR(lastCanvas);
 
         /* ---------- Eventos ---------- */
-        function home() { clearTimeout(resetT); show("s-idle") }
+        function home() { clearTimeout(resetT); show("s-idle"); updateTeamUI(); }
+        function updateTeamUI() {
+            $("teamSelect").value = selectedTeam;
+            $("start").disabled = !selectedTeam;
+            $("teamHint").textContent = selectedTeam
+                ? "Equipo seleccionado: " + selectedTeam + ". Todas las personas usarán este jersey."
+                : "Primero elige el jersey. Después, ¡sonríe!";
+        }
+        $("teamSelect").value = selectedTeam;
+        $("teamSelect").onchange = () => {
+            selectedTeam = $("teamSelect").value;
+            localStorage.setItem("pb-football-team", selectedTeam);
+            updateTeamUI();
+        };
+        updateTeamUI();
         $("start").onclick = session;
         $("again").onclick = session;
         $("home").onclick = home;
