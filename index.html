@@ -11,8 +11,8 @@
             --ink: #ffffff;
             --card: #15171b;
             --muted: #a7abb2;
-            --accent: #e10600;
-            --accent-dark: #a80000;
+            --accent: #f58220;
+            --accent-dark: #b84f00;
             --line: #292d33;
             box-sizing: border-box;
             padding-top: env(safe-area-inset-top, 0px);
@@ -98,12 +98,12 @@
             letter-spacing: .04em;
             padding: .65em 1.6em;
             text-transform: uppercase;
-            box-shadow: 0 5px 0 var(--accent-dark), 0 12px 35px rgba(225,6,0,.25);
-            animation: racePulse 2.4s ease-in-out infinite
+            box-shadow: 0 5px 0 var(--accent-dark), 0 12px 35px rgba(245,130,32,.25);
+            animation: footballPulse 2.4s ease-in-out infinite
         }
 
-        @keyframes racePulse {
-            50% { transform: scale(1.035); box-shadow: 0 5px 0 var(--accent-dark), 0 15px 45px rgba(225,6,0,.38) }
+        @keyframes footballPulse {
+            50% { transform: scale(1.035); box-shadow: 0 5px 0 var(--accent-dark), 0 15px 45px rgba(245,130,32,.38) }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -139,12 +139,12 @@
         .checkered-line { width: 180px; height: 8px; background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 16px 16px; }
         .race-lights { display: flex; gap: 14px; margin-bottom: 10px; }
         .race-lights span { width: 24px; height: 24px; border-radius: 50%; background: #24272c; border: 2px solid #3b3f46; box-shadow: inset 0 0 8px #000; }
-        .race-lights span:nth-child(1) { animation: lightOn 2.5s infinite 0s }
-        .race-lights span:nth-child(2) { animation: lightOn 2.5s infinite .12s }
-        .race-lights span:nth-child(3) { animation: lightOn 2.5s infinite .24s }
-        .race-lights span:nth-child(4) { animation: lightOn 2.5s infinite .36s }
-        .race-lights span:nth-child(5) { animation: lightOn 2.5s infinite .48s }
-        @keyframes lightOn { 0%,70%,100% { background:#24272c; box-shadow:inset 0 0 8px #000 } 30%,55% { background:#e10600; box-shadow:0 0 16px rgba(225,6,0,.8), inset 0 0 5px #fff } }
+        .race-lights span:nth-child(1) { animation: stadiumDot 2.5s infinite 0s }
+        .race-lights span:nth-child(2) { animation: stadiumDot 2.5s infinite .12s }
+        .race-lights span:nth-child(3) { animation: stadiumDot 2.5s infinite .24s }
+        .race-lights span:nth-child(4) { animation: stadiumDot 2.5s infinite .36s }
+        .race-lights span:nth-child(5) { animation: stadiumDot 2.5s infinite .48s }
+        @keyframes lightOn { 0%,70%,100% { background:#24272c; box-shadow:inset 0 0 8px #000 } 30%,55% { background:#e10600; box-shadow:0 0 16px rgba(245,130,32,.8), inset 0 0 5px #fff } }
 
         .row {
             display: flex;
@@ -202,7 +202,7 @@
             transition: none
         }
 
-        #s-ai { background: radial-gradient(circle at center, rgba(225,6,0,.08), transparent 45%), var(--bg) }
+        #s-ai { background: radial-gradient(circle at center, rgba(245,130,32,.12), transparent 45%), var(--bg) }
 
         #aipic {
             max-height: 42vh;
@@ -212,8 +212,8 @@
         }
 
         .spin { width:min(420px,70vw); height:8px; border:0; border-radius:0; background:#292d33; overflow:hidden; position:relative; animation:none }
-        #s-ai .spin::after { content:""; position:absolute; inset:0; width:35%; background:var(--accent); box-shadow:0 0 18px rgba(225,6,0,.7); animation:raceProgress 1.2s ease-in-out infinite }
-        @keyframes raceProgress { 0%{transform:translateX(-120%)} 100%{transform:translateX(320%)} }
+        #s-ai .spin::after { content:""; position:absolute; inset:0; width:35%; background:var(--accent); box-shadow:0 0 18px rgba(245,130,32,.7); animation:footballProgress 1.2s ease-in-out infinite }
+        @keyframes footballProgress { 0%{transform:translateX(-120%)} 100%{transform:translateX(320%)} }
 
         .hint {
             font-size: .85rem;
@@ -268,7 +268,7 @@
             image-rendering: pixelated
         }
 
-        #qrbox::before { content:"PIT STOP"; display:block; color:#e10600; font-size:.75rem; font-weight:900; letter-spacing:.18em }
+        #qrbox::before { content:"GAME DAY"; display:block; color:#f58220; font-size:.75rem; font-weight:900; letter-spacing:.18em }
 
         #qrmsg { margin:0; font-weight:700 }
 
@@ -534,8 +534,13 @@
 
         /* ====== TEMÁTICA IA: CARTOON FOOTBALL ====== */
         const THEME = {
-            loading: ["Preparando el estadio…", "Poniendo el jersey…", "Transformando la foto en cartoon…", "¡Listos para el touchdown!"],
-            style: "ilustración cartoon premium de fútbol americano, personajes claramente reconocibles, acabado limpio y profesional, colores vibrantes, iluminación cinematográfica, líneas suaves, volumen 3D estilizado, expresiones naturales y aspecto de póster deportivo; no fotorealista, no anime y no caricatura extrema"
+            loading: [
+                "Preparando tu jersey…",
+                "Entrando al estadio…",
+                "Convirtiendo la foto en caricatura…",
+                "¡Listos para el touchdown!"
+            ],
+            style: "caricatura deportiva de fútbol americano, ilustración 2D de alta calidad, estilo cómic moderno, contornos limpios y visibles, formas simplificadas pero expresivas, colores vivos y saturados, sombreado tipo ilustración, textura de dibujo y acabado de póster deportivo; claramente ilustrado y caricaturesco, NO fotográfico, NO fotorrealista, NO apariencia de fotografía, NO piel fotográfica, NO poros ni textura de piel realista, NO iluminación fotográfica, NO aspecto de persona real"
         };
         const AI_ENDPOINT = "/api/ai";
         const TEAM_COLORS = {
@@ -549,25 +554,44 @@
         let selectedTeam = localStorage.getItem("pb-football-team") || "";
         const buildPrompt = () => {
             const team = selectedTeam || "un equipo famoso de fútbol americano";
-            const colors = TEAM_COLORS[team] || "colores oficiales del equipo";
+            const colors = TEAM_COLORS[team] || "los colores oficiales del equipo";
+
             return (
-                "Transforma esta fotografía en una ilustración cartoon premium de fútbol americano. " +
-                "IMPORTANTE: conserva a TODAS las personas visibles de la fotografía, sin eliminar, duplicar, fusionar ni sustituir a ninguna. " +
-                "Cada persona que aparezca debe seguir siendo claramente reconocible y conservar exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y características distintivas. " +
-                "Conserva también la complexión y proporciones naturales de cada persona: no cambies artificialmente estatura, ancho de hombros, torso, brazos, piernas, silueta, peso aparente ni proporciones corporales. " +
-                "No conviertas a nadie en una persona diferente, modelo o atleta musculoso. Mantén las expresiones y poses originales tanto como sea posible. " +
-                "VISTE A TODAS LAS PERSONAS con jerseys profesionales de fútbol americano del equipo " + team + ". Usa como referencia visual los colores " + colors + " y el estilo reconocible del uniforme de ese equipo. " +
-                "Todas las personas de esta misma fotografía deben llevar el MISMO equipo. No mezcles equipos entre personas. " +
-                "Los jerseys deben adaptarse naturalmente al cuerpo original de cada persona, sin alterar sus proporciones. " +
-                "Crea una escena deportiva de fútbol americano con ambiente de estadio, césped, gradas y luces de partido, pero mantén a las personas originales como protagonistas. " +
-                "No agregues jugadores, mascotas, celebridades ni personas adicionales. No cambies el número de personas de la fotografía. " +
-                "Estilo: " + THEME.style + ". " +
-                "El resultado debe parecer una versión cartoon de la fotografía original, no una escena genérica con personajes nuevos. " +
-                "Evita texto grande, nombres inventados y logotipos deformados; si aparece un emblema del equipo, debe ser discreto y coherente con el uniforme."
+                "Convierte esta fotografía en una CARICATURA DE FÚTBOL AMERICANO. " +
+                "El resultado final DEBE verse claramente como una ilustración cartoon, no como una fotografía. " +
+                "Usa un estilo de caricatura deportiva 2D tipo cómic/póster, con contornos definidos, " +
+                "formas ligeramente simplificadas, expresiones naturales, colores vivos y sombreado ilustrado. " +
+                "NO hagas un resultado fotorrealista. NO uses textura de piel fotográfica, poros, " +
+                "arrugas hiperrealistas, fotografía deportiva, cámara fotográfica ni acabado de persona real. " +
+                "La imagen debe parecer una ilustración hecha por un artista a partir de la fotografía original. " +
+
+                "IMPORTANTE: conserva a TODAS las personas visibles de la fotografía. " +
+                "No elimines, dupliques, fusiones, sustituyas ni agregues personas. " +
+                "Cada persona original debe seguir siendo claramente reconocible por su rostro, cabello, " +
+                "tono de piel, edad aparente, expresión y rasgos distintivos. " +
+                "Conserva también la complexión y proporciones corporales originales de cada persona. " +
+                "No hagas a nadie más alto, más bajo, más musculoso, más delgado o con otra complexión. " +
+
+                "VISTE A TODAS LAS PERSONAS con un jersey de fútbol americano del equipo " + team + ". " +
+                "Usa los colores " + colors + " y una estética reconocible del uniforme de ese equipo. " +
+                "TODAS las personas de la fotografía deben llevar EL MISMO equipo seleccionado. " +
+                "No mezcles equipos. El jersey debe adaptarse a cada cuerpo sin cambiar sus proporciones. " +
+
+                "Crea un ambiente ilustrado de día de partido: estadio de fútbol americano, " +
+                "césped, gradas, marcadores y luces deportivas, todo representado también como ilustración cartoon. " +
+                "Las personas originales son las protagonistas. " +
+                "No agregues jugadores, mascotas, celebridades ni personajes adicionales. " +
+
+                "Estilo visual obligatorio: " + THEME.style + ". " +
+                "Mantén la composición y las poses generales de la fotografía original, pero transforma completamente " +
+                "su apariencia visual en caricatura. " +
+                "No agregues texto grande, nombres inventados ni elementos de Fórmula 1. " +
+                "Si aparece el emblema del equipo, debe ser discreto y coherente con el uniforme."
             );
         };
 
-        const DEF = { title: "¡DÍA DE PARTIDO!", sub: "Elige tu equipo y conviértete en jugador", footer: "Football Cartoon · 2026", stickers: "🏈🏆⭐", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#102018", accent: "#0b7a3b", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
+        const DEF = { title: "¡DÍA DE PARTIDO!", sub: "Elige tu equipo y conviértete en caricatura", footer: "FOOTBALL CARTOON · 2026", stickers: "🏈🏆⭐", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#102018", accent: "#f58220", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
+        const THEME_VERSION = "football-cartoon-v2";
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
         const FIELDS = [
             ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
@@ -579,7 +603,16 @@
         const FF = [["x", "Ventana: X %", 0, 100, .5], ["y", "Ventana: Y %", 0, 100, .5], ["w", "Ventana: ancho %", 1, 100, .5], ["h", "Ventana: alto %", 1, 100, .5]];
         const $ = id => document.getElementById(id);
         let cfg = { ...DEF }, frames = [], imgCache = {}, lastCanvas = null;
-        try { const s = localStorage.getItem("pb-cfg"); if (s) cfg = { ...DEF, ...JSON.parse(s) } } catch (e) { }
+        try {
+            if (localStorage.getItem("pb-theme-version") !== THEME_VERSION) {
+                cfg = { ...DEF };
+                localStorage.setItem("pb-theme-version", THEME_VERSION);
+                localStorage.setItem("pb-cfg", JSON.stringify(cfg));
+            } else {
+                const s = localStorage.getItem("pb-cfg");
+                if (s) cfg = { ...DEF, ...JSON.parse(s) };
+            }
+        } catch (e) { cfg = { ...DEF }; }
         const save = () => { try { localStorage.setItem("pb-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
 
         /* ---------- IndexedDB (marcos) ---------- */
@@ -847,7 +880,7 @@
             if (cfg.reset > 0) {
                 let t = cfg.reset;
                 const tick = () => {
-                    $("timer").textContent = "SIGUIENTE PILOTO EN " + t + " s";
+                    $("timer").textContent = "SIGUIENTE JUGADA EN " + t + " s";
                     if (t <= 0) { home(); return; }
                     t--;
                     resetT = setTimeout(tick, 1000);
