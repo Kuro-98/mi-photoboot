@@ -550,7 +550,7 @@
         const buildPrompt = () => {
             const team = selectedTeam || "un equipo famoso de fútbol americano";
             const colors = TEAM_COLORS[team] || "colores oficiales del equipo";
-            return
+            return (
                 "Transforma esta fotografía en una ilustración cartoon premium de fútbol americano. " +
                 "IMPORTANTE: conserva a TODAS las personas visibles de la fotografía, sin eliminar, duplicar, fusionar ni sustituir a ninguna. " +
                 "Cada persona que aparezca debe seguir siendo claramente reconocible y conservar exactamente su identidad, rostro, rasgos faciales, tono de piel, edad aparente, peinado y características distintivas. " +
@@ -563,7 +563,8 @@
                 "No agregues jugadores, mascotas, celebridades ni personas adicionales. No cambies el número de personas de la fotografía. " +
                 "Estilo: " + THEME.style + ". " +
                 "El resultado debe parecer una versión cartoon de la fotografía original, no una escena genérica con personajes nuevos. " +
-                "Evita texto grande, nombres inventados y logotipos deformados; si aparece un emblema del equipo, debe ser discreto y coherente con el uniforme.";
+                "Evita texto grande, nombres inventados y logotipos deformados; si aparece un emblema del equipo, debe ser discreto y coherente con el uniforme."
+            );
         };
 
         const DEF = { title: "¡DÍA DE PARTIDO!", sub: "Elige tu equipo y conviértete en jugador", footer: "Football Cartoon · 2026", stickers: "🏈🏆⭐", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#102018", accent: "#0b7a3b", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
