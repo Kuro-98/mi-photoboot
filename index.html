@@ -537,10 +537,10 @@
             loading: [
                 "Preparando tu jersey…",
                 "Entrando al estadio…",
-                "Convirtiendo la foto en caricatura…",
+                "Convirtiendo la foto en chibi…",
                 "¡Listos para el touchdown!"
             ],
-            style: "caricatura deportiva de fútbol americano, ilustración 2D de alta calidad, estilo cómic moderno, contornos limpios y visibles, formas simplificadas pero expresivas, colores vivos y saturados, sombreado tipo ilustración, textura de dibujo y acabado de póster deportivo; claramente ilustrado y caricaturesco, NO fotográfico, NO fotorrealista, NO apariencia de fotografía, NO piel fotográfica, NO poros ni textura de piel realista, NO iluminación fotográfica, NO aspecto de persona real"
+            style: "caricatura CHIBI deportiva premium, personajes tiernos y adorables, cabeza ligeramente grande respecto al cuerpo, rostro redondeado, ojos grandes y muy expresivos pero conservando la identidad y forma característica de los ojos de cada persona, facciones simplificadas y reconocibles, cuerpo compacto y estilizado, manos y pies ligeramente pequeños, proporciones chibi, líneas limpias y suaves, contornos definidos, colores vivos, sombreado suave tipo ilustración, acabado pulido de personaje de videojuego/cartoon, apariencia de figura coleccionable adorable, profundidad y volumen ilustrados; NO fotográfico, NO fotorrealista, NO filtro de fotografía, NO piel realista, NO poros, NO textura fotográfica, NO apariencia de persona real, NO anime, NO manga"
         };
         const AI_ENDPOINT = "/api/ai";
         const TEAM_COLORS = {
@@ -557,41 +557,47 @@
             const colors = TEAM_COLORS[team] || "los colores oficiales del equipo";
 
             return (
-                "Convierte esta fotografía en una CARICATURA DE FÚTBOL AMERICANO. " +
-                "El resultado final DEBE verse claramente como una ilustración cartoon, no como una fotografía. " +
-                "Usa un estilo de caricatura deportiva 2D tipo cómic/póster, con contornos definidos, " +
-                "formas ligeramente simplificadas, expresiones naturales, colores vivos y sombreado ilustrado. " +
-                "NO hagas un resultado fotorrealista. NO uses textura de piel fotográfica, poros, " +
-                "arrugas hiperrealistas, fotografía deportiva, cámara fotográfica ni acabado de persona real. " +
-                "La imagen debe parecer una ilustración hecha por un artista a partir de la fotografía original. " +
+                "TRANSFORMA COMPLETAMENTE esta fotografía en personajes CHIBI de fútbol americano. " +
+                "NO hagas simplemente un filtro cartoon sobre la fotografía. La imagen final debe parecer una ilustración nueva de personajes chibi creada a partir de las personas originales. " +
+                "Quiero una caricatura MUY evidente, tierna, adorable y juguetona. " +
+                "Usa proporciones chibi: cabeza ligeramente grande respecto al cuerpo, rostro redondeado, " +
+                "ojos grandes y expresivos, mejillas suaves, cuerpo compacto y estilizado, manos y pies ligeramente pequeños, " +
+                "silueta adorable y aspecto de personaje coleccionable. " +
+                "Mantén suficiente detalle en los rostros para que cada persona siga siendo claramente reconocible. " +
+                "Conserva los rasgos distintivos de cada persona, especialmente forma de ojos, cejas, nariz, boca, peinado y barba si existe, " +
+                "pero interprétalos como caricatura chibi. " +
+                "NO hagas caras genéricas. " +
+                "NO hagas una simple fotografía con un filtro. " +
+                "NO hagas una pintura realista. " +
+                "NO uses piel fotográfica, poros, textura de piel real, iluminación fotográfica ni apariencia de persona real. " +
+                "El acabado debe ser claramente ilustrado, cute, colorido y caricaturesco. " +
 
                 "IMPORTANTE: conserva a TODAS las personas visibles de la fotografía. " +
                 "No elimines, dupliques, fusiones, sustituyas ni agregues personas. " +
-                "Cada persona original debe seguir siendo claramente reconocible por su rostro, cabello, " +
-                "tono de piel, edad aparente, expresión y rasgos distintivos. " +
-                "Conserva también la complexión y proporciones corporales originales de cada persona. " +
-                "No hagas a nadie más alto, más bajo, más musculoso, más delgado o con otra complexión. " +
+                "Cada persona original debe convertirse en su propio personaje chibi. " +
+                "Conserva sus características físicas reconocibles y sus proporciones generales, pero interprétalas dentro del estilo chibi. " +
+                "No cambies artificialmente el color de piel, cabello o características distintivas. " +
 
                 "VISTE A TODAS LAS PERSONAS con un jersey de fútbol americano del equipo " + team + ". " +
                 "Usa los colores " + colors + " y una estética reconocible del uniforme de ese equipo. " +
-                "TODAS las personas de la fotografía deben llevar EL MISMO equipo seleccionado. " +
-                "No mezcles equipos. El jersey debe adaptarse a cada cuerpo sin cambiar sus proporciones. " +
+                "TODAS las personas de esta fotografía deben llevar EL MISMO equipo seleccionado. " +
+                "No mezcles equipos. El jersey debe verse como ropa de personaje chibi y adaptarse naturalmente a cada personaje. " +
 
-                "Crea un ambiente ilustrado de día de partido: estadio de fútbol americano, " +
-                "césped, gradas, marcadores y luces deportivas, todo representado también como ilustración cartoon. " +
-                "Las personas originales son las protagonistas. " +
+                "Crea un escenario de día de partido también convertido a cartoon: estadio de fútbol americano, " +
+                "césped, gradas, luces y elementos deportivos estilizados, coloridos y ligeramente exagerados. " +
+                "Las personas originales son las protagonistas y deben ocupar la mayor parte de la composición. " +
                 "No agregues jugadores, mascotas, celebridades ni personajes adicionales. " +
 
                 "Estilo visual obligatorio: " + THEME.style + ". " +
-                "Mantén la composición y las poses generales de la fotografía original, pero transforma completamente " +
-                "su apariencia visual en caricatura. " +
-                "No agregues texto grande, nombres inventados ni elementos de Fórmula 1. " +
+                "La transformación debe ser profunda y consistente en TODA la imagen: personas, ropa, estadio, iluminación y fondo deben pertenecer al mismo universo cartoon chibi. " +
+                "Evita cualquier elemento de Fórmula 1. " +
+                "No agregues texto grande ni nombres inventados. " +
                 "Si aparece el emblema del equipo, debe ser discreto y coherente con el uniforme."
             );
         };
 
         const DEF = { title: "¡DÍA DE PARTIDO!", sub: "Elige tu equipo y conviértete en caricatura", footer: "FOOTBALL CARTOON · 2026", stickers: "🏈🏆⭐", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#102018", accent: "#f58220", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
-        const THEME_VERSION = "football-cartoon-v2";
+        const THEME_VERSION = "football-cartoon-v3-chibi";
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
         const FIELDS = [
             ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
