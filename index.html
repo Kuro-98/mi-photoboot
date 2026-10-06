@@ -11,8 +11,8 @@
             --ink: #ffffff;
             --card: #15171b;
             --muted: #a7abb2;
-            --accent: #f58220;
-            --accent-dark: #b84f00;
+            --accent: #e10600;
+            --accent-dark: #a80000;
             --line: #292d33;
             box-sizing: border-box;
             padding-top: env(safe-area-inset-top, 0px);
@@ -26,8 +26,8 @@
         html,
         body {
             background:
-                linear-gradient(135deg, rgba(255,255,255,.025) 25%, transparent 25%) 0 0 / 32px 32px,
-                linear-gradient(315deg, rgba(255,255,255,.018) 25%, transparent 25%) 0 0 / 32px 32px,
+                linear-gradient(135deg, rgba(255, 255, 255, .025) 25%, transparent 25%) 0 0 / 32px 32px,
+                linear-gradient(315deg, rgba(255, 255, 255, .018) 25%, transparent 25%) 0 0 / 32px 32px,
                 var(--bg);
             color: var(--ink);
             font-family: "Trebuchet MS", system-ui, sans-serif;
@@ -76,14 +76,22 @@
             font-weight: 800;
             background: var(--card);
             color: var(--ink);
-            box-shadow: 0 4px 0 rgba(0,0,0,.35);
+            box-shadow: 0 4px 0 rgba(0, 0, 0, .35);
             transition: transform .15s ease, background .15s ease, box-shadow .15s ease
         }
 
-        button:hover { transform: translateY(-2px) }
-        button:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(0,0,0,.35) }
+        button:hover {
+            transform: translateY(-2px)
+        }
 
-        button:focus-visible, input:focus-visible, select:focus-visible {
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, .35)
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
             outline: 3px solid var(--accent);
             outline-offset: 3px
         }
@@ -98,53 +106,266 @@
             letter-spacing: .04em;
             padding: .65em 1.6em;
             text-transform: uppercase;
-            box-shadow: 0 5px 0 var(--accent-dark), 0 12px 35px rgba(245,130,32,.25);
-            animation: footballPulse 2.4s ease-in-out infinite
+            box-shadow: 0 5px 0 var(--accent-dark), 0 12px 35px rgba(225, 6, 0, .25);
+            animation: racePulse 2.4s ease-in-out infinite
         }
 
-        @keyframes footballPulse {
-            50% { transform: scale(1.035); box-shadow: 0 5px 0 var(--accent-dark), 0 15px 45px rgba(245,130,32,.38) }
+        @keyframes racePulse {
+            50% {
+                transform: scale(1.035);
+                box-shadow: 0 5px 0 var(--accent-dark), 0 15px 45px rgba(225, 6, 0, .38)
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            button.big { animation: none }
+            button.big {
+                animation: none
+            }
         }
 
-        /* ====== CARTOON FOOTBALL HOME ====== */
-        #s-idle { position: relative; overflow: hidden; background:
-            radial-gradient(circle at 50% 42%, rgba(45,125,74,.28), transparent 36%),
-            linear-gradient(180deg, #07140e 0%, #0b2417 55%, #06110b 100%); }
-        #s-idle::before { content:""; position:absolute; inset:0; opacity:.18; background: repeating-linear-gradient(90deg, transparent 0 9.8%, #fff 9.8% 10%); pointer-events:none; }
-        #s-idle::after { content:""; position:absolute; left:5%; right:5%; top:50%; height:2px; background:rgba(255,255,255,.25); box-shadow:0 -150px rgba(255,255,255,.12),0 150px rgba(255,255,255,.12); pointer-events:none; }
-        .football-home { gap:16px; max-width:760px; }
-        .brand-mark { color:#fff; }
-        .football-deco { position:absolute; right:7vw; top:12vh; font-size:clamp(3rem,8vw,7rem); transform:rotate(-18deg); filter:drop-shadow(0 12px 18px rgba(0,0,0,.45)); opacity:.9; z-index:1; }
-        .stadium-lights { display:flex; gap:12px; position:absolute; top:34px; left:50%; transform:translateX(-50%); z-index:2; }
-        .stadium-lights span { width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 0 18px rgba(255,255,255,.8); animation:stadiumPulse 2.2s infinite alternate; }
-        .stadium-lights span:nth-child(2){animation-delay:.2s}.stadium-lights span:nth-child(3){animation-delay:.4s}.stadium-lights span:nth-child(4){animation-delay:.6s}.stadium-lights span:nth-child(5){animation-delay:.8s}
-        @keyframes stadiumPulse { from{opacity:.45;transform:scale(.85)} to{opacity:1;transform:scale(1.12)} }
-        .yard-line { width:min(420px,70vw); height:24px; border-top:3px solid rgba(255,255,255,.75); border-bottom:3px solid rgba(255,255,255,.75); display:flex; align-items:center; justify-content:center; color:#fff; letter-spacing:.6em; font-size:.75rem; }
-        .team-picker { width:min(560px,88vw); padding:16px 18px; border:1px solid rgba(255,255,255,.22); border-radius:18px; background:rgba(4,15,9,.78); box-shadow:0 18px 50px rgba(0,0,0,.35); backdrop-filter:blur(8px); }
-        .team-picker label { display:block; color:#d9ffe5; font-size:.78rem; font-weight:900; letter-spacing:.18em; margin-bottom:8px; }
-        #teamSelect { width:100%; border:2px solid #fff; border-radius:12px; padding:14px 16px; background:#fff; color:#111; font:inherit; font-weight:800; font-size:clamp(1rem,2vw,1.2rem); cursor:pointer; }
-        #teamHint { margin:8px 0 0; color:#a9c5b2; font-size:.82rem; }
-        #start:disabled { opacity:.38; cursor:not-allowed; transform:none; animation:none; box-shadow:none; }
-        .start-hint { color:#b8cfc0; }
-        @media (max-width:700px) { .football-deco { right:3vw; top:10vh; opacity:.45; } .stadium-lights { top:24px; } .brand-mark { left:20px; top:64px; font-size:.72rem; } }
+        #s-idle {
+            position: relative;
+        }
 
-        #s-idle { position: relative; }
-        .start-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 22px; }
-        .brand-mark { position: absolute; top: 32px; left: 40px; font-weight: 900; font-size: 1rem; letter-spacing: .16em; color: #fff; }
-        .start-hint { margin: 0; color: #777d86; font-size: .75rem; font-weight: 800; letter-spacing: .2em; }
-        .checkered-line { width: 180px; height: 8px; background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 16px 16px; }
-        .race-lights { display: flex; gap: 14px; margin-bottom: 10px; }
-        .race-lights span { width: 24px; height: 24px; border-radius: 50%; background: #24272c; border: 2px solid #3b3f46; box-shadow: inset 0 0 8px #000; }
-        .race-lights span:nth-child(1) { animation: stadiumDot 2.5s infinite 0s }
-        .race-lights span:nth-child(2) { animation: stadiumDot 2.5s infinite .12s }
-        .race-lights span:nth-child(3) { animation: stadiumDot 2.5s infinite .24s }
-        .race-lights span:nth-child(4) { animation: stadiumDot 2.5s infinite .36s }
-        .race-lights span:nth-child(5) { animation: stadiumDot 2.5s infinite .48s }
-        @keyframes lightOn { 0%,70%,100% { background:#24272c; box-shadow:inset 0 0 8px #000 } 30%,55% { background:#e10600; box-shadow:0 0 16px rgba(245,130,32,.8), inset 0 0 5px #fff } }
+        .start-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .brand-mark {
+            position: absolute;
+            top: 32px;
+            left: 40px;
+            font-weight: 900;
+            font-size: 1rem;
+            letter-spacing: .16em;
+            color: #fff;
+        }
+
+        .start-hint {
+            margin: 0;
+            color: #777d86;
+            font-size: .75rem;
+            font-weight: 800;
+            letter-spacing: .2em;
+        }
+
+        .checkered-line {
+            width: 180px;
+            height: 8px;
+            background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 16px 16px;
+        }
+
+        .race-lights {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .race-lights span {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #24272c;
+            border: 2px solid #3b3f46;
+            box-shadow: inset 0 0 8px #000;
+        }
+
+        .race-lights span:nth-child(1) {
+            animation: lightOn 2.5s infinite 0s
+        }
+
+        .race-lights span:nth-child(2) {
+            animation: lightOn 2.5s infinite .12s
+        }
+
+        .race-lights span:nth-child(3) {
+            animation: lightOn 2.5s infinite .24s
+        }
+
+        .race-lights span:nth-child(4) {
+            animation: lightOn 2.5s infinite .36s
+        }
+
+        .race-lights span:nth-child(5) {
+            animation: lightOn 2.5s infinite .48s
+        }
+
+        @keyframes lightOn {
+
+            0%,
+            70%,
+            100% {
+                background: #24272c;
+                box-shadow: inset 0 0 8px #000
+            }
+
+            30%,
+            55% {
+                background: #e10600;
+                box-shadow: 0 0 16px rgba(225, 6, 0, .8), inset 0 0 5px #fff
+            }
+        }
+
+        /* ====== UX/UI — PANTALLA VERTICAL ====== */
+        @media (orientation: portrait) {
+
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                height: 100dvh;
+            }
+
+            #s-idle {
+                justify-content: flex-start;
+                padding: 0;
+                min-height: 100dvh;
+                isolation: isolate;
+            }
+
+            #s-idle::before,
+            #s-idle::after {
+                content: "";
+                position: absolute;
+                top: 14%;
+                bottom: 13%;
+                width: 2px;
+                background: linear-gradient(to bottom, transparent, rgba(225, 6, 0, .7) 25%, rgba(225, 6, 0, .12) 75%, transparent);
+                opacity: .65;
+                z-index: 0;
+            }
+
+            #s-idle::before {
+                left: clamp(18px, 5vw, 52px);
+            }
+
+            #s-idle::after {
+                right: clamp(18px, 5vw, 52px);
+            }
+
+            .brand-mark {
+                top: clamp(24px, 4.5vh, 58px);
+                left: clamp(24px, 5vw, 52px);
+                font-size: clamp(.82rem, 2.1vw, 1.1rem);
+                letter-spacing: .18em;
+                z-index: 3;
+            }
+
+            .race-lights {
+                position: absolute;
+                top: clamp(74px, 10vh, 150px);
+                left: 50%;
+                transform: translateX(-50%);
+                gap: clamp(9px, 1.5vw, 15px);
+                margin: 0;
+                z-index: 2;
+            }
+
+            .race-lights span {
+                width: clamp(18px, 3.1vw, 30px);
+                height: clamp(18px, 3.1vw, 30px);
+            }
+
+            .start-content {
+                position: absolute;
+                top: 19%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: min(88vw, 820px);
+                height: 62%;
+                justify-content: center;
+                gap: clamp(20px, 3.1vh, 38px);
+                z-index: 2;
+            }
+
+            .checkered-line {
+                width: clamp(150px, 28vw, 230px);
+                height: clamp(7px, .65vh, 11px);
+                background-size: clamp(13px, 1.7vw, 18px) clamp(13px, 1.7vw, 18px);
+                box-shadow: 0 0 20px rgba(255, 255, 255, .05);
+            }
+
+            h1 {
+                font-size: clamp(3.4rem, 10vw, 7rem);
+                line-height: .88;
+                max-width: 100%;
+                text-shadow: 0 8px 35px rgba(0, 0, 0, .55);
+            }
+
+            p.sub {
+                font-size: clamp(1.05rem, 2.8vw, 1.65rem);
+                max-width: 90%;
+                line-height: 1.3;
+            }
+
+            #start {
+                width: min(72vw, 640px);
+                min-height: clamp(74px, 8vh, 112px);
+                padding: .55em 1em;
+                font-size: clamp(1.45rem, 4vw, 2.45rem);
+            }
+
+            .start-hint {
+                font-size: clamp(.62rem, 1.6vw, .82rem);
+                letter-spacing: .25em;
+            }
+
+            #gear {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                bottom: max(14px, env(safe-area-inset-bottom));
+                width: min(92vw, 560px);
+                justify-content: center;
+                padding: 6px;
+                background: rgba(8, 9, 11, .72);
+                border: 1px solid rgba(255, 255, 255, .06);
+                border-radius: 10px;
+                backdrop-filter: blur(10px);
+            }
+
+            #gear button {
+                flex: 1;
+                min-width: 0;
+                padding: 11px 12px;
+                font-size: clamp(.8rem, 2.2vw, 1rem);
+            }
+        }
+
+        @media (max-height: 700px) and (orientation: portrait) {
+            .race-lights {
+                top: 8vh;
+            }
+
+            .start-content {
+                top: 16%;
+                height: 67%;
+                gap: 16px;
+            }
+
+            h1 {
+                font-size: clamp(2.7rem, 9vw, 4.8rem);
+            }
+
+            #start {
+                min-height: 64px;
+            }
+        }
+
+        @media (min-width: 800px) and (orientation: portrait) {
+            .start-content {
+                width: min(82vw, 900px);
+            }
+
+            #start {
+                width: min(58vw, 620px);
+            }
+        }
 
         .row {
             display: flex;
@@ -166,7 +387,7 @@
             overflow: hidden;
             background: #000;
             border: 2px solid #3b3f46;
-            box-shadow: 0 20px 60px rgba(0,0,0,.55), 0 0 0 1px #111
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .55), 0 0 0 1px #111
         }
 
         #cam video {
@@ -202,7 +423,9 @@
             transition: none
         }
 
-        #s-ai { background: radial-gradient(circle at center, rgba(245,130,32,.12), transparent 45%), var(--bg) }
+        #s-ai {
+            background: radial-gradient(circle at center, rgba(225, 6, 0, .08), transparent 45%), var(--bg)
+        }
 
         #aipic {
             max-height: 42vh;
@@ -211,9 +434,36 @@
             filter: blur(6px) brightness(.85)
         }
 
-        .spin { width:min(420px,70vw); height:8px; border:0; border-radius:0; background:#292d33; overflow:hidden; position:relative; animation:none }
-        #s-ai .spin::after { content:""; position:absolute; inset:0; width:35%; background:var(--accent); box-shadow:0 0 18px rgba(245,130,32,.7); animation:footballProgress 1.2s ease-in-out infinite }
-        @keyframes footballProgress { 0%{transform:translateX(-120%)} 100%{transform:translateX(320%)} }
+        .spin {
+            width: min(420px, 70vw);
+            height: 8px;
+            border: 0;
+            border-radius: 0;
+            background: #292d33;
+            overflow: hidden;
+            position: relative;
+            animation: none
+        }
+
+        #s-ai .spin::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            width: 35%;
+            background: var(--accent);
+            box-shadow: 0 0 18px rgba(225, 6, 0, .7);
+            animation: raceProgress 1.2s ease-in-out infinite
+        }
+
+        @keyframes raceProgress {
+            0% {
+                transform: translateX(-120%)
+            }
+
+            100% {
+                transform: translateX(320%)
+            }
+        }
 
         .hint {
             font-size: .85rem;
@@ -234,7 +484,7 @@
             max-width: 92vw;
             border-radius: 4px;
             border: 3px solid #fff;
-            box-shadow: 0 0 0 1px #333, 0 20px 60px rgba(0,0,0,.65);
+            box-shadow: 0 0 0 1px #333, 0 20px 60px rgba(0, 0, 0, .65);
             background: #fff;
             animation: drop .6s cubic-bezier(.2, 1.2, .4, 1)
         }
@@ -268,9 +518,19 @@
             image-rendering: pixelated
         }
 
-        #qrbox::before { content:"GAME DAY"; display:block; color:#f58220; font-size:.75rem; font-weight:900; letter-spacing:.18em }
+        #qrbox::before {
+            content: "PIT STOP";
+            display: block;
+            color: #e10600;
+            font-size: .75rem;
+            font-weight: 900;
+            letter-spacing: .18em
+        }
 
-        #qrmsg { margin:0; font-weight:700 }
+        #qrmsg {
+            margin: 0;
+            font-weight: 700
+        }
 
         #gear {
             position: fixed;
@@ -294,7 +554,11 @@
             opacity: 1
         }
 
-        #home { background: transparent; border-color:#3b3f46; color:#a7abb2 }
+        #home {
+            background: transparent;
+            border-color: #3b3f46;
+            color: #a7abb2
+        }
 
         dialog {
             border: 0;
@@ -424,36 +688,15 @@
 <body>
 
     <section id="s-idle" class="screen on">
-        <div class="stadium-lights" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="brand-mark">CARTOON FOOTBALL PHOTOBOOTH</div>
-        <div class="football-deco" aria-hidden="true">🏈</div>
-        <div class="start-content football-home">
-            <div class="yard-line"><span>• • • • •</span></div>
+        <div class="race-lights" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="brand-mark">F1 PHOTOBOOTH</div>
+        <div class="start-content">
+            <div class="checkered-line"></div>
             <h1 id="t-title"></h1>
             <p class="sub" id="t-sub"></p>
-
-            <div class="team-picker">
-                <label for="teamSelect">ELIGE TU EQUIPO</label>
-                <select id="teamSelect" aria-label="Selecciona tu equipo de fútbol americano">
-                    <option value="">Selecciona un equipo…</option>
-                    <option value="Kansas City Chiefs">Kansas City Chiefs</option>
-                    <option value="Dallas Cowboys">Dallas Cowboys</option>
-                    <option value="San Francisco 49ers">San Francisco 49ers</option>
-                    <option value="Green Bay Packers">Green Bay Packers</option>
-                    <option value="New England Patriots">New England Patriots</option>
-                    <option value="Philadelphia Eagles">Philadelphia Eagles</option>
-                    <option value="Buffalo Bills">Buffalo Bills</option>
-                    <option value="Baltimore Ravens">Baltimore Ravens</option>
-                    <option value="Pittsburgh Steelers">Pittsburgh Steelers</option>
-                    <option value="Miami Dolphins">Miami Dolphins</option>
-                    <option value="Las Vegas Raiders">Las Vegas Raiders</option>
-                    <option value="Chicago Bears">Chicago Bears</option>
-                </select>
-                <p id="teamHint">Primero elige el jersey. Después, ¡sonríe!</p>
-            </div>
-
-            <button class="big" id="start" disabled>TOMAR FOTO</button>
-            <p class="start-hint">TODOS LOS QUE APAREZCAN EN LA FOTO SE CONVIERTEN EN JUGADORES</p>
+            <button class="big" id="start">TOMAR FOTO</button>
+            <p class="start-hint">PREPÁRATE PARA LA CARRERA</p>
         </div>
     </section>
 
@@ -530,74 +773,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script>
         /* ====== CLOUDINARY ====== */
-        const CLOUD = { name: "cgt2nq8m", preset: "creaxid" };
+        const CLOUD = {name: "cgt2nq8m", preset: "creaxid"};
 
-        /* ====== TEMÁTICA IA: CARTOON FOOTBALL ====== */
+        /* ====== TEMÁTICA IA (cambia solo esto por evento) ====== */
+        const F1_TEAMS = [
+            "Ferrari",
+            "Mercedes",
+            "McLaren",
+            "Red Bull Racing",
+            "Aston Martin",
+            "Alpine",
+            "Williams",
+            "Haas",
+            "Audi",
+            "Cadillac"
+        ];
+
+        // Evita que dos fotos consecutivas reciban la misma escudería.
+        let lastF1Team = null;
+        let currentF1Team = null;
+
+        function pickF1Team() {
+            const available = F1_TEAMS.filter(team => team !== lastF1Team);
+            currentF1Team = available[Math.floor(Math.random() * available.length)];
+            lastF1Team = currentF1Team;
+            return currentF1Team;
+        }
+
         const THEME = {
-            loading: [
-                "Preparando tu jersey…",
-                "Entrando al estadio…",
-                "Convirtiendo la foto en chibi…",
-                "¡Listos para el touchdown!"
-            ],
-            style: "caricatura CHIBI deportiva premium, personajes tiernos y adorables, cabeza ligeramente grande respecto al cuerpo, rostro redondeado, ojos grandes y muy expresivos pero conservando la identidad y forma característica de los ojos de cada persona, facciones simplificadas y reconocibles, cuerpo compacto y estilizado, manos y pies ligeramente pequeños, proporciones chibi, líneas limpias y suaves, contornos definidos, colores vivos, sombreado suave tipo ilustración, acabado pulido de personaje de videojuego/cartoon, apariencia de figura coleccionable adorable, profundidad y volumen ilustrados; NO fotográfico, NO fotorrealista, NO filtro de fotografía, NO piel realista, NO poros, NO textura fotográfica, NO apariencia de persona real, NO anime, NO manga"
+            scene: "el podio de un Gran Premio de Fórmula 1 justo después de ganar la carrera; todas las personas originales visibles en la fotografía son las protagonistas de la escena y aparecen juntas celebrando en el podio, cada una vistiendo un traje profesional de Fórmula 1 de la escudería seleccionada, con poses naturales de celebración y levantando trofeos de campeón cuando resulte coherente con la cantidad de personas, con confeti cayendo a su alrededor, cámaras de televisión, público, boxes, pista y autos de Fórmula 1 al fondo, ambiente auténtico de celebración de un Gran Premio, fotografía deportiva profesional y extremadamente realista",
+            loading: ["Calentando motores…", "Preparando tu podio…", "Ajustando las luces del circuito…", "Revelando tu foto…"]
         };
         const AI_ENDPOINT = "/api/ai";
-        const TEAM_COLORS = {
-            "Kansas City Chiefs":"rojo, dorado y blanco", "Dallas Cowboys":"azul marino, plateado y blanco",
-            "San Francisco 49ers":"rojo escarlata y dorado", "Green Bay Packers":"verde oscuro y dorado",
-            "New England Patriots":"azul marino, rojo y plateado", "Philadelphia Eagles":"verde medianoche, gris y negro",
-            "Buffalo Bills":"azul, rojo y blanco", "Baltimore Ravens":"morado, negro y dorado",
-            "Pittsburgh Steelers":"negro y dorado", "Miami Dolphins":"aguamarina, naranja y blanco",
-            "Las Vegas Raiders":"negro y plateado", "Chicago Bears":"azul oscuro y naranja"
-        };
-        let selectedTeam = localStorage.getItem("pb-football-team") || "";
-        const buildPrompt = () => {
-            const team = selectedTeam || "un equipo famoso de fútbol americano";
-            const colors = TEAM_COLORS[team] || "los colores oficiales del equipo";
+        const buildPrompt = () =>
+            "Edita esta fotografía de una o varias personas reales. PRESERVA A TODAS LAS PERSONAS ORIGINALES QUE SEAN VISIBLES EN LA FOTOGRAFÍA. " +
+            "El número de personas debe mantenerse exactamente igual: no elimines personas, no combines dos personas en una, no dupliques personas y no agregues personas nuevas. " +
+            "Si hay una sola persona, transforma únicamente a esa persona. Si hay varias personas, transforma a CADA UNA de ellas y aplica la temática a todas por igual. " +
+            "Conserva individualmente la identidad de cada persona, incluyendo su rostro, rasgos faciales, tono de piel, edad aparente, peinado y características físicas. " +
+            "Cada persona debe seguir siendo claramente reconocible como la misma persona de la fotografía original. " +
+            "Respeta estrictamente la complexión, tipo de cuerpo, ancho de hombros, tamaño del torso, brazos, piernas, estatura aparente y proporciones corporales de CADA persona. " +
+            "No hagas a ninguna persona más musculosa, más delgada, más grande, más pequeña, más alta ni más baja de lo que aparenta en la fotografía original. " +
+            "No aumentes el volumen de los músculos ni ensanches hombros o torso. No reduzcas cuerpos ni alteres artificialmente sus siluetas. " +
+            "En el caso de mujeres, conserva igualmente su complexión, proporciones corporales, estatura aparente y silueta natural. " +
+            "Si alguna parte del cuerpo no es visible en la fotografía original, no inventes características físicas innecesarias. " +
+            "No embellezcas artificialmente a ninguna persona ni cambies sus características físicas para hacerlas parecer modelos, atletas o personas diferentes. " +
+            "Todas las personas originales deben conservarse y deben participar en la misma escena. No conviertas a una persona en un piloto adicional ni sustituyas a ninguna de las personas originales. " +
+            "Coloca a todas las personas originales en esta escena: " + THEME.scene + ". " +
+            "Haz que el traje de Fórmula 1 de cada persona se adapte naturalmente a SU propio cuerpo original, respetando completamente sus diferencias individuales de complexión y proporciones. " +
+            "La escudería asignada para ESTA fotografía es: " + currentF1Team + ". " +
+            "TODAS las personas deben vestir trajes de la MISMA escudería asignada, usando sus colores, diseño y estética de competición reconocibles. " +
+            "No sustituyas la escudería asignada por otra y no uses uniformes de diferentes escuderías dentro de la misma fotografía. " +
+            "La transformación debe parecer una fotografía real tomada durante un Gran Premio de Fórmula 1, con iluminación, perspectiva, sombras, escala y profundidad de campo coherentes. " +
+            "Estilo fotográfico profesional, realista y de alta resolución. Sin caricatura, sin apariencia de ilustración y sin alterar la identidad o el cuerpo de ninguna persona. " +
+            "No agregues texto superpuesto ni logotipos inventados.";
 
-            return (
-                "TRANSFORMA COMPLETAMENTE esta fotografía en personajes CHIBI de fútbol americano. " +
-                "NO hagas simplemente un filtro cartoon sobre la fotografía. La imagen final debe parecer una ilustración nueva de personajes chibi creada a partir de las personas originales. " +
-                "Quiero una caricatura MUY evidente, tierna, adorable y juguetona. " +
-                "Usa proporciones chibi: cabeza ligeramente grande respecto al cuerpo, rostro redondeado, " +
-                "ojos grandes y expresivos, mejillas suaves, cuerpo compacto y estilizado, manos y pies ligeramente pequeños, " +
-                "silueta adorable y aspecto de personaje coleccionable. " +
-                "Mantén suficiente detalle en los rostros para que cada persona siga siendo claramente reconocible. " +
-                "Conserva los rasgos distintivos de cada persona, especialmente forma de ojos, cejas, nariz, boca, peinado y barba si existe, " +
-                "pero interprétalos como caricatura chibi. " +
-                "NO hagas caras genéricas. " +
-                "NO hagas una simple fotografía con un filtro. " +
-                "NO hagas una pintura realista. " +
-                "NO uses piel fotográfica, poros, textura de piel real, iluminación fotográfica ni apariencia de persona real. " +
-                "El acabado debe ser claramente ilustrado, cute, colorido y caricaturesco. " +
-
-                "IMPORTANTE: conserva a TODAS las personas visibles de la fotografía. " +
-                "No elimines, dupliques, fusiones, sustituyas ni agregues personas. " +
-                "Cada persona original debe convertirse en su propio personaje chibi. " +
-                "Conserva sus características físicas reconocibles y sus proporciones generales, pero interprétalas dentro del estilo chibi. " +
-                "No cambies artificialmente el color de piel, cabello o características distintivas. " +
-
-                "VISTE A TODAS LAS PERSONAS con un jersey de fútbol americano del equipo " + team + ". " +
-                "Usa los colores " + colors + " y una estética reconocible del uniforme de ese equipo. " +
-                "TODAS las personas de esta fotografía deben llevar EL MISMO equipo seleccionado. " +
-                "No mezcles equipos. El jersey debe verse como ropa de personaje chibi y adaptarse naturalmente a cada personaje. " +
-
-                "Crea un escenario de día de partido también convertido a cartoon: estadio de fútbol americano, " +
-                "césped, gradas, luces y elementos deportivos estilizados, coloridos y ligeramente exagerados. " +
-                "Las personas originales son las protagonistas y deben ocupar la mayor parte de la composición. " +
-                "No agregues jugadores, mascotas, celebridades ni personajes adicionales. " +
-
-                "Estilo visual obligatorio: " + THEME.style + ". " +
-                "La transformación debe ser profunda y consistente en TODA la imagen: personas, ropa, estadio, iluminación y fondo deben pertenecer al mismo universo cartoon chibi. " +
-                "Evita cualquier elemento de Fórmula 1. " +
-                "No agregues texto grande ni nombres inventados. " +
-                "Si aparece el emblema del equipo, debe ser discreto y coherente con el uniforme."
-            );
-        };
-
-        const DEF = { title: "¡DÍA DE PARTIDO!", sub: "Elige tu equipo y conviértete en caricatura", footer: "FOOTBALL CARTOON · 2026", stickers: "🏈🏆⭐", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#102018", accent: "#f58220", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
-        const THEME_VERSION = "football-cartoon-v3-chibi";
+        const DEF = {title: "¡Sonríe!", sub: "Toca el botón y vive la escena", footer: "Mi evento · 2026", stickers: "✨🎉📸", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#1b1340", accent: "#ff5a36", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto"};
         const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
         const FIELDS = [
             ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
@@ -608,26 +838,17 @@
             ["qr", "Mostrar QR de descarga", "checkbox"], ["qrText", "Texto bajo el QR", "text"]];
         const FF = [["x", "Ventana: X %", 0, 100, .5], ["y", "Ventana: Y %", 0, 100, .5], ["w", "Ventana: ancho %", 1, 100, .5], ["h", "Ventana: alto %", 1, 100, .5]];
         const $ = id => document.getElementById(id);
-        let cfg = { ...DEF }, frames = [], imgCache = {}, lastCanvas = null;
-        try {
-            if (localStorage.getItem("pb-theme-version") !== THEME_VERSION) {
-                cfg = { ...DEF };
-                localStorage.setItem("pb-theme-version", THEME_VERSION);
-                localStorage.setItem("pb-cfg", JSON.stringify(cfg));
-            } else {
-                const s = localStorage.getItem("pb-cfg");
-                if (s) cfg = { ...DEF, ...JSON.parse(s) };
-            }
-        } catch (e) { cfg = { ...DEF }; }
-        const save = () => { try { localStorage.setItem("pb-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
+        let cfg = {...DEF}, frames = [], imgCache = {}, lastCanvas = null;
+        try {const s = localStorage.getItem("pb-cfg"); if (s) cfg = {...DEF, ...JSON.parse(s)}} catch (e) { }
+        const save = () => {try {localStorage.setItem("pb-cfg", JSON.stringify(cfg))} catch (e) { } $("json").value = JSON.stringify(cfg)};
 
         /* ---------- IndexedDB (marcos) ---------- */
-        const idb = () => new Promise((res, rej) => { const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) });
-        const tx = async (mode, fn) => { const d = await idb(); return new Promise((res, rej) => { const t = d.transaction("frames", mode), q = fn(t.objectStore("frames")); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error) }) };
+        const idb = () => new Promise((res, rej) => {const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", {keyPath: "id"}); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error)});
+        const tx = async (mode, fn) => {const d = await idb(); return new Promise((res, rej) => {const t = d.transaction("frames", mode), q = fn(t.objectStore("frames")); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error)})};
         const dbAll = () => tx("readonly", s => s.getAll());
         const dbPut = f => tx("readwrite", s => s.put(f));
         const dbDel = id => tx("readwrite", s => s.delete(id));
-        const loadImg = f => imgCache[f.id] || (imgCache[f.id] = new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f.blob) }));
+        const loadImg = f => imgCache[f.id] || (imgCache[f.id] = new Promise((res, rej) => {const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f.blob)}));
         const curFrame = () => frames.find(f => f.id === cfg.frameId);
 
         /* ---------- Geometría ---------- */
@@ -641,10 +862,10 @@
             const s = Math.min(1, 400 / Math.max(img.width, img.height)), w = Math.round(img.width * s), h = Math.round(img.height * s);
             const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.drawImage(img, 0, 0, w, h);
             const d = x.getImageData(0, 0, w, h).data; let x0 = w, y0 = h, x1 = -1, y1 = -1;
-            for (let j = 0; j < h; j++)for (let i = 0; i < w; i++)if (d[(j * w + i) * 4 + 3] < 20) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (j < y0) y0 = j; if (j > y1) y1 = j }
-            if (x1 < 0 || (x1 - x0) * (y1 - y0) < w * h * .02) return { x: 5, y: 5, w: 90, h: 90 };
+            for (let j = 0; j < h; j++)for (let i = 0; i < w; i++)if (d[(j * w + i) * 4 + 3] < 20) {if (i < x0) x0 = i; if (i > x1) x1 = i; if (j < y0) y0 = j; if (j > y1) y1 = j}
+            if (x1 < 0 || (x1 - x0) * (y1 - y0) < w * h * .02) return {x: 5, y: 5, w: 90, h: 90};
             const r = v => Math.round(v * 10) / 10;
-            return { x: r(x0 / w * 100), y: r(y0 / h * 100), w: r((x1 - x0 + 1) / w * 100), h: r((y1 - y0 + 1) / h * 100) };
+            return {x: r(x0 / w * 100), y: r(y0 / h * 100), w: r((x1 - x0 + 1) / w * 100), h: r((y1 - y0 + 1) / h * 100)};
         }
 
         /* ---------- Ajustes ---------- */
@@ -660,8 +881,8 @@
             FIELDS.forEach(([k, label, type, opts]) => {
                 const w = document.createElement("label"); w.className = "f"; w.append(label);
                 let el;
-                if (type === "select") { el = document.createElement("select"); opts.forEach(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; el.add(new Option(t, v)) }); el.value = cfg[k] }
-                else { el = document.createElement("input"); el.type = type; if (type === "checkbox") el.checked = cfg[k]; else el.value = cfg[k] }
+                if (type === "select") {el = document.createElement("select"); opts.forEach(o => {const [v, t] = Array.isArray(o) ? o : [o, o]; el.add(new Option(t, v))}); el.value = cfg[k]}
+                else {el = document.createElement("input"); el.type = type; if (type === "checkbox") el.checked = cfg[k]; else el.value = cfg[k]}
                 el.onchange = el.oninput = () => {
                     let v = type === "checkbox" ? el.checked : el.value;
                     if (["count", "reset"].includes(k)) v = Number(v) || 0;
@@ -673,14 +894,14 @@
 
         /* ---------- Gestor de marcos ---------- */
         async function renderFrames() {
-            try { frames = await dbAll() } catch (e) { frames = [] }
+            try {frames = await dbAll()} catch (e) {frames = []}
             const l = $("flist"); l.innerHTML = "";
             const none = document.createElement("button"); none.textContent = "Sin marco"; none.className = "fb" + (!curFrame() ? " sel" : "");
-            none.onclick = () => { cfg.frameId = ""; apply(); renderFrames() }; l.append(none);
+            none.onclick = () => {cfg.frameId = ""; apply(); renderFrames()}; l.append(none);
             frames.forEach(f => {
                 const b = document.createElement("button"); b.className = "fb" + (cfg.frameId === f.id ? " sel" : "");
                 const im = new Image(); im.src = URL.createObjectURL(f.blob); im.alt = f.name; b.title = f.name; b.append(im);
-                b.onclick = () => { cfg.frameId = f.id; apply(); renderFrames() }; l.append(b);
+                b.onclick = () => {cfg.frameId = f.id; apply(); renderFrames()}; l.append(b);
             });
             const cur = curFrame(); $("fedit").hidden = !cur; if (cur) buildFrameEditor(cur);
         }
@@ -689,7 +910,7 @@
             FF.forEach(([k, label, mn, mx, st]) => {
                 const w = document.createElement("label"); w.className = "f"; const t = document.createTextNode(label + ": " + f[k]); w.append(t);
                 const el = document.createElement("input"); el.type = "range"; el.min = mn; el.max = mx; el.step = st; el.value = f[k];
-                el.oninput = () => { f[k] = Number(el.value); t.nodeValue = label + ": " + f[k]; prev(f) };
+                el.oninput = () => {f[k] = Number(el.value); t.nodeValue = label + ": " + f[k]; prev(f)};
                 el.onchange = () => dbPut(f);
                 w.append(el); b.append(w);
             });
@@ -706,9 +927,9 @@
         $("fup").onchange = async e => {
             for (const file of e.target.files) {
                 if (file.type !== "image/png") continue;
-                const f = { id: "f" + Date.now() + Math.random().toString(36).slice(2, 6), name: file.name.replace(/\.png$/i, ""), blob: file };
+                const f = {id: "f" + Date.now() + Math.random().toString(36).slice(2, 6), name: file.name.replace(/\.png$/i, ""), blob: file};
                 Object.assign(f, detect(await loadImg(f)));
-                try { await dbPut(f) } catch (err) { alert("No se pudo guardar el marco en este navegador."); continue }
+                try {await dbPut(f)} catch (err) {alert("No se pudo guardar el marco en este navegador."); continue}
                 cfg.frameId = f.id;
             }
             e.target.value = ""; apply(); renderFrames();
@@ -719,69 +940,27 @@
         };
 
         /* ---------- Cámara y captura ---------- */
-        function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)) }
+        function show(id) {document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id))}
         const wait = ms => new Promise(r => setTimeout(r, ms));
         let stream = null, busy = false, resetT = null;
 
         async function ensureCam() {
-            if (stream && stream.active) return true;
-
-            const video = $("v");
-
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                $("t-sub").textContent =
-                    "Este navegador no permite usar la cámara. Abre el photobooth con HTTPS en Chrome.";
-                return false;
-            }
-
-            // IMPORTANTE: no asumimos que existe una webcam concreta.
-            // Puede ser la cámara integrada de la laptop, una webcam USB,
-            // una capturadora o cualquier otro dispositivo de video reconocido por Windows/Chrome.
-            // Primero pedimos simplemente "cualquier cámara".
+            if (stream) return true;
             try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: false
-                });
-
-                video.srcObject = stream;
-                await video.play();
-
-                return true;
-
+                stream = await navigator.mediaDevices.getUserMedia({video: {width: {ideal: 1280}, height: {ideal: 960}, facingMode: "user"}, audio: false});
+                $("v").srcObject = stream; await $("v").play(); return true;
             } catch (e) {
-                console.error("Cámara:", e.name, e.message);
-
-                if (stream) {
-                    stream.getTracks().forEach(t => t.stop());
-                    stream = null;
-                }
-
-                let msg = "No se pudo abrir la cámara.";
-
-                if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
-                    msg = "Chrome bloqueó la cámara. Permite el acceso a la cámara para este sitio y vuelve a intentarlo.";
-                } else if (e.name === "NotFoundError" || e.name === "DevicesNotFoundError") {
-                    msg = "Chrome no está viendo ninguna cámara. Revisa chrome://settings/content/camera y que Windows detecte la webcam.";
-                } else if (e.name === "NotReadableError" || e.name === "TrackStartError") {
-                    msg = "La cámara está ocupada por otra aplicación. Cierra Zoom, Teams, OBS, la app Cámara de Windows, etc.";
-                } else if (e.name === "SecurityError") {
-                    msg = "El navegador no permite usar la cámara en esta página. Abre el photobooth mediante HTTPS.";
-                } else if (e.name === "TypeError") {
-                    msg = "No se pudo iniciar la cámara desde este navegador. Comprueba que estés usando Chrome y una URL HTTPS.";
-                }
-
-                $("t-sub").textContent = msg;
+                $("t-sub").textContent = "No se pudo abrir la cámara. Permite el acceso en el navegador y abre la página con https.";
                 return false;
             }
         }
         function grab(ar) {
             const v = $("v"), vw = v.videoWidth, vh = v.videoHeight;
-            let sw = vw, sh = vw / ar; if (sh > vh) { sh = vh; sw = vh * ar }
+            let sw = vw, sh = vw / ar; if (sh > vh) {sh = vh; sw = vh * ar}
             const L = 1280, w = ar >= 1 ? L : Math.round(L * ar), h = ar >= 1 ? Math.round(L / ar) : L;
             const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d");
             if (cfg.filter !== "none") x.filter = cfg.filter; // Safari iOS no soporta ctx.filter
-            if (cfg.mirror) { x.translate(w, 0); x.scale(-1, 1) }
+            if (cfg.mirror) {x.translate(w, 0); x.scale(-1, 1)}
             x.drawImage(v, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, w, h);
             return c;
         }
@@ -797,20 +976,20 @@
             while (true) {
                 $("aiact").hidden = true; $("aispin").hidden = false;
                 let i = 0; $("aimsg").textContent = THEME.loading[0];
-                const iv = setInterval(() => { $("aimsg").textContent = THEME.loading[++i % THEME.loading.length] }, 3500);
+                const iv = setInterval(() => {$("aimsg").textContent = THEME.loading[++i % THEME.loading.length]}, 3500);
                 try {
                     const ac = new AbortController(), to = setTimeout(() => ac.abort(), 115000);
-                    const r = await fetch(AI_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, prompt: buildPrompt(), size }), signal: ac.signal });
+                    const r = await fetch(AI_ENDPOINT, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({image: dataUrl, prompt: buildPrompt(), size}), signal: ac.signal});
                     clearTimeout(to);
                     const j = await r.json();
                     if (!r.ok || !j.image) throw new Error(j.error || "Error");
                     clearInterval(iv);
-                    return await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = j.image });
+                    return await new Promise((res, rej) => {const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = j.image});
                 } catch (e) {
                     clearInterval(iv); console.error("IA:", e);
                     $("aimsg").textContent = "No pudimos crear tu foto con IA.";
                     $("aispin").hidden = true; $("aiact").hidden = false;
-                    const choice = await new Promise(res => { $("airetry").onclick = () => res("retry"); $("aiorig").onclick = () => res("orig") });
+                    const choice = await new Promise(res => {$("airetry").onclick = () => res("retry"); $("aiorig").onclick = () => res("orig")});
                     if (choice === "orig") return shot;
                 }
             }
@@ -818,29 +997,25 @@
 
         /* ---------- Sesión ---------- */
         async function session() {
-            if (busy) return;
-            if (!selectedTeam) {
-                $("teamSelect").focus();
-                $("teamHint").textContent = "Selecciona un equipo antes de tomar la foto.";
-                return;
-            }
-            busy = true; clearTimeout(resetT);
+            if (busy) return; busy = true; clearTimeout(resetT);
+            // Se elige una escudería nueva al iniciar cada sesión.
+            pickF1Team();
             try {
                 if (!(await ensureCam())) return;
                 const f = curFrame(); let ar = 2 / 3;
-                if (f) { const img = await loadImg(f); ar = (f.w * img.width) / (f.h * img.height) }
+                if (f) {const img = await loadImg(f); ar = (f.w * img.width) / (f.h * img.height)}
                 ar = Math.min(2, Math.max(.5, ar));
                 const cam = $("cam"); cam.style.aspectRatio = ar;
                 cam.style.width = "min(92vw,calc((100vh - 170px)*" + ar + "),1000px)";
                 show("s-cap");
-                for (let c = cfg.count; c > 0; c--) { $("count").textContent = c; await wait(1000) }
+                for (let c = cfg.count; c > 0; c--) {$("count").textContent = c; await wait(1000)}
                 $("count").textContent = "";
                 const fl = $("flash"); fl.classList.add("go");
                 const shot = grab(ar);
                 await wait(60); fl.classList.remove("go"); await wait(700);
                 const out = cfg.ai ? await runAI(shot, ar) : shot;
                 await finish(out, ar);
-            } finally { busy = false }
+            } finally {busy = false}
         }
         async function finish(photo, ar) {
             const f = curFrame(), c = document.createElement("canvas");
@@ -871,8 +1046,8 @@
             if (cfg.reset > 0) {
                 let t = cfg.reset;
                 const tick = () => {
-                    $("timer").textContent = "SIGUIENTE JUGADA EN " + t + " s";
-                    if (t <= 0) { home(); return; }
+                    $("timer").textContent = "SIGUIENTE PILOTO EN " + t + " s";
+                    if (t <= 0) {home(); return;}
                     t--;
                     resetT = setTimeout(tick, 1000);
                 };
@@ -885,12 +1060,12 @@
         /* ---------- Subida + QR ---------- */
         async function uploadQR(canvas) {
             const box = $("qrbox");
-            if (!cfg.qr) { box.hidden = true; return }
+            if (!cfg.qr) {box.hidden = true; return }
             box.hidden = false; $("qrimg").innerHTML = ""; $("qrmsg").textContent = "Preparando tu QR…"; $("qrretry").hidden = true;
             try {
                 const blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .88));
                 const fd = new FormData(); fd.append("file", blob); fd.append("upload_preset", CLOUD.preset);
-                const r = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", { method: "POST", body: fd });
+                const r = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", {method: "POST", body: fd});
                 const j = await r.json();
                 if (!j.secure_url) throw new Error(j.error && j.error.message || "Error");
                 const qr = qrcode(0, "M"); qr.addData(j.secure_url); qr.make();
@@ -905,35 +1080,21 @@
         $("qrretry").onclick = () => lastCanvas && uploadQR(lastCanvas);
 
         /* ---------- Eventos ---------- */
-        function home() { clearTimeout(resetT); show("s-idle"); updateTeamUI(); }
-        function updateTeamUI() {
-            $("teamSelect").value = selectedTeam;
-            $("start").disabled = !selectedTeam;
-            $("teamHint").textContent = selectedTeam
-                ? "Equipo seleccionado: " + selectedTeam + ". Todas las personas usarán este jersey."
-                : "Primero elige el jersey. Después, ¡sonríe!";
-        }
-        $("teamSelect").value = selectedTeam;
-        $("teamSelect").onchange = () => {
-            selectedTeam = $("teamSelect").value;
-            localStorage.setItem("pb-football-team", selectedTeam);
-            updateTeamUI();
-        };
-        updateTeamUI();
+        function home() {clearTimeout(resetT); show("s-idle")}
         $("start").onclick = session;
         $("again").onclick = session;
         $("home").onclick = home;
-        $("dl").onclick = () => { clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click() };
-        $("pr").onclick = () => { clearTimeout(resetT); window.print() };
-        $("fs").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen() } catch (e) { } };
-        $("cfg").onclick = () => { clearTimeout(resetT); buildFields(); renderFrames(); $("json").value = JSON.stringify(cfg); $("dlg").showModal() };
+        $("dl").onclick = () => {clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click()};
+        $("pr").onclick = () => {clearTimeout(resetT); window.print()};
+        $("fs").onclick = () => {try {document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()} catch (e) { } };
+        $("cfg").onclick = () => {clearTimeout(resetT); buildFields(); renderFrames(); $("json").value = JSON.stringify(cfg); $("dlg").showModal()};
         $("close").onclick = () => $("dlg").close();
-        $("reset").onclick = () => { cfg = { ...DEF }; apply(); buildFields(); renderFrames() };
-        $("imp").onclick = () => { try { cfg = { ...DEF, ...JSON.parse($("json").value) }; apply(); buildFields(); renderFrames() } catch (e) { alert("La configuración no es válida.") } };
+        $("reset").onclick = () => {cfg = {...DEF}; apply(); buildFields(); renderFrames()};
+        $("imp").onclick = () => {try {cfg = {...DEF, ...JSON.parse($("json").value)}; apply(); buildFields(); renderFrames()} catch (e) {alert("La configuración no es válida.")} };
         document.addEventListener("keydown", e => {
-            if ((e.key === " " || e.key === "Enter") && $("s-idle").classList.contains("on") && !$("dlg").open) { e.preventDefault(); session() }
+            if ((e.key === " " || e.key === "Enter") && $("s-idle").classList.contains("on") && !$("dlg").open) {e.preventDefault(); session()}
         });
-        (async () => { try { frames = await dbAll() } catch (e) { frames = [] } apply() })();
+        (async () => {try {frames = await dbAll()} catch (e) {frames = []} apply()})();
     </script>
 </body>
 
