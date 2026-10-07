@@ -264,7 +264,7 @@
         #start-preview {
             position: relative;
             width: 100%;
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 2 / 3;
             max-height: 31vh;
             overflow: hidden;
             border: 2px solid #3b3f46;
@@ -1661,7 +1661,7 @@
 
 
 
-    <script src="https\://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 
     <script>
 
@@ -1859,6 +1859,34 @@
 
         /* ---------- Ajustes ---------- */
 
+        async function syncStartPreview() {
+            const preview = $("start-preview");
+            const pv = $("pv");
+            if (!preview || !pv) return;
+
+            // El preview usa exactamente la misma proporción que se utilizará
+            // para recortar la captura. Si hay un marco PNG, es la proporción
+            // de su ventana transparente; si no, usamos 2:3 como la captura por defecto.
+            let ar = 2 / 3;
+            const f = curFrame();
+
+            if (f) {
+                try {
+                    const img = await loadImg(f);
+                    ar = (f.w * img.width) / (f.h * img.height);
+                } catch (e) {
+                    ar = 2 / 3;
+                }
+            }
+
+            ar = Math.min(2, Math.max(.5, ar));
+            preview.style.aspectRatio = ar;
+
+            // El video del preview debe verse igual que el video que se captura.
+            pv.style.transform = cfg.mirror ? "scaleX(-1)" : "none";
+            pv.style.filter = cfg.filter;
+        }
+
         function apply() {
 
             $("t-title").textContent = cfg.title; $("t-sub").textContent = cfg.sub;
@@ -1866,8 +1894,10 @@
             document.documentElement.style.setProperty("--accent", cfg.accent);
 
             $("v").style.transform = cfg.mirror ? "scaleX(-1)" : "none";
-
             $("v").style.filter = cfg.filter;
+
+            // Mantener el preview sincronizado con el encuadre real de captura.
+            syncStartPreview();
 
             save();
 
@@ -2272,7 +2302,7 @@
 
                 const fd = new FormData(); fd.append("file", blob); fd.append("upload_preset", CLOUD.preset);
 
-                const r = await fetch("https\://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", {method: "POST", body: fd});
+                const r = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", {method: "POST", body: fd});
 
                 const j = await r.json();
 
