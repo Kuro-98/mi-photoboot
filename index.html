@@ -274,6 +274,217 @@
 
     .start-hint { margin: 0; color: #777d86; font-size: .75rem; font-weight: 800; letter-spacing: .2em; }
 
+    /* ====== PREVIEW EN PANTALLA VERTICAL ====== */
+    .live-preview-wrap {
+      width: min(72vw, 400px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .preview-label {
+      color: #d9ffe5;
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .2em;
+      line-height: 1;
+    }
+
+    #start-preview {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,.42);
+      border-radius: 14px;
+      background: #000;
+      box-shadow: 0 14px 35px rgba(0,0,0,.42), 0 0 0 1px rgba(0,0,0,.45);
+      flex: 0 0 auto;
+    }
+
+    #start-preview video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      background: #000;
+    }
+
+    #start-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to bottom, rgba(0,0,0,.08), transparent 22%, transparent 78%, rgba(0,0,0,.22));
+    }
+
+    .preview-guide {
+      position: absolute;
+      inset: 8% 9%;
+      border: 2px dashed rgba(255,255,255,.58);
+      border-radius: 12px;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 10px;
+      z-index: 2;
+    }
+
+    .preview-guide::before,
+    .preview-guide::after {
+      content: '';
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      border-color: var(--accent);
+      border-style: solid;
+    }
+
+    .preview-guide::before {
+      top: -2px;
+      left: -2px;
+      border-width: 3px 0 0 3px;
+    }
+
+    .preview-guide::after {
+      right: -2px;
+      bottom: -2px;
+      border-width: 0 3px 3px 0;
+    }
+
+    .guide-text {
+      padding: 6px 11px;
+      border-radius: 5px;
+      background: rgba(4,15,9,.78);
+      color: #fff;
+      font-size: .62rem;
+      font-weight: 900;
+      letter-spacing: .13em;
+      white-space: nowrap;
+    }
+
+    .preview-status {
+      margin: 0;
+      min-height: 1em;
+      color: #a9c5b2;
+      font-size: .66rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .preview-status.ready { color: #b8ffca; }
+    .preview-status.error { color: #ff9b9b; }
+
+    /* El inicio se diseña como una columna compacta para kioscos verticales. */
+    .football-home {
+      width: min(92vw, 560px);
+      max-width: 560px;
+      gap: 12px;
+    }
+
+    .football-home h1 {
+      font-size: clamp(2.35rem, 5.8vw, 4.6rem);
+      max-width: 100%;
+      text-wrap: balance;
+    }
+
+    .football-home p.sub {
+      font-size: clamp(1rem, 2.3vw, 1.45rem);
+    }
+
+    .football-home .yard-line {
+      width: min(280px, 58vw);
+      height: 16px;
+    }
+
+    .football-home .team-picker {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 16px;
+    }
+
+    .football-home #teamSelect {
+      padding: 11px 14px;
+      font-size: 1rem;
+    }
+
+    .football-home #teamHint {
+      font-size: .76rem;
+      margin-top: 6px;
+    }
+
+    .football-home button.big {
+      width: min(100%, 410px);
+      font-size: clamp(1.35rem, 3.2vw, 2rem);
+      padding: .58em 1.4em;
+    }
+
+    .football-home .start-hint {
+      font-size: .64rem;
+      line-height: 1.25;
+      max-width: 500px;
+    }
+
+    @media (orientation: portrait) {
+      .screen { padding: 18px 16px; }
+
+      .brand-mark {
+        top: 22px;
+        left: 22px;
+        font-size: .72rem;
+      }
+
+      .stadium-lights {
+        top: 24px;
+        gap: 8px;
+      }
+
+      .stadium-lights span {
+        width: 15px;
+        height: 15px;
+      }
+
+      .football-deco {
+        right: 3vw;
+        top: 9vh;
+        font-size: 3.5rem;
+        opacity: .35;
+      }
+
+      .start-content {
+        width: min(92vw, 560px);
+        gap: 10px;
+      }
+
+      .live-preview-wrap {
+        width: min(64vw, 380px);
+      }
+
+      #start-preview {
+        max-width: 100%;
+        max-height: 31vh;
+      }
+    }
+
+    @media (max-height: 900px) and (orientation: portrait) {
+      .start-content { gap: 7px; }
+      .football-home h1 { font-size: clamp(2rem, 5.5vw, 3.6rem); }
+      .football-home p.sub { font-size: 1rem; }
+      .live-preview-wrap { width: min(58vw, 320px); }
+      #start-preview { max-height: 25vh; }
+      .preview-status { display: none; }
+      .football-home .team-picker { padding: 9px 12px; }
+      .football-home #teamSelect { padding: 9px 12px; }
+      .football-home button.big { padding: .48em 1.2em; }
+    }
+
+    @media (max-width: 700px) and (orientation: portrait) {
+      .football-home { width: min(94vw, 520px); }
+      .live-preview-wrap { width: min(68vw, 330px); }
+    }
+
     .checkered-line { width: 180px; height: 8px; background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 16px 16px; }
 
     .race-lights { display: flex; gap: 14px; margin-bottom: 10px; }
@@ -1566,8 +1777,9 @@
 
       // Calculamos ancho y alto por separado para que el preview conserve
       // EXACTAMENTE la misma proporción que tendrá la captura final.
-      const maxW = Math.min(window.innerWidth * .52, 420);
-      const maxH = Math.min(window.innerHeight * .24, 250);
+      const portrait = window.matchMedia("(orientation: portrait)").matches;
+      const maxW = Math.min(window.innerWidth * (portrait ? .64 : .42), portrait ? 380 : 420);
+      const maxH = Math.min(window.innerHeight * (portrait ? .31 : .30), portrait ? 500 : 320);
 
       let w = maxW;
       let h = w / ar;
