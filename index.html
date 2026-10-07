@@ -2336,8 +2336,6 @@
 
         $("start").onclick = session;
 
-        $("again").onclick = session;
-
         $("home").onclick = home;
 
         $("dl").onclick = () => {clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click()};
