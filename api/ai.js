@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
 	fd.append(
     'model',
-    process.env.IMAGE_MODEL || 'gpt-image-2.5-sunburst'
+    process.env.IMAGE_MODEL || 'gpt-image-2.5-flare'
 );
 
 fd.append(
@@ -56,7 +56,7 @@ fd.append(
         : '1024x1536'
 );
 
-		fd.append('quality', 'max');
+		fd.append('quality', 'high');
 
 fd.append('output_format', 'jpeg');
 
