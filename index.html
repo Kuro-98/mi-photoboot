@@ -828,6 +828,7 @@
         <div class="row">
             <button id="dl">Descargar</button>
             <button id="pr">Imprimir</button>
+            <button id="home">Volver al inicio</button>
         </div>
         <div class="timer" id="timer"></div>
     </section>
@@ -875,17 +876,17 @@
         let selectedCostume = localStorage.getItem("pb-halloween-costume") || "";
         const THEME = {
             loading: ["Preparando la noche…", "Eligiendo tu disfraz…", "Añadiendo la atmósfera de Halloween…", "Revelando tu transformación…"],
-            style: "fotografía cinematográfica de Halloween con estilo semi-realista estilizado: un punto intermedio entre fotografía real y arte digital, rostros y personas claramente reconocibles, materiales y ropa detallados, iluminación dramática de noche, sombras suaves, niebla sutil, luces de luna y tonos cálidos de Halloween; NO fotorrealismo extremo, NO aspecto de fotografía documental, NO caricatura, NO cartoon, NO anime, NO chibi, NO ilustración infantil"
+            style: "estilo cinematográfico de Halloween semi-estilizado, claramente situado entre fotografía realista y personaje cartoon: conserva rostros, identidad, piel y anatomía creíbles, pero aplica un acabado artístico pulido, ligeramente ilustrado y con estética de personaje de película de fantasía; formas suavemente simplificadas, colores más ricos, contraste atractivo, iluminación dramática, volumen y profundidad tipo render cinematográfico, detalles definidos pero sin textura fotográfica excesiva; debe sentirse como una fotografía transformada en una versión artística premium, NO como una foto documental, NO hiperrealista, NO fotorrealismo extremo, pero tampoco caricatura, NO cartoon, NO chibi, NO anime, NO cabezas exageradas, NO proporciones infantiles"
         };
         const AI_ENDPOINT = "/api/ai";
         const buildPrompt = () => {
             const costume = selectedCostume || "un disfraz clásico de Halloween";
             return (
-                "TRANSFORMA ESTA FOTOGRAFÍA EN UNA FOTO DE HALLOWEEN SEMI-REALISTA ESTILIZADA. " +
+                "TRANSFORMA ESTA FOTOGRAFÍA EN UNA VERSIÓN ARTÍSTICA CINEMATOGRÁFICA DE HALLOWEEN, A MEDIO CAMINO ENTRE LA FOTOGRAFÍA DE F1 Y EL ESTILO CARTOON DE NFL. " +
                 "La cantidad de personas debe permanecer EXACTAMENTE igual a la fotografía original. No elimines, dupliques, fusiones ni agregues personas. " +
-                "Cada persona visible debe seguir siendo claramente la misma persona: conserva identidad, estructura y forma del rostro, ojos, cejas, nariz, boca, tono de piel, edad aparente, peinado, barba y proporciones corporales. No embellezcas ni cambies sus rasgos. " +
+                "Cada persona visible debe seguir siendo claramente la misma persona: conserva identidad, estructura y forma del rostro, ojos, cejas, nariz, boca, tono de piel, edad aparente, peinado, barba y proporciones corporales. Permite una estilización artística moderada en iluminación, textura y acabado, pero NO alteres sus rasgos ni conviertas sus caras en caricaturas. " +
                 "DISFRAZ: todas las personas deben llevar el mismo concepto de disfraz seleccionado: " + costume + ". Adapta el disfraz individualmente al cuerpo y postura de cada persona, con ropa, maquillaje, accesorios y materiales creíbles y bien integrados. " +
-                "La transformación debe sentirse como un disfraz real y elaborado, no como un filtro aplicado encima de la foto. " +
+                "La transformación debe sentirse como un personaje de película de Halloween cuidadosamente diseñado: disfraz real y elaborado, maquillaje y accesorios integrados, con acabado artístico cinematográfico. No debe parecer un filtro fotográfico ni una simple superposición, pero tampoco una fotografía completamente realista. " +
                 "ESCENA: ambiente de Halloween nocturno, elegante y ligeramente misterioso, iluminación cinematográfica, atmósfera de fiesta de Halloween, decoración sutil, niebla ligera y profundidad de campo natural. " +
                 "ESTILO: " + THEME.style + ". " +
                 "Mantén composición, encuadre y posiciones generales de las personas de la fotografía. No añadas personajes secundarios. No añadas texto, nombres, marcas de agua ni logotipos inventados."
@@ -1180,6 +1181,7 @@
         $("start").onclick = session;
         $("dl").onclick = () => { clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click() };
         $("pr").onclick = () => { clearTimeout(resetT); window.print() };
+        $("home").onclick = home;
         $("fs").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen() } catch (e) { } };
         $("cfg").onclick = () => { clearTimeout(resetT); buildFields(); renderFrames(); $("json").value = JSON.stringify(cfg); $("dlg").showModal() };
         $("close").onclick = () => $("dlg").close();
