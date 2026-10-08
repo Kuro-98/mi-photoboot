@@ -515,7 +515,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            gap: 0;
+            gap: 18px;
         }
 
         .halloween-home .halloween-kicker {
@@ -538,7 +538,7 @@
         .live-preview-wrap {
             width: min(46vw, 410px);
             flex: 0 0 auto;
-            gap: 8px;
+            gap: 12px;
         }
 
         #start-preview {
@@ -573,7 +573,7 @@
         }
 
         .costume-picker label {
-            margin-bottom: 7px;
+            margin-bottom: 10px;
             font-size: .69rem;
             letter-spacing: .20em;
         }
@@ -586,7 +586,7 @@
         }
 
         #costumeHint {
-            margin: 7px 2px 0;
+            margin: 10px 2px 0;
             font-size: .70rem;
             line-height: 1.25;
         }
@@ -616,6 +616,7 @@
             .halloween-home {
                 padding-top: 72px;
                 padding-bottom: 22px;
+                gap: 14px;
             }
             .halloween-home p.sub { margin-bottom: 13px; }
             .live-preview-wrap,
@@ -630,7 +631,7 @@
         }
 
         @media (max-height: 900px) and (orientation: portrait) {
-            .halloween-home { padding-top: 54px; }
+            .halloween-home { padding-top: 54px; gap: 12px; }
             .halloween-home h1 { font-size: clamp(2rem, 5.3vw, 3rem); }
             .halloween-home p.sub { font-size: .86rem; margin: 7px 0 10px; }
             .live-preview-wrap,
