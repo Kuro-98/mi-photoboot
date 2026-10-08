@@ -1,2161 +1,929 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
-
-
 <head>
-
-  <meta charset="utf-8">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <title>Photobooth</title>
-
-  <style>
-
-    :root {
-
-      --bg: #08090b;
-
-      --ink: #ffffff;
-
-      --card: #15171b;
-
-      --muted: #a7abb2;
-
-      --accent: #f58220;
-
-      --accent-dark: #b84f00;
-
-      --line: #292d33;
-
-      box-sizing: border-box;
-
-      padding-top: env(safe-area-inset-top, 0px);
-
-      padding-bottom: env(safe-area-inset-bottom, 0px)
-
-    }
-
-
-
-    * {
-
-      box-sizing: border-box
-
-    }
-
-
-
-    html,
-
-    body {
-
-      background:
-
-        linear-gradient(135deg, rgba(255,255,255,.025) 25%, transparent 25%) 0 0 / 32px 32px,
-
-        linear-gradient(315deg, rgba(255,255,255,.018) 25%, transparent 25%) 0 0 / 32px 32px,
-
-        var(--bg);
-
-      color: var(--ink);
-
-      font-family: "Trebuchet MS", system-ui, sans-serif;
-
-      overflow: hidden
-
-    }
-
-
-
-    .screen {
-
-      position: absolute;
-
-      inset: 0;
-
-      display: none;
-
-      flex-direction: column;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 24px;
-
-      text-align: center;
-
-      gap: 18px;
-
-      overflow: hidden
-
-    }
-
-
-
-    .screen.on {
-
-      display: flex
-
-    }
-
-
-
-    h1 {
-
-      font-size: clamp(2.8rem, 8vw, 6rem);
-
-      margin: 0;
-
-      line-height: .95;
-
-      letter-spacing: -.04em;
-
-      text-transform: uppercase;
-
-      font-weight: 900
-
-    }
-
-
-
-    p.sub {
-
-      font-size: clamp(1.1rem, 2.6vw, 1.8rem);
-
-      margin: 0;
-
-      color: var(--muted)
-
-    }
-
-
-
-    button {
-
-      font: inherit;
-
-      cursor: pointer;
-
-      border: 1px solid var(--line);
-
-      border-radius: 8px;
-
-      padding: 14px 28px;
-
-      font-size: 1.15rem;
-
-      font-weight: 800;
-
-      background: var(--card);
-
-      color: var(--ink);
-
-      box-shadow: 0 4px 0 rgba(0,0,0,.35);
-
-      transition: transform .15s ease, background .15s ease, box-shadow .15s ease
-
-    }
-
-
-
-    button:hover { transform: translateY(-2px) }
-
-    button:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(0,0,0,.35) }
-
-
-
-    button:focus-visible, input:focus-visible, select:focus-visible {
-
-      outline: 3px solid var(--accent);
-
-      outline-offset: 3px
-
-    }
-
-
-
-    button.big {
-
-      background: var(--accent);
-
-      color: #fff;
-
-      border: 0;
-
-      border-radius: 8px;
-
-      font-size: clamp(1.5rem, 4vw, 2.6rem);
-
-      font-weight: 900;
-
-      letter-spacing: .04em;
-
-      padding: .65em 1.6em;
-
-      text-transform: uppercase;
-
-      box-shadow: 0 5px 0 var(--accent-dark), 0 12px 35px rgba(245,130,32,.25);
-
-      animation: footballPulse 2.4s ease-in-out infinite
-
-    }
-
-
-
-    @keyframes footballPulse {
-
-      50% { transform: scale(1.035); box-shadow: 0 5px 0 var(--accent-dark), 0 15px 45px rgba(245,130,32,.38) }
-
-    }
-
-
-
-    @media (prefers-reduced-motion: reduce) {
-
-      button.big { animation: none }
-
-    }
-
-
-
-    /* ====== CARTOON FOOTBALL HOME ====== */
-
-    #s-idle { position: relative; overflow: hidden; background:
-
-      radial-gradient(circle at 50% 42%, rgba(45,125,74,.28), transparent 36%),
-
-      linear-gradient(180deg, #07140e 0%, #0b2417 55%, #06110b 100%); }
-
-    #s-idle::before { content:""; position:absolute; inset:0; opacity:.18; background: repeating-linear-gradient(90deg, transparent 0 9.8%, #fff 9.8% 10%); pointer-events:none; }
-
-    #s-idle::after { content:""; position:absolute; left:5%; right:5%; top:50%; height:2px; background:rgba(255,255,255,.25); box-shadow:0 -150px rgba(255,255,255,.12),0 150px rgba(255,255,255,.12); pointer-events:none; }
-
-    .football-home { gap:16px; max-width:760px; }
-
-    .brand-mark { color:#fff; }
-
-    .football-deco { position:absolute; right:7vw; top:12vh; font-size:clamp(3rem,8vw,7rem); transform:rotate(-18deg); filter:drop-shadow(0 12px 18px rgba(0,0,0,.45)); opacity:.9; z-index:1; }
-
-    .stadium-lights { display:flex; gap:12px; position:absolute; top:34px; left:50%; transform:translateX(-50%); z-index:2; }
-
-    .stadium-lights span { width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 0 18px rgba(255,255,255,.8); animation:stadiumPulse 2.2s infinite alternate; }
-
-    .stadium-lights span:nth-child(2){animation-delay:.2s}.stadium-lights span:nth-child(3){animation-delay:.4s}.stadium-lights span:nth-child(4){animation-delay:.6s}.stadium-lights span:nth-child(5){animation-delay:.8s}
-
-    @keyframes stadiumPulse { from{opacity:.45;transform:scale(.85)} to{opacity:1;transform:scale(1.12)} }
-
-    .yard-line { width:min(420px,70vw); height:24px; border-top:3px solid rgba(255,255,255,.75); border-bottom:3px solid rgba(255,255,255,.75); display:flex; align-items:center; justify-content:center; color:#fff; letter-spacing:.6em; font-size:.75rem; }
-
-    .team-picker { width:min(560px,88vw); padding:16px 18px; border:1px solid rgba(255,255,255,.22); border-radius:18px; background:rgba(4,15,9,.78); box-shadow:0 18px 50px rgba(0,0,0,.35); backdrop-filter:blur(8px); }
-
-    .team-picker label { display:block; color:#d9ffe5; font-size:.78rem; font-weight:900; letter-spacing:.18em; margin-bottom:8px; }
-
-    #teamSelect { width:100%; border:2px solid #fff; border-radius:12px; padding:14px 16px; background:#fff; color:#111; font:inherit; font-weight:800; font-size:clamp(1rem,2vw,1.2rem); cursor:pointer; }
-
-    #teamHint { margin:8px 0 0; color:#a9c5b2; font-size:.82rem; }
-
-    #start:disabled { opacity:.38; cursor:not-allowed; transform:none; animation:none; box-shadow:none; }
-
-    .start-hint { color:#b8cfc0; }
-
-    @media (max-width:700px) { .football-deco { right:3vw; top:10vh; opacity:.45; } .stadium-lights { top:24px; } .brand-mark { left:20px; top:64px; font-size:.72rem; } }
-
-
-
-    #s-idle { position: relative; }
-
-    .start-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 22px; }
-
-    .brand-mark { position: absolute; top: 32px; left: 40px; font-weight: 900; font-size: 1rem; letter-spacing: .16em; color: #fff; }
-
-    .start-hint { margin: 0; color: #777d86; font-size: .75rem; font-weight: 800; letter-spacing: .2em; }
-
-    /* ====== PREVIEW / KIOSCO VERTICAL ====== */
-    .live-preview-wrap {
-      width: min(68vw, 430px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      flex: 0 0 auto;
-    }
-
-    .preview-label {
-      color: #d9ffe5;
-      font-size: .72rem;
-      font-weight: 900;
-      letter-spacing: .2em;
-      line-height: 1;
-    }
-
-    #start-preview {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      border: 2px solid rgba(255,255,255,.48);
-      border-radius: 16px;
-      background: #000;
-      box-shadow: 0 18px 50px rgba(0,0,0,.48), 0 0 0 1px rgba(0,0,0,.5);
-      flex: 0 0 auto;
-    }
-
-    #start-preview video {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      background: #000;
-    }
-
-    #start-preview::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(to bottom, rgba(0,0,0,.08), transparent 22%, transparent 78%, rgba(0,0,0,.25));
-    }
-
-    .preview-guide {
-      position: absolute;
-      inset: 7% 8%;
-      border: 2px dashed rgba(255,255,255,.62);
-      border-radius: 12px;
-      pointer-events: none;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding-bottom: 10px;
-      z-index: 2;
-    }
-
-    .preview-guide::before,
-    .preview-guide::after {
-      content: '';
-      position: absolute;
-      width: 28px;
-      height: 28px;
-      border-color: var(--accent);
-      border-style: solid;
-    }
-
-    .preview-guide::before {
-      top: -2px;
-      left: -2px;
-      border-width: 4px 0 0 4px;
-    }
-
-    .preview-guide::after {
-      right: -2px;
-      bottom: -2px;
-      border-width: 0 4px 4px 0;
-    }
-
-    .guide-text {
-      padding: 7px 12px;
-      border-radius: 5px;
-      background: rgba(4,15,9,.82);
-      color: #fff;
-      font-size: .64rem;
-      font-weight: 900;
-      letter-spacing: .13em;
-      white-space: nowrap;
-    }
-
-    .preview-status {
-      margin: 0;
-      min-height: 1em;
-      color: #a9c5b2;
-      font-size: .68rem;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .preview-status.ready { color: #b8ffca; }
-    .preview-status.error { color: #ff9b9b; }
-
-    /* ====== COMPOSICIÓN DE KIOSCO ====== */
-    .football-home {
-      width: min(88vw, 760px);
-      max-width: 760px;
-      height: calc(100vh - 92px);
-      min-height: 700px;
-      justify-content: space-evenly;
-      gap: 0;
-      padding: 42px 0 22px;
-    }
-
-    .football-home h1 {
-      font-size: clamp(3rem, 6.2vw, 5.6rem);
-      max-width: 100%;
-      text-wrap: balance;
-      line-height: .94;
-    }
-
-    .football-home p.sub {
-      font-size: clamp(1.15rem, 2.5vw, 1.75rem);
-    }
-
-    .football-home .yard-line {
-      width: min(420px, 60vw);
-      height: 18px;
-    }
-
-    .football-home .team-picker {
-      width: min(78vw, 650px);
-      padding: 17px 20px;
-      border-radius: 18px;
-    }
-
-    .football-home .team-picker label {
-      font-size: .86rem;
-      margin-bottom: 10px;
-    }
-
-    .football-home #teamSelect {
-      padding: 15px 18px;
-      font-size: clamp(1.05rem, 2vw, 1.3rem);
-    }
-
-    .football-home #teamHint {
-      font-size: .84rem;
-      margin-top: 8px;
-    }
-
-    .football-home button.big {
-      width: min(60vw, 500px);
-      min-height: 82px;
-      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
-      padding: .55em 1.4em;
-    }
-
-    .football-home .start-hint {
-      font-size: .7rem;
-      line-height: 1.3;
-      max-width: 600px;
-    }
-
-    @media (orientation: portrait) {
-      .screen { padding: 0 20px; }
-
-      .brand-mark {
-        top: 24px;
-        left: 24px;
-        font-size: .78rem;
-        z-index: 5;
-      }
-
-      .stadium-lights {
-        top: 25px;
-        gap: 10px;
-      }
-
-      .stadium-lights span {
-        width: 18px;
-        height: 18px;
-      }
-
-      .football-deco {
-        right: 4vw;
-        top: 13vh;
-        font-size: 4.5rem;
-        opacity: .28;
-      }
-
-      .football-home {
-        width: min(88vw, 760px);
-        height: 100vh;
-        min-height: 0;
-        padding: 78px 0 54px;
-      }
-
-      .live-preview-wrap {
-        width: min(60vw, 440px);
-      }
-
-      #start-preview {
-        max-width: 100%;
-        max-height: none;
-      }
-
-      .football-home .team-picker {
-        width: min(78vw, 680px);
-      }
-    }
-
-    @media (max-height: 1200px) and (orientation: portrait) {
-      .football-home { padding-top: 70px; padding-bottom: 42px; }
-      .football-home h1 { font-size: clamp(2.5rem, 5.8vw, 4.5rem); }
-      .football-home p.sub { font-size: 1.1rem; }
-      .live-preview-wrap { width: min(54vw, 360px); }
-      #start-preview { max-height: none; }
-      .football-home .team-picker { padding: 13px 16px; }
-      .football-home #teamSelect { padding: 12px 15px; }
-      .football-home button.big { min-height: 70px; }
-    }
-
-    @media (max-height: 900px) and (orientation: portrait) {
-      .football-home { padding-top: 60px; padding-bottom: 30px; }
-      .football-home h1 { font-size: clamp(2.1rem, 5.5vw, 3.5rem); }
-      .football-home p.sub { font-size: 1rem; }
-      .live-preview-wrap { width: min(48vw, 300px); }
-      #start-preview { max-height: none; }
-      .preview-status { display: none; }
-      .football-home .team-picker { padding: 10px 12px; }
-      .football-home #teamSelect { padding: 10px 12px; }
-      .football-home button.big { min-height: 60px; padding: .45em 1.2em; }
-    }
-
-    @media (max-width: 700px) and (orientation: portrait) {
-      .football-home { width: 92vw; }
-      .live-preview-wrap { width: min(62vw, 330px); }
-      .football-home .team-picker { width: 92vw; }
-      .football-home button.big { width: 82vw; }
-    }
-
-    .checkered-line { width: 180px; height: 8px; background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 16px 16px; }
-
-    .race-lights { display: flex; gap: 14px; margin-bottom: 10px; }
-
-    .race-lights span { width: 24px; height: 24px; border-radius: 50%; background: #24272c; border: 2px solid #3b3f46; box-shadow: inset 0 0 8px #000; }
-
-    .race-lights span:nth-child(1) { animation: stadiumDot 2.5s infinite 0s }
-
-    .race-lights span:nth-child(2) { animation: stadiumDot 2.5s infinite .12s }
-
-    .race-lights span:nth-child(3) { animation: stadiumDot 2.5s infinite .24s }
-
-    .race-lights span:nth-child(4) { animation: stadiumDot 2.5s infinite .36s }
-
-    .race-lights span:nth-child(5) { animation: stadiumDot 2.5s infinite .48s }
-
-    @keyframes lightOn { 0%,70%,100% { background:#24272c; box-shadow:inset 0 0 8px #000 } 30%,55% { background:#e10600; box-shadow:0 0 16px rgba(245,130,32,.8), inset 0 0 5px #fff } }
-
-
-
-    .row {
-
-      display: flex;
-
-      gap: 12px;
-
-      flex-wrap: wrap;
-
-      justify-content: center
-
-    }
-
-
-
-    .row[hidden],
-
-    .spin[hidden] {
-
-      display: none
-
-    }
-
-
-
-    #cam {
-
-      position: relative;
-
-      width: min(92vw, calc((100vh - 170px)*.75), 1000px);
-
-      aspect-ratio: 3/4;
-
-      border-radius: 8px;
-
-      overflow: hidden;
-
-      background: #000;
-
-      border: 2px solid #3b3f46;
-
-      box-shadow: 0 20px 60px rgba(0,0,0,.55), 0 0 0 1px #111
-
-    }
-
-
-
-    #cam video {
-
-      width: 100%;
-
-      height: 100%;
-
-      object-fit: cover;
-
-      display: block
-
-    }
-
-
-
-    #count {
-
-      position: absolute;
-
-      inset: 0;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      font-size: clamp(6rem, 30vw, 20rem);
-
-      font-weight: 700;
-
-      color: #fff;
-
-      text-shadow: 0 6px 30px rgba(0, 0, 0, .6)
-
-    }
-
-
-
-    #flash {
-
-      position: absolute;
-
-      inset: 0;
-
-      background: #fff;
-
-      opacity: 0;
-
-      pointer-events: none;
-
-      transition: opacity .35s
-
-    }
-
-
-
-    #flash.go {
-
-      opacity: 1;
-
-      transition: none
-
-    }
-
-
-
-    #s-ai { background: radial-gradient(circle at center, rgba(245,130,32,.12), transparent 45%), var(--bg) }
-
-
-
-    #aipic {
-
-      max-height: 42vh;
-
-      max-width: 70vw;
-
-      border-radius: 16px;
-
-      filter: blur(6px) brightness(.85)
-
-    }
-
-
-
-    .spin { width:min(420px,70vw); height:8px; border:0; border-radius:0; background:#292d33; overflow:hidden; position:relative; animation:none }
-
-    #s-ai .spin::after { content:""; position:absolute; inset:0; width:35%; background:var(--accent); box-shadow:0 0 18px rgba(245,130,32,.7); animation:footballProgress 1.2s ease-in-out infinite }
-
-    @keyframes footballProgress { 0%{transform:translateX(-120%)} 100%{transform:translateX(320%)} }
-
-
-
-    .hint {
-
-      font-size: .85rem;
-
-      color: var(--muted);
-
-      margin: 0
-
-    }
-
-
-
-    #resrow {
-
-      display: flex;
-
-      gap: 28px;
-
-      align-items: center;
-
-      justify-content: center;
-
-      flex-wrap: wrap
-
-    }
-
-
-
-    #result {
-
-      max-height: calc(100vh - 210px);
-
-      max-width: 92vw;
-
-      border-radius: 4px;
-
-      border: 3px solid #fff;
-
-      box-shadow: 0 0 0 1px #333, 0 20px 60px rgba(0,0,0,.65);
-
-      background: #fff;
-
-      animation: drop .6s cubic-bezier(.2, 1.2, .4, 1)
-
-    }
-
-
-
-    @keyframes drop {
-
-      from {
-
-        transform: translateY(-60px) rotate(-4deg);
-
-        opacity: 0
-
-      }
-
-    }
-
-
-
-    #qrbox {
-
-      background: #fff;
-
-      color: #111;
-
-      border-radius: 8px;
-
-      border-top: 5px solid var(--accent);
-
-      padding: 16px;
-
-      width: min(260px, 80vw);
-
-      display: grid;
-
-      gap: 10px
-
-    }
-
-
-
-    #qrbox[hidden] {
-
-      display: none
-
-    }
-
-
-
-    #qrimg img {
-
-      width: 100%;
-
-      height: auto;
-
-      display: block;
-
-      image-rendering: pixelated
-
-    }
-
-
-
-    #qrbox::before { content:"GAME DAY"; display:block; color:#f58220; font-size:.75rem; font-weight:900; letter-spacing:.18em }
-
-
-
-    #qrmsg { margin:0; font-weight:700 }
-
-
-
-    #gear {
-
-      position: fixed;
-
-      right: 12px;
-
-      bottom: 12px;
-
-      z-index: 5;
-
-      display: flex;
-
-      gap: 8px
-
-    }
-
-
-
-    #gear button {
-
-      padding: 10px 14px;
-
-      opacity: .4;
-
-      font-size: 1rem;
-
-      background: #15171b;
-
-      border-color: #292d33
-
-    }
-
-
-
-    #gear button:hover,
-
-    #gear button:focus-visible {
-
-      opacity: 1
-
-    }
-
-
-
-    #home { background: transparent; border-color:#3b3f46; color:#a7abb2 }
-
-
-
-    dialog {
-
-      border: 0;
-
-      border-radius: 20px;
-
-      padding: 0;
-
-      background: var(--card);
-
-      color: var(--ink);
-
-      width: min(600px, 94vw);
-
-      max-height: 90vh;
-
-      overflow: auto
-
-    }
-
-
-
-    dialog::backdrop {
-
-      background: rgba(10, 5, 30, .6)
-
-    }
-
-
-
-    .dlg {
-
-      padding: 22px;
-
-      display: grid;
-
-      gap: 12px
-
-    }
-
-
-
-    .dlg h2,
-
-    .dlg h3 {
-
-      margin: 0
-
-    }
-
-
-
-    .f {
-
-      display: grid;
-
-      grid-template-columns: 1fr 1.2fr;
-
-      gap: 10px;
-
-      align-items: center;
-
-      font-size: .95rem;
-
-      margin-bottom: 8px
-
-    }
-
-
-
-    .f input,
-
-    .f select {
-
-      font: inherit;
-
-      padding: 8px 10px;
-
-      border-radius: 10px;
-
-      border: 1px solid var(--muted);
-
-      background: var(--bg);
-
-      color: var(--ink);
-
-      min-width: 0
-
-    }
-
-
-
-    .f input[type=color] {
-
-      padding: 2px;
-
-      height: 38px
-
-    }
-
-
-
-    .f input[type=checkbox] {
-
-      width: 24px;
-
-      height: 24px
-
-    }
-
-
-
-    .f input[type=range] {
-
-      padding: 0
-
-    }
-
-
-
-    textarea {
-
-      width: 100%;
-
-      height: 70px;
-
-      font: 12px monospace;
-
-      border-radius: 10px;
-
-      padding: 8px;
-
-      background: var(--bg);
-
-      color: var(--ink)
-
-    }
-
-
-
-    .timer {
-
-      font-size: .8rem;
-
-      color: #777d86;
-
-      font-weight: 700;
-
-      letter-spacing: .08em;
-
-      text-transform: uppercase
-
-    }
-
-
-
-    #flist {
-
-      display: flex;
-
-      gap: 8px;
-
-      flex-wrap: wrap;
-
-      align-items: center
-
-    }
-
-
-
-    .fb {
-
-      padding: 6px 10px;
-
-      border-radius: 12px;
-
-      font-size: .9rem;
-
-      background: var(--bg)
-
-    }
-
-
-
-    .fb.sel {
-
-      outline: 3px solid var(--accent)
-
-    }
-
-
-
-    .fb img {
-
-      height: 70px;
-
-      display: block;
-
-      background: repeating-conic-gradient(#ccc 0 25%, #fff 0 50%) 0/12px 12px
-
-    }
-
-
-
-    #fprev {
-
-      max-width: 100%;
-
-      border-radius: 8px;
-
-      border: 1px solid var(--muted)
-
-    }
-
-
-
-    @media print {
-
-      body * {
-
-        visibility: hidden
-
-      }
-
-
-
-      #result {
-
-        visibility: visible;
-
-        position: fixed;
-
-        inset: 0;
-
-        margin: auto;
-
-        max-height: 100vh;
-
-        box-shadow: none
-
-      }
-
-    }
-
-  </style>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Photobooth</title>
+    <style>
+        :root {
+            --bg: #09060d;
+            --ink: #fff8ef;
+            --card: #17111f;
+            --muted: #b7a8bd;
+            --accent: #ff7a00;
+            --accent-dark: #b43f00;
+            --purple: #8f4cff;
+            --green: #86d44b;
+            --line: #33263b;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        @media (prefers-color-scheme:dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #1a1233;
+                --ink: #f1edff;
+                --card: #2a1f4d;
+                --muted: #b3a9e6
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #1a1233;
+            --ink: #f1edff;
+            --card: #2a1f4d;
+            --muted: #b3a9e6
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 50% 8%, rgba(143,76,255,.20), transparent 25%),
+                radial-gradient(circle at 10% 85%, rgba(255,122,0,.14), transparent 28%),
+                linear-gradient(135deg, rgba(255,255,255,.018) 25%, transparent 25%) 0 0 / 30px 30px,
+                var(--bg);
+            color: var(--ink);
+            font-family: "Trebuchet MS", system-ui, sans-serif;
+            overflow: hidden
+        }
+
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            gap: 18px
+        }
+
+        .screen.on {
+            display: flex
+        }
+
+        h1 {
+            font-size: clamp(2.4rem, 8vw, 6rem);
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -.02em
+        }
+
+        p.sub {
+            font-size: clamp(1.1rem, 2.6vw, 1.8rem);
+            margin: 0;
+            color: var(--muted)
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: var(--card);
+            color: var(--ink);
+            box-shadow: 0 5px 0 rgba(0,0,0,.35);
+            transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px
+        }
+
+        button:hover { transform: translateY(-2px); border-color: rgba(255,122,0,.65) }
+        button:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(0,0,0,.35) }
+
+        button.big {
+            background: linear-gradient(180deg, #ff8a1c, #f05b00);
+            color: #fff;
+            border: 0;
+            border-radius: 14px;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            padding: .58em 1.55em;
+            box-shadow: 0 6px 0 var(--accent-dark), 0 15px 45px rgba(255,122,0,.22);
+            animation: pulse 2.4s ease-in-out infinite
+        }
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.05)
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            button.big {
+                animation: none
+            }
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .row[hidden],
+        .spin[hidden] {
+            display: none
+        }
+
+        #cam {
+            position: relative;
+            width: min(92vw, calc((100vh - 170px)*.75), 1000px);
+            aspect-ratio: 3/4;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .3)
+        }
+
+        #cam video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block
+        }
+
+        #count {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(6rem, 30vw, 20rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 6px 30px rgba(0, 0, 0, .6)
+        }
+
+        #flash {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .35s
+        }
+
+        #flash.go {
+            opacity: 1;
+            transition: none
+        }
+
+        #aipic {
+            max-height: 42vh;
+            max-width: 70vw;
+            border-radius: 16px;
+            filter: blur(6px) brightness(.85)
+        }
+
+        .spin {
+            width: 54px;
+            height: 54px;
+            border: 6px solid var(--muted);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: rot 1s linear infinite
+        }
+
+        @keyframes rot {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .hint {
+            font-size: .85rem;
+            color: var(--muted);
+            margin: 0
+        }
+
+        #resrow {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        #result {
+            max-height: calc(100vh - 210px);
+            max-width: 92vw;
+            border-radius: 6px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+            background: #fff;
+            animation: drop .6s cubic-bezier(.2, 1.2, .4, 1)
+        }
+
+        @keyframes drop {
+            from {
+                transform: translateY(-60px) rotate(-4deg);
+                opacity: 0
+            }
+        }
+
+        #qrbox {
+            background: #fff;
+            color: #1b1340;
+            border-radius: 20px;
+            padding: 16px;
+            width: min(260px, 80vw);
+            display: grid;
+            gap: 10px
+        }
+
+        #qrbox[hidden] {
+            display: none
+        }
+
+        #qrimg img {
+            width: 100%;
+            height: auto;
+            display: block;
+            image-rendering: pixelated
+        }
+
+        #qrmsg {
+            margin: 0;
+            font-weight: 600
+        }
+
+        #gear {
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            z-index: 5;
+            display: flex;
+            gap: 8px
+        }
+
+        #gear button {
+            padding: 10px 14px;
+            opacity: .4;
+            font-size: 1rem
+        }
+
+        #gear button:hover,
+        #gear button:focus-visible {
+            opacity: 1
+        }
+
+        dialog {
+            border: 0;
+            border-radius: 20px;
+            padding: 0;
+            background: var(--card);
+            color: var(--ink);
+            width: min(600px, 94vw);
+            max-height: 90vh;
+            overflow: auto
+        }
+
+        dialog::backdrop {
+            background: rgba(10, 5, 30, .6)
+        }
+
+        .dlg {
+            padding: 22px;
+            display: grid;
+            gap: 12px
+        }
+
+        .dlg h2,
+        .dlg h3 {
+            margin: 0
+        }
+
+        /* ===== HALLOWEEN KIOSCO VERTICAL ===== */
+        #s-idle { position: relative; overflow: hidden; }
+        #s-idle::before {
+            content: ""; position:absolute; inset:0; pointer-events:none; opacity:.22;
+            background: radial-gradient(circle at 20% 25%, #8f4cff 0 2px, transparent 3px),
+                        radial-gradient(circle at 80% 65%, #ff7a00 0 2px, transparent 3px);
+            background-size: 120px 120px, 150px 150px;
+        }
+        .halloween-home {
+            position:relative; z-index:2; width:min(90vw,760px); height:100vh;
+            min-height:0; padding:34px 0 28px; justify-content:space-evenly; gap:0;
+        }
+        .brand-mark { position:absolute; top:22px; left:28px; color:#d9c7e8; font-weight:900; font-size:.78rem; letter-spacing:.18em; z-index:5; }
+        .moon { position:absolute; right:7vw; top:5vh; width:clamp(60px,9vw,105px); aspect-ratio:1; border-radius:50%; background:#f8edc8; box-shadow:0 0 45px rgba(248,237,200,.25); opacity:.9; }
+        .moon::after { content:""; position:absolute; width:100%; height:100%; border-radius:50%; background:#09060d; left:-18%; top:-10%; }
+        .bats { position:absolute; top:9vh; left:8vw; font-size:clamp(1.8rem,4vw,3.4rem); letter-spacing:.35em; opacity:.75; transform:rotate(-8deg); }
+        .pumpkin { position:absolute; left:6vw; bottom:9vh; font-size:clamp(2.8rem,7vw,6rem); filter:drop-shadow(0 12px 20px rgba(0,0,0,.55)); opacity:.75; transform:rotate(-8deg); }
+        .web { position:absolute; right:-20px; bottom:-20px; width:180px; height:180px; opacity:.24; background:repeating-radial-gradient(circle at 100% 100%, transparent 0 16px, #fff 17px 18px); border-radius:100% 0 0 0; }
+        .halloween-kicker { color:#bfa9cc; font-size:.72rem; font-weight:900; letter-spacing:.24em; text-transform:uppercase; }
+        .halloween-home h1 { font-size:clamp(3rem,7vw,5.8rem); line-height:.9; text-transform:uppercase; text-shadow:0 8px 35px rgba(0,0,0,.55); }
+        .halloween-home h1 span { color:#ff7a00; }
+        .halloween-home p.sub { color:#c9bdcf; font-size:clamp(1rem,2.4vw,1.5rem); }
+        .live-preview-wrap { width:min(61vw,390px); display:flex; flex-direction:column; align-items:center; gap:7px; flex:0 0 auto; }
+        .preview-label { color:#d9c7e8; font-size:.68rem; font-weight:900; letter-spacing:.2em; }
+        #start-preview { position:relative; width:100%; overflow:hidden; border:2px solid rgba(255,122,0,.72); border-radius:16px; background:#000; box-shadow:0 0 0 1px #24172b, 0 18px 50px rgba(0,0,0,.5); aspect-ratio:2/3; }
+        #start-preview video { width:100%; height:100%; display:block; object-fit:cover; background:#000; }
+        #start-preview::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(to bottom,rgba(0,0,0,.1),transparent 25%,transparent 75%,rgba(0,0,0,.35)); }
+        .preview-guide { position:absolute; inset:7% 8%; border:2px dashed rgba(255,255,255,.55); border-radius:12px; pointer-events:none; display:flex; align-items:flex-end; justify-content:center; padding-bottom:10px; z-index:2; }
+        .preview-guide::before,.preview-guide::after { content:""; position:absolute; width:26px; height:26px; border-color:#ff7a00; border-style:solid; }
+        .preview-guide::before { top:-2px; left:-2px; border-width:4px 0 0 4px; }
+        .preview-guide::after { right:-2px; bottom:-2px; border-width:0 4px 4px 0; }
+        .guide-text { padding:6px 11px; border-radius:5px; background:rgba(9,6,13,.82); color:#fff; font-size:.61rem; font-weight:900; letter-spacing:.12em; }
+        .preview-status { margin:0; min-height:1em; color:#b7a8bd; font-size:.66rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+        .preview-status.ready { color:#bde58f; } .preview-status.error { color:#ff9a9a; }
+        .costume-picker { width:min(78vw,650px); padding:14px 18px; border:1px solid rgba(143,76,255,.55); border-radius:16px; background:rgba(16,10,23,.82); box-shadow:0 16px 45px rgba(0,0,0,.35); backdrop-filter:blur(8px); }
+        .costume-picker label { display:block; color:#eadcf1; font-size:.76rem; font-weight:900; letter-spacing:.18em; margin-bottom:8px; }
+        #costumeSelect { width:100%; border:2px solid #ff7a00; border-radius:10px; padding:13px 15px; background:#fff8ef; color:#17111f; font:inherit; font-weight:900; font-size:clamp(1rem,2vw,1.2rem); cursor:pointer; }
+        #costumeHint { margin:7px 0 0; color:#b7a8bd; font-size:.78rem; }
+        #start:disabled { opacity:.38; cursor:not-allowed; transform:none; animation:none; box-shadow:none; }
+        .start-hint { color:#a996b0; font-size:.68rem; font-weight:800; letter-spacing:.12em; }
+        #gear button { opacity:.4; background:#17111f; border-color:#33263b; }
+        #gear button:hover,#gear button:focus-visible { opacity:1; }
+        #home { background:transparent; color:#b7a8bd; }
+        @media (orientation:portrait) {
+            .halloween-home { width:min(90vw,760px); padding:72px 0 42px; }
+            .live-preview-wrap { width:min(58vw,390px); }
+            .costume-picker { width:min(78vw,650px); }
+            .moon { right:4vw; top:7vh; } .bats { left:4vw; top:11vh; }
+        }
+        @media (max-height:1200px) and (orientation:portrait) {
+            .halloween-home { padding-top:66px; padding-bottom:34px; }
+            .halloween-home h1 { font-size:clamp(2.4rem,5.8vw,4.6rem); }
+            .live-preview-wrap { width:min(52vw,330px); }
+            .costume-picker { padding:11px 14px; }
+            #costumeSelect { padding:11px 13px; }
+            .halloween-home button.big { min-height:66px; }
+        }
+        @media (max-height:900px) and (orientation:portrait) {
+            .halloween-home { padding-top:58px; padding-bottom:24px; }
+            .halloween-home h1 { font-size:clamp(2rem,5.2vw,3.4rem); }
+            .halloween-home p.sub { font-size:.92rem; }
+            .live-preview-wrap { width:min(45vw,285px); }
+            .preview-status { display:none; }
+            .costume-picker { padding:9px 12px; }
+            #costumeSelect { padding:9px 11px; }
+            .halloween-home button.big { min-height:58px; padding:.45em 1.15em; }
+        }
+
+        .f {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 10px;
+            align-items: center;
+            font-size: .95rem;
+            margin-bottom: 8px
+        }
+
+        .f input,
+        .f select {
+            font: inherit;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--muted);
+            background: var(--bg);
+            color: var(--ink);
+            min-width: 0
+        }
+
+        .f input[type=color] {
+            padding: 2px;
+            height: 38px
+        }
+
+        .f input[type=checkbox] {
+            width: 24px;
+            height: 24px
+        }
+
+        .f input[type=range] {
+            padding: 0
+        }
+
+        textarea {
+            width: 100%;
+            height: 70px;
+            font: 12px monospace;
+            border-radius: 10px;
+            padding: 8px;
+            background: var(--bg);
+            color: var(--ink)
+        }
+
+        .timer {
+            font-size: 1rem;
+            color: var(--muted)
+        }
+
+        #flist {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .fb {
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-size: .9rem;
+            background: var(--bg)
+        }
+
+        .fb.sel {
+            outline: 3px solid var(--accent)
+        }
+
+        .fb img {
+            height: 70px;
+            display: block;
+            background: repeating-conic-gradient(#ccc 0 25%, #fff 0 50%) 0/12px 12px
+        }
+
+        #fprev {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--muted)
+        }
+
+        @media print {
+            body * {
+                visibility: hidden
+            }
+
+            #result {
+                visibility: visible;
+                position: fixed;
+                inset: 0;
+                margin: auto;
+                max-height: 100vh;
+                box-shadow: none
+            }
+        }
+    </style>
 </head>
-
-
 
 <body>
 
+    <section id="s-idle" class="screen on">
+        <div class="moon" aria-hidden="true"></div>
+        <div class="bats" aria-hidden="true">⌁ 🦇 ⌁</div>
+        <div class="pumpkin" aria-hidden="true">🎃</div>
+        <div class="web" aria-hidden="true"></div>
+        <div class="brand-mark">HALLOWEEN PHOTOBOOTH</div>
+        <div class="start-content halloween-home">
+            <div class="halloween-kicker">Noche de Halloween · Edición especial</div>
+            <h1 id="t-title">DISFRÁZATE <span>DE NOCHE</span></h1>
+            <p class="sub" id="t-sub">Elige tu disfraz y deja que la magia haga el resto</p>
+            <div class="live-preview-wrap">
+                <div class="preview-label">VISTA PREVIA</div>
+                <div id="start-preview" aria-label="Vista previa de la cámara">
+                    <video id="pv" autoplay playsinline muted></video>
+                    <div class="preview-guide"><div class="guide-text">ACOMÓDATE AQUÍ</div></div>
+                </div>
+                <p class="preview-status" id="preview-status">Activando cámara…</p>
+            </div>
+            <div class="costume-picker">
+                <label for="costumeSelect">¿DE QUÉ QUIEREN DISFRAZARSE?</label>
+                <select id="costumeSelect" aria-label="Selecciona el disfraz">
+                    <option value="">Selecciona un disfraz…</option>
+                    <option value="Vampiros">🧛 Vampiros</option>
+                    <option value="Brujas">🧙 Brujas</option>
+                    <option value="Esqueletos">💀 Esqueletos</option>
+                    <option value="Zombis">🧟 Zombis</option>
+                    <option value="Hombres lobo">🐺 Hombres lobo</option>
+                    <option value="Fantasmas">👻 Fantasmas</option>
+                    <option value="Momias">🧟 Momias</option>
+                    <option value="Demonios">😈 Demonios</option>
+                    <option value="Payasos siniestros">🤡 Payasos siniestros</option>
+                    <option value="Cazadores de monstruos">🗡️ Cazadores de monstruos</option>
+                    <option value="Calabazas de Halloween">🎃 Calabazas de Halloween</option>
+                    <option value="Drácula clásico">🧛 Drácula clásico</option>
+                </select>
+                <p id="costumeHint">Todos los que aparezcan en la foto usarán el mismo tema de disfraz.</p>
+            </div>
+            <button class="big" id="start" disabled>TOMAR FOTO</button>
+            <p class="start-hint">TODOS LOS QUE APAREZCAN EN LA FOTO SE TRANSFORMARÁN EN EL DISFRAZ ELEGIDO</p>
+        </div>
+    </section>
 
+    <section id="s-cap" class="screen">
+        <div id="cam"><video id="v" autoplay playsinline muted></video>
+            <div id="count"></div>
+            <div id="flash"></div>
+        </div>
+    </section>
 
-  <section id="s-idle" class="screen on">
+    <section id="s-ai" class="screen">
+        <img id="aipic" alt="">
+        <div id="aispin" class="spin" aria-hidden="true"></div>
+        <p class="sub" id="aimsg" aria-live="polite"></p>
+        <p class="hint">Puede tardar hasta un minuto</p>
+        <div class="row" id="aiact" hidden>
+            <button id="airetry" class="big"
+                style="animation:none;font-size:1.15rem;padding:14px 28px">Reintentar</button>
+            <button id="aiorig">Usar mi foto original</button>
+        </div>
+    </section>
 
-    <div class="stadium-lights" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+    <section id="s-res" class="screen">
+        <div id="resrow">
+            <img id="result" alt="Tu foto lista">
+            <div id="qrbox" hidden>
+                <div id="qrimg"></div>
+                <p id="qrmsg"></p>
+                <button id="qrretry" hidden>Reintentar</button>
+            </div>
+        </div>
+        <div class="row">
+            <button id="dl">Descargar</button>
+            <button id="pr">Imprimir</button>
+        </div>
+        <div class="timer" id="timer"></div>
+    </section>
 
-    <div class="brand-mark">CARTOON FOOTBALL PHOTOBOOTH</div>
-
-    <div class="football-deco" aria-hidden="true">🏈</div>
-
-    <div class="start-content football-home">
-
-      <div class="yard-line"><span>• • • • •</span></div>
-
-      <h1 id="t-title"></h1>
-
-      <p class="sub" id="t-sub"></p>
-
-           <div class="live-preview-wrap">
-               <div class="preview-label">VISTA PREVIA</div>
-               <div id="start-preview" aria-label="Vista previa de la cámara">
-                   <video id="pv" autoplay playsinline muted></video>
-                   <div class="preview-guide">
-                       <div class="guide-text">ACOMÓDATE AQUÍ</div>
-                   </div>
-               </div>
-               <p class="preview-status" id="preview-status">ACTIVANDO CÁMARA…</p>
-           </div>
-
-           <div class="team-picker">
-
-        <label for="teamSelect">ELIGE TU EQUIPO</label>
-
-        <select id="teamSelect" aria-label="Selecciona tu equipo de fútbol americano">
-
-          <option value="">Selecciona un equipo…</option>
-
-          <option value="Kansas City Chiefs">Kansas City Chiefs</option>
-
-          <option value="Dallas Cowboys">Dallas Cowboys</option>
-
-          <option value="San Francisco 49ers">San Francisco 49ers</option>
-
-          <option value="Green Bay Packers">Green Bay Packers</option>
-
-          <option value="New England Patriots">New England Patriots</option>
-
-          <option value="Philadelphia Eagles">Philadelphia Eagles</option>
-
-          <option value="Buffalo Bills">Buffalo Bills</option>
-
-          <option value="Baltimore Ravens">Baltimore Ravens</option>
-
-          <option value="Pittsburgh Steelers">Pittsburgh Steelers</option>
-
-          <option value="Miami Dolphins">Miami Dolphins</option>
-
-          <option value="Las Vegas Raiders">Las Vegas Raiders</option>
-
-          <option value="Chicago Bears">Chicago Bears</option>
-
-        </select>
-
-        <p id="teamHint">Primero elige el jersey. Después, ¡sonríe!</p>
-
-      </div>
-
-
-
-      <button class="big" id="start" disabled>TOMAR FOTO</button>
-
-      <p class="start-hint">TODOS LOS QUE APAREZCAN EN LA FOTO SE CONVIERTEN EN JUGADORES</p>
-
+    <div id="gear">
+        <button id="fs" aria-label="Pantalla completa">⛶ Pantalla completa</button>
+        <button id="cfg" aria-label="Ajustes">⚙ Ajustes</button>
     </div>
 
-  </section>
-
-
-
-  <section id="s-cap" class="screen">
-
-    <div id="cam"><video id="v" autoplay playsinline muted></video>
-
-      <div id="count"></div>
-
-      <div id="flash"></div>
-
-    </div>
-
-  </section>
-
-
-
-  <section id="s-ai" class="screen">
-
-    <img id="aipic" alt="">
-
-    <div id="aispin" class="spin" aria-hidden="true"></div>
-
-    <p class="sub" id="aimsg" aria-live="polite"></p>
-
-    <p class="hint">Puede tardar hasta un minuto</p>
-
-    <div class="row" id="aiact" hidden>
-
-      <button id="airetry" class="big"
-
-        style="animation:none;font-size:1.15rem;padding:14px 28px">Reintentar</button>
-
-      <button id="aiorig">Usar mi foto original</button>
-
-    </div>
-
-  </section>
-
-
-
-  <section id="s-res" class="screen">
-
-    <div id="resrow">
-
-      <img id="result" alt="Tu foto lista">
-
-      <div id="qrbox" hidden>
-
-        <div id="qrimg"></div>
-
-        <p id="qrmsg"></p>
-
-        <button id="qrretry" hidden>Reintentar</button>
-
-      </div>
-
-    </div>
-
-    <div class="row">
-
-      <button id="dl">Descargar</button>
-
-      <button id="pr">Imprimir</button>
-
-      <button id="home">Volver al inicio</button>
-
-      
-
-    </div>
-
-    <div class="timer" id="timer"></div>
-
-  </section>
-
-
-
-  <div id="gear">
-
-    <button id="fs" aria-label="Pantalla completa">⛶ Pantalla completa</button>
-
-    <button id="cfg" aria-label="Ajustes">⚙ Ajustes</button>
-
-  </div>
-
-
-
-  <dialog id="dlg">
-
-    <div class="dlg">
-
-      <h2>Ajustes del photobooth</h2>
-
-      <div id="fields"></div>
-
-
-
-      <h3>Marcos PNG</h3>
-
-      <p class="hint">Sube PNG con una ventana transparente (cualquier forma y tamaño). La cámara y la IA se
-
-        adaptan a la proporción de esa ventana. Se guardan solo en este navegador.</p>
-
-      <input type="file" id="fup" accept="image/png" multiple hidden>
-
-      <div class="row" style="justify-content:flex-start"><button id="fupb">+ Subir marcos PNG</button></div>
-
-      <div id="flist"></div>
-
-      <div id="fedit" hidden>
-
-        <div id="ffields"></div>
-
-        <canvas id="fprev"></canvas>
-
-        <div class="row"><button id="fdel">Borrar este marco</button></div>
-
-      </div>
-
-
-
-      <details>
-
-        <summary>Guardar o cargar configuración</summary>
-
-        <textarea id="json" aria-label="Configuración en JSON"></textarea>
-
-        <p class="hint">No incluye los marcos PNG: esos se suben en cada equipo.</p>
-
-        <div class="row"><button id="imp">Cargar</button></div>
-
-      </details>
-
-      <div class="row"><button id="reset">Restaurar valores</button><button id="close"
-
-          style="background:var(--accent);color:#fff">Listo</button></div>
-
-    </div>
-
-  </dialog>
-
-
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-
-  <script>
-
-    /* ====== CLOUDINARY ====== */
-
-    const CLOUD = { name: "cgt2nq8m", preset: "creaxid" };
-
-
-
-    /* ====== TEMÁTICA IA: CARTOON FOOTBALL / TRADING CARD ====== */
-
-    const THEME = {
-
-      loading: [
-
-        "Preparando tu tarjeta…",
-
-        "Poniendo el jersey…",
-
-        "Dibujando tu personaje…",
-
-        "¡Lista la tarjeta de partido!"
-
-      ],
-
-      style: "caricatura deportiva 3D estilizada, cute y expresiva, estilo personaje coleccionable de videojuego, chibi moderado (no super-deformed), cabeza solo ligeramente más grande que el cuerpo, ojos expresivos pero proporcionados, rostros redondeados, facciones simplificadas pero muy reconocibles, cuerpos con proporciones naturales ligeramente estilizadas, manos y pies normales ligeramente simplificados, contornos limpios, formas suaves, colores vivos, sombreado suave de ilustración, volumen 3D cartoon, acabado premium de figura coleccionable; NO fotográfico, NO fotorrealista, NO filtro sobre fotografía, NO piel realista, NO poros, NO textura fotográfica, NO aspecto de persona real, NO anime, NO manga, NO chibi extremo"
-
-    };
-
-    const AI_ENDPOINT = "/api/ai";
-
-    const TEAM_COLORS = {
-
-      "Kansas City Chiefs":"rojo, dorado y blanco", "Dallas Cowboys":"azul marino, plateado y blanco",
-
-      "San Francisco 49ers":"rojo escarlata y dorado", "Green Bay Packers":"verde oscuro y dorado",
-
-      "New England Patriots":"azul marino, rojo y plateado", "Philadelphia Eagles":"verde medianoche, gris y negro",
-
-      "Buffalo Bills":"azul, rojo y blanco", "Baltimore Ravens":"morado, negro y dorado",
-
-      "Pittsburgh Steelers":"negro y dorado", "Miami Dolphins":"aguamarina, naranja y blanco",
-
-      "Las Vegas Raiders":"negro y plateado", "Chicago Bears":"azul oscuro y naranja"
-
-    };
-
-    let selectedTeam = localStorage.getItem("pb-football-team") || "";
-
-    const buildPrompt = () => {
-
-      const team = selectedTeam || "un equipo famoso de fútbol americano";
-
-      const colors = TEAM_COLORS[team] || "los colores oficiales del equipo";
-
-
-
-      return (
-
-        "TRANSFORMA COMPLETAMENTE esta fotografía en una ilustración de personajes de fútbol americano. " +
-
-        "NO hagas simplemente un filtro cartoon sobre la fotografía. La imagen final debe parecer una ilustración nueva, dibujada y diseñada como una TARJETA COLECCIONABLE DE FÚTBOL AMERICANO. " +
-
-
-
-        "ESTILO DE PERSONAJE: caricatura deportiva cute y expresiva, con estética de personaje coleccionable de videojuego y CHIBI MODERADO. " +
-
-        "Las cabezas pueden ser ligeramente más grandes de lo normal y los ojos más expresivos, pero NO hagas cuerpos diminutos, cabezas gigantes ni proporciones super-deformed. " +
-
-        "Mantén una anatomía estilizada pero reconocible y relativamente natural. " +
-
-        "Los personajes deben verse adorables, simpáticos y pulidos, con rostros redondeados, facciones simplificadas y contornos limpios. " +
-
-        "Conserva la identidad de cada persona: forma de ojos, cejas, nariz, boca, peinado, barba y rasgos distintivos deben seguir siendo reconocibles, pero reinterpretados como caricatura. " +
-
-
-
-        "NO hagas una fotografía con filtro. " +
-
-        "NO hagas pintura realista. " +
-
-        "NO uses piel fotográfica, poros, textura de piel real, iluminación fotográfica ni apariencia de persona real. " +
-
-        "Toda la imagen debe pertenecer al mismo universo cartoon: personas, ropa, estadio, luces, fondo y efectos. " +
-
-
-
-        "PERSONAS: conserva a TODAS las personas visibles de la fotografía. " +
-
-        "No elimines, dupliques, fusiones, sustituyas ni agregues personas. " +
-
-        "Cada persona original debe convertirse en su propio personaje cartoon. " +
-
-        "Conserva sus características físicas reconocibles y sus proporciones generales, sin cambiar artificialmente su identidad, color de piel, cabello o rasgos distintivos. " +
-
-
-
-        "EQUIPO: viste a TODAS las personas con un jersey de fútbol americano del equipo " + team + ". " +
-
-        "Usa los colores " + colors + " y una estética visual reconocible del uniforme de ese equipo. " +
-
-        "TODAS las personas de esta fotografía deben llevar EL MISMO equipo seleccionado. No mezcles equipos. " +
-
-
-
-        "TARJETA COLECCIONABLE: la composición completa debe verse como una tarjeta deportiva premium vertical, inspirada en las tarjetas coleccionables modernas de fútbol americano. " +
-
-        "Integra dentro de la propia ilustración un MARCO GRÁFICO DE TARJETA: borde exterior limpio y grueso, doble línea interior, esquinas decorativas, detalles geométricos deportivos, pequeñas formas inspiradas en fútbol americano y acentos con los colores del equipo. " +
-
-        "El marco debe formar parte de la imagen generada por IA, no parecer un PNG colocado posteriormente. " +
-
-        "El borde debe rodear toda la ilustración y quedar claramente visible. " +
-
-        "Deja un pequeño margen interior para que ninguna persona toque o corte el borde. " +
-
-        "La composición debe sentirse como una tarjeta física coleccionable de alta calidad, no como una fotografía normal. " +
-
-        "Puedes incluir un pequeño espacio gráfico superior e inferior para identidad visual del equipo, pero NO inventes nombres de personas, estadísticas ni texto largo. " +
-
-        "Si aparece texto, que sea mínimo y visualmente limpio. " +
-
-
-
-        "ESCENARIO: estadio de fútbol americano también convertido a cartoon, con césped, gradas, luces de partido, marcadores y elementos deportivos estilizados. " +
-
-        "Las personas deben ser las protagonistas y ocupar la mayor parte de la tarjeta. " +
-
-        "No agregues jugadores, mascotas, celebridades ni personajes adicionales. " +
-
-        "No agregues elementos de Fórmula 1. " +
-
-
-
-        "Estilo visual obligatorio: " + THEME.style + ". " +
-
-        "El resultado final debe ser claramente una caricatura deportiva cute con apariencia de tarjeta coleccionable, no una fotografía estilizada."
-
-      );
-
-    };
-
-
-
-    const DEF = { title: "¡DÍA DE PARTIDO!", sub: "Elige tu equipo y conviértete en caricatura", footer: "FOOTBALL CARTOON · 2026", stickers: "🏈🏆⭐", ai: true, count: 3, filter: "none", frame: "#ffffff", ink: "#102018", accent: "#f58220", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
-
-    const THEME_VERSION = "football-cartoon-v4-card-moderate-chibi";
-
-    const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
-
-    const FIELDS = [
-
-      ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
-
-      ["footer", "Texto al pie (sin marco PNG)", "text"], ["stickers", "Stickers (sin marco PNG)", "text"],
-
-      ["count", "Cuenta regresiva (seg)", "select", [2, 3, 5]], ["filter", "Filtro", "select", FILTERS],
-
-      ["frame", "Color de fondo del marco", "color"], ["ink", "Color del texto", "color"], ["accent", "Color de acento", "color"],
-
-      ["mirror", "Efecto espejo", "checkbox"], ["reset", "Reinicio automático (seg, 0 = nunca)", "number"],
-
-      ["qr", "Mostrar QR de descarga", "checkbox"], ["qrText", "Texto bajo el QR", "text"]];
-
-    const FF = [["x", "Ventana: X %", 0, 100, .5], ["y", "Ventana: Y %", 0, 100, .5], ["w", "Ventana: ancho %", 1, 100, .5], ["h", "Ventana: alto %", 1, 100, .5]];
-
-    const $ = id => document.getElementById(id);
-
-    let cfg = { ...DEF }, frames = [], imgCache = {}, lastCanvas = null;
-
-    try {
-
-      if (localStorage.getItem("pb-theme-version") !== THEME_VERSION) {
-
-        cfg = { ...DEF };
-
-        localStorage.setItem("pb-theme-version", THEME_VERSION);
-
-        localStorage.setItem("pb-cfg", JSON.stringify(cfg));
-
-      } else {
-
-        const s = localStorage.getItem("pb-cfg");
-
-        if (s) cfg = { ...DEF, ...JSON.parse(s) };
-
-      }
-
-    } catch (e) { cfg = { ...DEF }; }
-
-    const save = () => { try { localStorage.setItem("pb-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
-
-
-
-    /* ---------- IndexedDB (marcos) ---------- */
-
-    const idb = () => new Promise((res, rej) => { const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) });
-
-    const tx = async (mode, fn) => { const d = await idb(); return new Promise((res, rej) => { const t = d.transaction("frames", mode), q = fn(t.objectStore("frames")); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error) }) };
-
-    const dbAll = () => tx("readonly", s => s.getAll());
-
-    const dbPut = f => tx("readwrite", s => s.put(f));
-
-    const dbDel = id => tx("readwrite", s => s.delete(id));
-
-    const loadImg = f => imgCache[f.id] || (imgCache[f.id] = new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f.blob) }));
-
-    const curFrame = () => frames.find(f => f.id === cfg.frameId);
-
-
-
-    /* ---------- Geometría ---------- */
-
-    const win = (f, W, H) => [f.x / 100 * W, f.y / 100 * H, f.w / 100 * W, f.h / 100 * H];
-
-    function cover(x, s, dx, dy, dw, dh) {
-
-      const sw0 = s.naturalWidth || s.width, sh0 = s.naturalHeight || s.height, r = dw / dh, sr = sw0 / sh0; let sw = sw0, sh = sh0;
-
-      if (sr > r) sw = sh * r; else sh = sw / r;
-
-      x.drawImage(s, (sw0 - sw) / 2, (sh0 - sh) / 2, sw, sh, dx, dy, dw, dh);
-
-    }
-
-    function detect(img) {
-
-      const s = Math.min(1, 400 / Math.max(img.width, img.height)), w = Math.round(img.width * s), h = Math.round(img.height * s);
-
-      const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.drawImage(img, 0, 0, w, h);
-
-      const d = x.getImageData(0, 0, w, h).data; let x0 = w, y0 = h, x1 = -1, y1 = -1;
-
-      for (let j = 0; j < h; j++)for (let i = 0; i < w; i++)if (d[(j * w + i) * 4 + 3] < 20) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (j < y0) y0 = j; if (j > y1) y1 = j }
-
-      if (x1 < 0 || (x1 - x0) * (y1 - y0) < w * h * .02) return { x: 5, y: 5, w: 90, h: 90 };
-
-      const r = v => Math.round(v * 10) / 10;
-
-      return { x: r(x0 / w * 100), y: r(y0 / h * 100), w: r((x1 - x0 + 1) / w * 100), h: r((y1 - y0 + 1) / h * 100) };
-
-    }
-
-
-
-    /* ---------- Ajustes ---------- */
-
-    function apply() {
-
-      $("t-title").textContent = cfg.title; $("t-sub").textContent = cfg.sub;
-
-      document.documentElement.style.setProperty("--accent", cfg.accent);
-
-      $("v").style.transform = cfg.mirror ? "scaleX(-1)" : "none";
-
-      $("v").style.filter = cfg.filter;
-
-      const pv = $("pv");
-      if (pv) {
-        pv.style.transform = cfg.mirror ? "scaleX(-1)" : "none";
-        pv.style.filter = cfg.filter;
-      }
-
-      updatePreview();
-      save();
-
-    }
-
-    function buildFields() {
-
-      const box = $("fields"); box.innerHTML = "";
-
-      FIELDS.forEach(([k, label, type, opts]) => {
-
-        const w = document.createElement("label"); w.className = "f"; w.append(label);
-
-        let el;
-
-        if (type === "select") { el = document.createElement("select"); opts.forEach(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; el.add(new Option(t, v)) }); el.value = cfg[k] }
-
-        else { el = document.createElement("input"); el.type = type; if (type === "checkbox") el.checked = cfg[k]; else el.value = cfg[k] }
-
-        el.onchange = el.oninput = () => {
-
-          let v = type === "checkbox" ? el.checked : el.value;
-
-          if (["count", "reset"].includes(k)) v = Number(v) || 0;
-
-          cfg[k] = v; apply();
-
+    <dialog id="dlg">
+        <div class="dlg">
+            <h2>Ajustes del photobooth</h2>
+            <div id="fields"></div>
+
+            <h3>Marcos PNG</h3>
+            <p class="hint">Sube PNG con una ventana transparente (cualquier forma y tamaño). La cámara y la IA se
+                adaptan a la proporción de esa ventana. Se guardan solo en este navegador.</p>
+            <input type="file" id="fup" accept="image/png" multiple hidden>
+            <div class="row" style="justify-content:flex-start"><button id="fupb">+ Subir marcos PNG</button></div>
+            <div id="flist"></div>
+            <div id="fedit" hidden>
+                <div id="ffields"></div>
+                <canvas id="fprev"></canvas>
+                <div class="row"><button id="fdel">Borrar este marco</button></div>
+            </div>
+
+            <details>
+                <summary>Guardar o cargar configuración</summary>
+                <textarea id="json" aria-label="Configuración en JSON"></textarea>
+                <p class="hint">No incluye los marcos PNG: esos se suben en cada equipo.</p>
+                <div class="row"><button id="imp">Cargar</button></div>
+            </details>
+            <div class="row"><button id="reset">Restaurar valores</button><button id="close"
+                    style="background:var(--accent);color:#fff">Listo</button></div>
+        </div>
+    </dialog>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script>
+        /* ====== CLOUDINARY ====== */
+        const CLOUD = { name: "cgt2nq8m", preset: "creaxid" };
+
+        /* ====== TEMÁTICA IA: HALLOWEEN SEMI-REALISTA ====== */
+        const COSTUMES = ["Vampiros","Brujas","Esqueletos","Zombis","Hombres lobo","Fantasmas","Momias","Demonios","Payasos siniestros","Cazadores de monstruos","Calabazas de Halloween","Drácula clásico"];
+        let selectedCostume = localStorage.getItem("pb-halloween-costume") || "";
+        const THEME = {
+            loading: ["Preparando la noche…", "Eligiendo tu disfraz…", "Añadiendo la atmósfera de Halloween…", "Revelando tu transformación…"],
+            style: "fotografía cinematográfica de Halloween con estilo semi-realista estilizado: un punto intermedio entre fotografía real y arte digital, rostros y personas claramente reconocibles, materiales y ropa detallados, iluminación dramática de noche, sombras suaves, niebla sutil, luces de luna y tonos cálidos de Halloween; NO fotorrealismo extremo, NO aspecto de fotografía documental, NO caricatura, NO cartoon, NO anime, NO chibi, NO ilustración infantil"
+        };
+        const AI_ENDPOINT = "/api/ai";
+        const buildPrompt = () => {
+            const costume = selectedCostume || "un disfraz clásico de Halloween";
+            return (
+                "TRANSFORMA ESTA FOTOGRAFÍA EN UNA FOTO DE HALLOWEEN SEMI-REALISTA ESTILIZADA. " +
+                "La cantidad de personas debe permanecer EXACTAMENTE igual a la fotografía original. No elimines, dupliques, fusiones ni agregues personas. " +
+                "Cada persona visible debe seguir siendo claramente la misma persona: conserva identidad, estructura y forma del rostro, ojos, cejas, nariz, boca, tono de piel, edad aparente, peinado, barba y proporciones corporales. No embellezcas ni cambies sus rasgos. " +
+                "DISFRAZ: todas las personas deben llevar el mismo concepto de disfraz seleccionado: " + costume + ". Adapta el disfraz individualmente al cuerpo y postura de cada persona, con ropa, maquillaje, accesorios y materiales creíbles y bien integrados. " +
+                "La transformación debe sentirse como un disfraz real y elaborado, no como un filtro aplicado encima de la foto. " +
+                "ESCENA: ambiente de Halloween nocturno, elegante y ligeramente misterioso, iluminación cinematográfica, atmósfera de fiesta de Halloween, decoración sutil, niebla ligera y profundidad de campo natural. " +
+                "ESTILO: " + THEME.style + ". " +
+                "Mantén composición, encuadre y posiciones generales de las personas de la fotografía. No añadas personajes secundarios. No añadas texto, nombres, marcas de agua ni logotipos inventados."
+            );
         };
 
-        w.append(el); box.append(w);
+        const DEF = { title: "¡DISFRÁZATE!", sub: "Elige tu disfraz y vive una noche diferente", footer: "Halloween · 2026", stickers: "🎃🦇👻", ai: true, count: 3, filter: "none", frame: "#09060d", ink: "#fff8ef", accent: "#ff7a00", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
+        const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
+        const FIELDS = [
+            ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
+            ["footer", "Texto al pie (sin marco PNG)", "text"], ["stickers", "Stickers (sin marco PNG)", "text"],
+            ["count", "Cuenta regresiva (seg)", "select", [2, 3, 5]], ["filter", "Filtro", "select", FILTERS],
+            ["frame", "Color de fondo del marco", "color"], ["ink", "Color del texto", "color"], ["accent", "Color de acento", "color"],
+            ["mirror", "Efecto espejo", "checkbox"], ["reset", "Reinicio automático (seg, 0 = nunca)", "number"],
+            ["qr", "Mostrar QR de descarga", "checkbox"], ["qrText", "Texto bajo el QR", "text"]];
+        const FF = [["x", "Ventana: X %", 0, 100, .5], ["y", "Ventana: Y %", 0, 100, .5], ["w", "Ventana: ancho %", 1, 100, .5], ["h", "Ventana: alto %", 1, 100, .5]];
+        const $ = id => document.getElementById(id);
+        let cfg = { ...DEF }, frames = [], imgCache = {}, lastCanvas = null;
+        try { const s = localStorage.getItem("pb-cfg"); if (s) cfg = { ...DEF, ...JSON.parse(s) } } catch (e) { }
+        const save = () => { try { localStorage.setItem("pb-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
 
-      });
+        /* ---------- IndexedDB (marcos) ---------- */
+        const idb = () => new Promise((res, rej) => { const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) });
+        const tx = async (mode, fn) => { const d = await idb(); return new Promise((res, rej) => { const t = d.transaction("frames", mode), q = fn(t.objectStore("frames")); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error) }) };
+        const dbAll = () => tx("readonly", s => s.getAll());
+        const dbPut = f => tx("readwrite", s => s.put(f));
+        const dbDel = id => tx("readwrite", s => s.delete(id));
+        const loadImg = f => imgCache[f.id] || (imgCache[f.id] = new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f.blob) }));
+        const curFrame = () => frames.find(f => f.id === cfg.frameId);
 
-    }
-
-
-
-    /* ---------- Gestor de marcos ---------- */
-
-    async function renderFrames() {
-
-      try { frames = await dbAll() } catch (e) { frames = [] }
-
-      const l = $("flist"); l.innerHTML = "";
-
-      const none = document.createElement("button"); none.textContent = "Sin marco"; none.className = "fb" + (!curFrame() ? " sel" : "");
-
-      none.onclick = () => { cfg.frameId = ""; apply(); renderFrames() }; l.append(none);
-
-      frames.forEach(f => {
-
-        const b = document.createElement("button"); b.className = "fb" + (cfg.frameId === f.id ? " sel" : "");
-
-        const im = new Image(); im.src = URL.createObjectURL(f.blob); im.alt = f.name; b.title = f.name; b.append(im);
-
-        b.onclick = () => { cfg.frameId = f.id; apply(); renderFrames() }; l.append(b);
-
-      });
-
-      const cur = curFrame(); $("fedit").hidden = !cur; if (cur) buildFrameEditor(cur);
-
-    }
-
-    function buildFrameEditor(f) {
-
-      const b = $("ffields"); b.innerHTML = "";
-
-      FF.forEach(([k, label, mn, mx, st]) => {
-
-        const w = document.createElement("label"); w.className = "f"; const t = document.createTextNode(label + ": " + f[k]); w.append(t);
-
-        const el = document.createElement("input"); el.type = "range"; el.min = mn; el.max = mx; el.step = st; el.value = f[k];
-
-        el.oninput = () => { f[k] = Number(el.value); t.nodeValue = label + ": " + f[k]; prev(f) };
-
-        el.onchange = () => dbPut(f);
-
-        w.append(el); b.append(w);
-
-      });
-
-      prev(f);
-
-    }
-
-    async function prev(f) {
-
-      const img = await loadImg(f), c = $("fprev"), s = Math.min(1, 360 / img.width);
-
-      c.width = img.width * s; c.height = img.height * s;
-
-      const x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, c.width, c.height);
-
-      x.fillStyle = "#e0527a"; x.fillRect(...win(f, c.width, c.height));
-
-      x.drawImage(img, 0, 0, c.width, c.height);
-
-    }
-
-    $("fupb").onclick = () => $("fup").click();
-
-    $("fup").onchange = async e => {
-
-      for (const file of e.target.files) {
-
-        if (file.type !== "image/png") continue;
-
-        const f = { id: "f" + Date.now() + Math.random().toString(36).slice(2, 6), name: file.name.replace(/.png$/i, ""), blob: file };
-
-        Object.assign(f, detect(await loadImg(f)));
-
-        try { await dbPut(f) } catch (err) { alert("No se pudo guardar el marco en este navegador."); continue }
-
-        cfg.frameId = f.id;
-
-      }
-
-      e.target.value = ""; apply(); renderFrames();
-
-    };
-
-    $("fdel").onclick = async () => {
-
-      const f = curFrame(); if (!f || !confirm("¿Borrar este marco?")) return;
-
-      await dbDel(f.id); delete imgCache[f.id]; cfg.frameId = ""; apply(); renderFrames();
-
-    };
-
-
-
-    /* ---------- Cámara y captura ---------- */
-
-    function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)) }
-
-    const wait = ms => new Promise(r => setTimeout(r, ms));
-
-    let stream = null, busy = false, resetT = null;
-
-
-
-    async function ensureCam() {
-      const video = $("v");
-      const preview = $("pv");
-      const status = $("preview-status");
-
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        $("t-sub").textContent =
-          "Este navegador no permite usar la cámara. Abre el photobooth con HTTPS en Chrome.";
-        if (status) {
-          status.textContent = "Cámara no disponible";
-          status.className = "preview-status error";
+        /* ---------- Geometría ---------- */
+        const win = (f, W, H) => [f.x / 100 * W, f.y / 100 * H, f.w / 100 * W, f.h / 100 * H];
+        function cover(x, s, dx, dy, dw, dh) {
+            const sw0 = s.naturalWidth || s.width, sh0 = s.naturalHeight || s.height, r = dw / dh, sr = sw0 / sh0; let sw = sw0, sh = sh0;
+            if (sr > r) sw = sh * r; else sh = sw / r;
+            x.drawImage(s, (sw0 - sw) / 2, (sh0 - sh) / 2, sw, sh, dx, dy, dw, dh);
         }
-        return false;
-      }
+        function detect(img) {
+            const s = Math.min(1, 400 / Math.max(img.width, img.height)), w = Math.round(img.width * s), h = Math.round(img.height * s);
+            const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.drawImage(img, 0, 0, w, h);
+            const d = x.getImageData(0, 0, w, h).data; let x0 = w, y0 = h, x1 = -1, y1 = -1;
+            for (let j = 0; j < h; j++)for (let i = 0; i < w; i++)if (d[(j * w + i) * 4 + 3] < 20) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (j < y0) y0 = j; if (j > y1) y1 = j }
+            if (x1 < 0 || (x1 - x0) * (y1 - y0) < w * h * .02) return { x: 5, y: 5, w: 90, h: 90 };
+            const r = v => Math.round(v * 10) / 10;
+            return { x: r(x0 / w * 100), y: r(y0 / h * 100), w: r((x1 - x0 + 1) / w * 100), h: r((y1 - y0 + 1) / h * 100) };
+        }
 
-      if (stream && stream.active) {
-        video.srcObject = stream;
-        if (preview) preview.srcObject = stream;
-        try { await video.play(); } catch (e) {}
-        if (preview) { try { await preview.play(); } catch (e) {} }
-        updatePreview();
-        return true;
-      }
+        /* ---------- Ajustes ---------- */
+        function apply() {
+            $("t-title").textContent = cfg.title; $("t-sub").textContent = cfg.sub;
+            document.documentElement.style.setProperty("--accent", cfg.accent);
+            $("v").style.transform = cfg.mirror ? "scaleX(-1)" : "none";
+            $("v").style.filter = cfg.filter;
+            const cs = $("costumeSelect");
+            if (cs) cs.value = selectedCostume;
+            syncStartPreview();
+            save();
+        }
+        function buildFields() {
+            const box = $("fields"); box.innerHTML = "";
+            FIELDS.forEach(([k, label, type, opts]) => {
+                const w = document.createElement("label"); w.className = "f"; w.append(label);
+                let el;
+                if (type === "select") { el = document.createElement("select"); opts.forEach(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; el.add(new Option(t, v)) }); el.value = cfg[k] }
+                else { el = document.createElement("input"); el.type = type; if (type === "checkbox") el.checked = cfg[k]; else el.value = cfg[k] }
+                el.onchange = el.oninput = () => {
+                    let v = type === "checkbox" ? el.checked : el.value;
+                    if (["count", "reset"].includes(k)) v = Number(v) || 0;
+                    cfg[k] = v; apply();
+                };
+                w.append(el); box.append(w);
+            });
+        }
 
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: false
+        /* ---------- Gestor de marcos ---------- */
+        async function renderFrames() {
+            try { frames = await dbAll() } catch (e) { frames = [] }
+            const l = $("flist"); l.innerHTML = "";
+            const none = document.createElement("button"); none.textContent = "Sin marco"; none.className = "fb" + (!curFrame() ? " sel" : "");
+            none.onclick = () => { cfg.frameId = ""; apply(); renderFrames() }; l.append(none);
+            frames.forEach(f => {
+                const b = document.createElement("button"); b.className = "fb" + (cfg.frameId === f.id ? " sel" : "");
+                const im = new Image(); im.src = URL.createObjectURL(f.blob); im.alt = f.name; b.title = f.name; b.append(im);
+                b.onclick = () => { cfg.frameId = f.id; apply(); renderFrames() }; l.append(b);
+            });
+            const cur = curFrame(); $("fedit").hidden = !cur; if (cur) buildFrameEditor(cur);
+        }
+        function buildFrameEditor(f) {
+            const b = $("ffields"); b.innerHTML = "";
+            FF.forEach(([k, label, mn, mx, st]) => {
+                const w = document.createElement("label"); w.className = "f"; const t = document.createTextNode(label + ": " + f[k]); w.append(t);
+                const el = document.createElement("input"); el.type = "range"; el.min = mn; el.max = mx; el.step = st; el.value = f[k];
+                el.oninput = () => { f[k] = Number(el.value); t.nodeValue = label + ": " + f[k]; prev(f) };
+                el.onchange = () => dbPut(f);
+                w.append(el); b.append(w);
+            });
+            prev(f);
+        }
+        async function prev(f) {
+            const img = await loadImg(f), c = $("fprev"), s = Math.min(1, 360 / img.width);
+            c.width = img.width * s; c.height = img.height * s;
+            const x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, c.width, c.height);
+            x.fillStyle = "#e0527a"; x.fillRect(...win(f, c.width, c.height));
+            x.drawImage(img, 0, 0, c.width, c.height);
+        }
+        $("fupb").onclick = () => $("fup").click();
+        $("fup").onchange = async e => {
+            for (const file of e.target.files) {
+                if (file.type !== "image/png") continue;
+                const f = { id: "f" + Date.now() + Math.random().toString(36).slice(2, 6), name: file.name.replace(/\.png$/i, ""), blob: file };
+                Object.assign(f, detect(await loadImg(f)));
+                try { await dbPut(f) } catch (err) { alert("No se pudo guardar el marco en este navegador."); continue }
+                cfg.frameId = f.id;
+            }
+            e.target.value = ""; apply(); renderFrames();
+        };
+        $("fdel").onclick = async () => {
+            const f = curFrame(); if (!f || !confirm("¿Borrar este marco?")) return;
+            await dbDel(f.id); delete imgCache[f.id]; cfg.frameId = ""; apply(); renderFrames();
+        };
+
+        /* ---------- Cámara y captura ---------- */
+        function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)) }
+        const wait = ms => new Promise(r => setTimeout(r, ms));
+        let stream = null, busy = false, resetT = null;
+
+        async function captureAspect() {
+            const f = curFrame();
+            let ar = 2 / 3;
+            if (f) { const img = await loadImg(f); ar = (f.w * img.width) / (f.h * img.height); }
+            return Math.min(2, Math.max(.5, ar));
+        }
+
+        async function syncStartPreview() {
+            const preview = $("start-preview"), pv = $("pv");
+            if (!preview || !pv) return;
+            const ar = await captureAspect();
+            preview.style.aspectRatio = ar;
+            pv.style.transform = cfg.mirror ? "scaleX(-1)" : "none";
+            pv.style.filter = cfg.filter;
+        }
+
+        async function ensureCam() {
+            const pv = $("pv"), status = $("preview-status");
+            if (stream) {
+                if (pv.srcObject !== stream) pv.srcObject = stream;
+                try { await pv.play(); } catch(e) {}
+                if (status) { status.textContent = "Cámara lista · acomódate en el recuadro"; status.className = "preview-status ready"; }
+                return true;
+            }
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" }, audio: false });
+                $("v").srcObject = stream;
+                pv.srcObject = stream;
+                await $("v").play();
+                try { await pv.play(); } catch(e) {}
+                if (status) { status.textContent = "Cámara lista · acomódate en el recuadro"; status.className = "preview-status ready"; }
+                return true;
+            } catch (e) {
+                if (status) { status.textContent = "Cámara no disponible"; status.className = "preview-status error"; }
+                $("t-sub").textContent = "No se pudo abrir la cámara. Permite el acceso en el navegador y abre la página con https.";
+                return false;
+            }
+        }
+        function grab(ar) {
+            const v = $("v"), vw = v.videoWidth, vh = v.videoHeight;
+            let sw = vw, sh = vw / ar; if (sh > vh) { sh = vh; sw = vh * ar }
+            const L = 1280, w = ar >= 1 ? L : Math.round(L * ar), h = ar >= 1 ? Math.round(L / ar) : L;
+            const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d");
+            if (cfg.filter !== "none") x.filter = cfg.filter; // Safari iOS no soporta ctx.filter
+            if (cfg.mirror) { x.translate(w, 0); x.scale(-1, 1) }
+            x.drawImage(v, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, w, h);
+            return c;
+        }
+
+        /* ---------- IA ---------- */
+        async function runAI(shot, ar) {
+            const size = ar > 1.2 ? "1536x1024" : ar < .83 ? "1024x1536" : "1024x1024";
+            const k = 1024 / Math.max(shot.width, shot.height), c = document.createElement("canvas");
+            c.width = Math.round(shot.width * k); c.height = Math.round(shot.height * k);
+            c.getContext("2d").drawImage(shot, 0, 0, c.width, c.height);
+            const dataUrl = c.toDataURL("image/jpeg", .85);
+            $("aipic").src = dataUrl; show("s-ai");
+            while (true) {
+                $("aiact").hidden = true; $("aispin").hidden = false;
+                let i = 0; $("aimsg").textContent = THEME.loading[0];
+                const iv = setInterval(() => { $("aimsg").textContent = THEME.loading[++i % THEME.loading.length] }, 3500);
+                try {
+                    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 115000);
+                    const r = await fetch(AI_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, prompt: buildPrompt(), size }), signal: ac.signal });
+                    clearTimeout(to);
+                    const j = await r.json();
+                    if (!r.ok || !j.image) throw new Error(j.error || "Error");
+                    clearInterval(iv);
+                    return await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = j.image });
+                } catch (e) {
+                    clearInterval(iv); console.error("IA:", e);
+                    $("aimsg").textContent = "No pudimos crear tu foto con IA.";
+                    $("aispin").hidden = true; $("aiact").hidden = false;
+                    const choice = await new Promise(res => { $("airetry").onclick = () => res("retry"); $("aiorig").onclick = () => res("orig") });
+                    if (choice === "orig") return shot;
+                }
+            }
+        }
+
+        /* ---------- Sesión ---------- */
+        async function session() {
+            if (busy) return; busy = true; clearTimeout(resetT);
+            try {
+                if (!(await ensureCam())) return;
+                const f = curFrame(); let ar = 2 / 3;
+                if (f) { const img = await loadImg(f); ar = (f.w * img.width) / (f.h * img.height) }
+                ar = Math.min(2, Math.max(.5, ar));
+                const cam = $("cam"); cam.style.aspectRatio = ar;
+                cam.style.width = "min(92vw,calc((100vh - 170px)*" + ar + "),1000px)";
+                show("s-cap");
+                for (let c = cfg.count; c > 0; c--) { $("count").textContent = c; await wait(1000) }
+                $("count").textContent = "";
+                const fl = $("flash"); fl.classList.add("go");
+                const shot = grab(ar);
+                await wait(60); fl.classList.remove("go"); await wait(700);
+                const out = cfg.ai ? await runAI(shot, ar) : shot;
+                await finish(out, ar);
+            } finally { busy = false }
+        }
+        async function finish(photo, ar) {
+            const f = curFrame(), c = document.createElement("canvas");
+            let W, H, x;
+            if (f) {
+                const img = await loadImg(f), s = Math.min(1, 2000 / Math.max(img.width, img.height));
+                W = c.width = Math.round(img.width * s); H = c.height = Math.round(img.height * s); x = c.getContext("2d");
+                x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
+                cover(x, photo, ...win(f, W, H));
+                x.drawImage(img, 0, 0, W, H);
+            } else {
+                const pad = 30, cw = 540, ch = Math.round(cw / ar), foot = 130;
+                W = c.width = cw + pad * 2; H = c.height = ch + pad * 2 + foot; x = c.getContext("2d");
+                x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
+                cover(x, photo, pad, pad, cw, ch);
+                x.fillStyle = cfg.ink; x.textAlign = "center"; x.textBaseline = "middle";
+                x.font = "700 34px 'Trebuchet MS',sans-serif"; x.fillText(cfg.title, W / 2, H - foot + 38, W - 60);
+                x.font = "500 22px 'Trebuchet MS',sans-serif"; x.fillText(cfg.footer, W / 2, H - foot + 78, W - 60);
+                const st = [...cfg.stickers].filter(s => s.trim());
+                x.font = "46px sans-serif";
+                const pos = [[46, 46], [W - 46, 46], [46, pad + ch - 6], [W - 46, pad + ch - 6], [W / 2, H - 24]];
+                st.slice(0, 5).forEach((e, i) => x.fillText(e, pos[i][0], pos[i][1]));
+            }
+            lastCanvas = c;
+            $("result").src = c.toDataURL("image/png");
+            show("s-res");
+            uploadQR(c);
+            if (cfg.reset > 0) { let t = cfg.reset; const tick = () => { $("timer").textContent = "Volviendo al inicio en " + t + " s"; if (t-- <= 0) return home(); resetT = setTimeout(tick, 1000) }; tick() }
+            else $("timer").textContent = "";
+        }
+
+        /* ---------- Subida + QR ---------- */
+        async function uploadQR(canvas) {
+            const box = $("qrbox");
+            if (!cfg.qr) { box.hidden = true; return }
+            box.hidden = false; $("qrimg").innerHTML = ""; $("qrmsg").textContent = "Preparando tu QR…"; $("qrretry").hidden = true;
+            try {
+                const blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .88));
+                const fd = new FormData(); fd.append("file", blob); fd.append("upload_preset", CLOUD.preset);
+                const r = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", { method: "POST", body: fd });
+                const j = await r.json();
+                if (!j.secure_url) throw new Error(j.error && j.error.message || "Error");
+                const qr = qrcode(0, "M"); qr.addData(j.secure_url); qr.make();
+                $("qrimg").innerHTML = qr.createImgTag(6, 2);
+                $("qrmsg").textContent = cfg.qrText;
+            } catch (e) {
+                console.error("Cloudinary:", e);
+                $("qrmsg").textContent = "No se pudo subir la foto. Revisa el internet.";
+                $("qrretry").hidden = false;
+            }
+        }
+        $("qrretry").onclick = () => lastCanvas && uploadQR(lastCanvas);
+
+        /* ---------- Selector de disfraz + preview ---------- */
+        $("costumeSelect").onchange = async () => {
+            selectedCostume = $("costumeSelect").value;
+            try { localStorage.setItem("pb-halloween-costume", selectedCostume); } catch(e) {}
+            $("start").disabled = !selectedCostume;
+            $("costumeHint").textContent = selectedCostume
+                ? "Perfecto: todos los que aparezcan en la foto usarán el tema “" + selectedCostume + "”."
+                : "Todos los que aparezcan en la foto usarán el mismo tema de disfraz.";
+        };
+        window.addEventListener("resize", syncStartPreview);
+        window.addEventListener("orientationchange", syncStartPreview);
+
+        /* ---------- Eventos ---------- */
+        function home() { clearTimeout(resetT); show("s-idle") }
+        $("start").onclick = session;
+        $("dl").onclick = () => { clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click() };
+        $("pr").onclick = () => { clearTimeout(resetT); window.print() };
+        $("fs").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen() } catch (e) { } };
+        $("cfg").onclick = () => { clearTimeout(resetT); buildFields(); renderFrames(); $("json").value = JSON.stringify(cfg); $("dlg").showModal() };
+        $("close").onclick = () => $("dlg").close();
+        $("reset").onclick = () => { cfg = { ...DEF }; apply(); buildFields(); renderFrames() };
+        $("imp").onclick = () => { try { cfg = { ...DEF, ...JSON.parse($("json").value) }; apply(); buildFields(); renderFrames() } catch (e) { alert("La configuración no es válida.") } };
+        document.addEventListener("keydown", e => {
+            if ((e.key === " " || e.key === "Enter") && $("s-idle").classList.contains("on") && !$("dlg").open && selectedCostume) { e.preventDefault(); session() }
         });
-
-        video.srcObject = stream;
-        if (preview) preview.srcObject = stream;
-
-        await video.play();
-        if (preview) { try { await preview.play(); } catch (e) {} }
-
-        if (status) {
-          status.textContent = "Cámara lista · acomódate en el recuadro";
-          status.className = "preview-status ready";
-        }
-
-        updatePreview();
-        return true;
-
-      } catch (e) {
-        console.error("Cámara:", e.name, e.message);
-
-        if (stream) {
-          stream.getTracks().forEach(t => t.stop());
-          stream = null;
-        }
-
-        let msg = "No se pudo abrir la cámara.";
-
-        if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
-          msg = "Chrome bloqueó la cámara. Permite el acceso a la cámara para este sitio y vuelve a intentarlo.";
-        } else if (e.name === "NotFoundError" || e.name === "DevicesNotFoundError") {
-          msg = "Chrome no está viendo ninguna cámara. Revisa chrome://settings/content/camera y que Windows detecte la webcam.";
-        } else if (e.name === "NotReadableError" || e.name === "TrackStartError") {
-          msg = "La cámara está ocupada por otra aplicación. Cierra Zoom, Teams, OBS, la app Cámara de Windows, etc.";
-        } else if (e.name === "SecurityError") {
-          msg = "El navegador no permite usar la cámara en esta página. Abre el photobooth mediante HTTPS.";
-        } else if (e.name === "TypeError") {
-          msg = "No se pudo iniciar la cámara desde este navegador. Comprueba que estés usando Chrome y una URL HTTPS.";
-        }
-
-        if (status) {
-          status.textContent = "Cámara no disponible";
-          status.className = "preview-status error";
-        }
-
-        $("t-sub").textContent = msg;
-        return false;
-      }
-    }
-
-    async function captureAspect() {
-      const f = curFrame();
-      let ar = 2 / 3;
-
-      if (f) {
-        const img = await loadImg(f);
-        ar = (f.w * img.width) / (f.h * img.height);
-      }
-
-      return Math.min(2, Math.max(.5, ar));
-    }
-
-    async function updatePreview() {
-      const preview = $("start-preview");
-      if (!preview) return;
-
-      const ar = await captureAspect();
-
-      // Calculamos ancho y alto por separado para que el preview conserve
-      // EXACTAMENTE la misma proporción que tendrá la captura final.
-      const portrait = window.matchMedia("(orientation: portrait)").matches;
-      const maxW = Math.min(window.innerWidth * (portrait ? .64 : .42), portrait ? 380 : 420);
-      const maxH = Math.min(window.innerHeight * (portrait ? .31 : .30), portrait ? 500 : 320);
-
-      let w = maxW;
-      let h = w / ar;
-
-      if (h > maxH) {
-        h = maxH;
-        w = h * ar;
-      }
-
-      preview.style.width = Math.max(120, Math.round(w)) + "px";
-      preview.style.height = Math.max(80, Math.round(h)) + "px";
-
-      const pv = $("pv");
-      if (pv) {
-        pv.style.transform = cfg.mirror ? "scaleX(-1)" : "none";
-        pv.style.filter = cfg.filter;
-      }
-    }
-
-    function grab(ar) {
-
-      const v = $("v"), vw = v.videoWidth, vh = v.videoHeight;
-
-      let sw = vw, sh = vw / ar; if (sh > vh) { sh = vh; sw = vh * ar }
-
-      const L = 1280, w = ar >= 1 ? L : Math.round(L * ar), h = ar >= 1 ? Math.round(L / ar) : L;
-
-      const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d");
-
-      if (cfg.filter !== "none") x.filter = cfg.filter; // Safari iOS no soporta ctx.filter
-
-      if (cfg.mirror) { x.translate(w, 0); x.scale(-1, 1) }
-
-      x.drawImage(v, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, w, h);
-
-      return c;
-
-    }
-
-
-
-    /* ---------- IA ---------- */
-
-    async function runAI(shot, ar) {
-
-      const size = ar > 1.2 ? "1536x1024" : ar < .83 ? "1024x1536" : "1024x1024";
-
-      const k = 1024 / Math.max(shot.width, shot.height), c = document.createElement("canvas");
-
-      c.width = Math.round(shot.width * k); c.height = Math.round(shot.height * k);
-
-      c.getContext("2d").drawImage(shot, 0, 0, c.width, c.height);
-
-      const dataUrl = c.toDataURL("image/jpeg", .85);
-
-      $("aipic").src = dataUrl; show("s-ai");
-
-      while (true) {
-
-        $("aiact").hidden = true; $("aispin").hidden = false;
-
-        let i = 0; $("aimsg").textContent = THEME.loading[0];
-
-        const iv = setInterval(() => { $("aimsg").textContent = THEME.loading[++i % THEME.loading.length] }, 3500);
-
-        try {
-
-          const ac = new AbortController(), to = setTimeout(() => ac.abort(), 115000);
-
-          const r = await fetch(AI_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, prompt: buildPrompt(), size }), signal: ac.signal });
-
-          clearTimeout(to);
-
-          const j = await r.json();
-
-          if (!r.ok || !j.image) throw new Error(j.error || "Error");
-
-          clearInterval(iv);
-
-          return await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = j.image });
-
-        } catch (e) {
-
-          clearInterval(iv); console.error("IA:", e);
-
-          $("aimsg").textContent = "No pudimos crear tu foto con IA.";
-
-          $("aispin").hidden = true; $("aiact").hidden = false;
-
-          const choice = await new Promise(res => { $("airetry").onclick = () => res("retry"); $("aiorig").onclick = () => res("orig") });
-
-          if (choice === "orig") return shot;
-
-        }
-
-      }
-
-    }
-
-
-
-    /* ---------- Sesión ---------- */
-
-    async function session() {
-
-      if (busy) return;
-
-      if (!selectedTeam) {
-
-        $("teamSelect").focus();
-
-        $("teamHint").textContent = "Selecciona un equipo antes de tomar la foto.";
-
-        return;
-
-      }
-
-      busy = true; clearTimeout(resetT);
-
-      try {
-
-        if (!(await ensureCam())) return;
-
-        const f = curFrame();
-      const ar = await captureAspect();
-
-        const cam = $("cam"); cam.style.aspectRatio = ar;
-
-        cam.style.width = "min(92vw,calc((100vh - 170px)*" + ar + "),1000px)";
-
-        show("s-cap");
-
-        for (let c = cfg.count; c > 0; c--) { $("count").textContent = c; await wait(1000) }
-
-        $("count").textContent = "";
-
-        const fl = $("flash"); fl.classList.add("go");
-
-        const shot = grab(ar);
-
-        await wait(60); fl.classList.remove("go"); await wait(700);
-
-        const out = cfg.ai ? await runAI(shot, ar) : shot;
-
-        await finish(out, ar);
-
-      } finally { busy = false }
-
-    }
-
-    async function finish(photo, ar) {
-
-      const f = curFrame(), c = document.createElement("canvas");
-
-      let W, H, x;
-
-      if (f) {
-
-        const img = await loadImg(f), s = Math.min(1, 2000 / Math.max(img.width, img.height));
-
-        W = c.width = Math.round(img.width * s); H = c.height = Math.round(img.height * s); x = c.getContext("2d");
-
-        x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
-
-        cover(x, photo, ...win(f, W, H));
-
-        x.drawImage(img, 0, 0, W, H);
-
-      } else {
-
-        const pad = 30, cw = 540, ch = Math.round(cw / ar), foot = 130;
-
-        W = c.width = cw + pad * 2; H = c.height = ch + pad * 2 + foot; x = c.getContext("2d");
-
-        x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
-
-        cover(x, photo, pad, pad, cw, ch);
-
-        x.fillStyle = cfg.ink; x.textAlign = "center"; x.textBaseline = "middle";
-
-        x.font = "700 34px 'Trebuchet MS',sans-serif"; x.fillText(cfg.title, W / 2, H - foot + 38, W - 60);
-
-        x.font = "500 22px 'Trebuchet MS',sans-serif"; x.fillText(cfg.footer, W / 2, H - foot + 78, W - 60);
-
-        const st = [...cfg.stickers].filter(s => s.trim());
-
-        x.font = "46px sans-serif";
-
-        const pos = [[46, 46], [W - 46, 46], [46, pad + ch - 6], [W - 46, pad + ch - 6], [W / 2, H - 24]];
-
-        st.slice(0, 5).forEach((e, i) => x.fillText(e, pos[i][0], pos[i][1]));
-
-      }
-
-      lastCanvas = c;
-
-      $("result").src = c.toDataURL("image/png");
-
-      show("s-res");
-
-      uploadQR(c);
-
-      if (cfg.reset > 0) {
-
-        let t = cfg.reset;
-
-        const tick = () => {
-
-          $("timer").textContent = "SIGUIENTE JUGADA EN " + t + " s";
-
-          if (t <= 0) { home(); return; }
-
-          t--;
-
-          resetT = setTimeout(tick, 1000);
-
-        };
-
-        tick();
-
-      } else {
-
-        $("timer").textContent = "";
-
-      }
-
-    }
-
-
-
-    /* ---------- Subida + QR ---------- */
-
-    async function uploadQR(canvas) {
-
-      const box = $("qrbox");
-
-      if (!cfg.qr) { box.hidden = true; return }
-
-      box.hidden = false; $("qrimg").innerHTML = ""; $("qrmsg").textContent = "Preparando tu QR…"; $("qrretry").hidden = true;
-
-      try {
-
-        const blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .88));
-
-        const fd = new FormData(); fd.append("file", blob); fd.append("upload_preset", CLOUD.preset);
-
-        const r = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", { method: "POST", body: fd });
-
-        const j = await r.json();
-
-        if (!j.secure_url) throw new Error(j.error && j.error.message || "Error");
-
-        const qr = qrcode(0, "M"); qr.addData(j.secure_url); qr.make();
-
-        $("qrimg").innerHTML = qr.createImgTag(6, 2);
-
-        $("qrmsg").textContent = cfg.qrText;
-
-      } catch (e) {
-
-        console.error("Cloudinary:", e);
-
-        $("qrmsg").textContent = "No se pudo subir la foto. Revisa el internet.";
-
-        $("qrretry").hidden = false;
-
-      }
-
-    }
-
-    $("qrretry").onclick = () => lastCanvas && uploadQR(lastCanvas);
-
-
-
-    /* ---------- Eventos ---------- */
-
-    function home() { clearTimeout(resetT); show("s-idle"); updateTeamUI(); }
-
-    function updateTeamUI() {
-
-      $("teamSelect").value = selectedTeam;
-
-      $("start").disabled = !selectedTeam;
-
-      $("teamHint").textContent = selectedTeam
-
-        ? "Equipo seleccionado: " + selectedTeam + ". Todas las personas usarán este jersey."
-
-        : "Primero elige el jersey. Después, ¡sonríe!";
-
-    }
-
-    $("teamSelect").value = selectedTeam;
-
-    $("teamSelect").onchange = () => {
-
-      selectedTeam = $("teamSelect").value;
-
-      localStorage.setItem("pb-football-team", selectedTeam);
-
-      updateTeamUI();
-
-    };
-
-    updateTeamUI();
-
-    $("start").onclick = session;
-
-    $("home").onclick = home;
-
-    $("dl").onclick = () => { clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click() };
-
-    $("pr").onclick = () => { clearTimeout(resetT); window.print() };
-
-    $("fs").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen() } catch (e) { } };
-
-    $("cfg").onclick = () => { clearTimeout(resetT); buildFields(); renderFrames(); $("json").value = JSON.stringify(cfg); $("dlg").showModal() };
-
-    $("close").onclick = () => $("dlg").close();
-
-    $("reset").onclick = () => { cfg = { ...DEF }; apply(); buildFields(); renderFrames() };
-
-    $("imp").onclick = () => { try { cfg = { ...DEF, ...JSON.parse($("json").value) }; apply(); buildFields(); renderFrames() } catch (e) { alert("La configuración no es válida.") } };
-
-    document.addEventListener("keydown", e => {
-
-      if ((e.key === " " || e.key === "Enter") && $("s-idle").classList.contains("on") && !$("dlg").open) { e.preventDefault(); session() }
-
-    });
-
-    window.addEventListener("resize", () => updatePreview());
-    window.addEventListener("orientationchange", () => setTimeout(updatePreview, 150));
-
-    (async () => {
-      try { frames = await dbAll() } catch (e) { frames = [] }
-      apply();
-      // Mantener la cámara activa en la pantalla inicial para mostrar la vista previa.
-      try { await ensureCam() } catch (e) {}
-    })();
-
-  </script>
-
+        (async () => {
+            try { frames = await dbAll() } catch (e) { frames = [] }
+            apply();
+            if (selectedCostume && COSTUMES.includes(selectedCostume)) {
+                $("costumeSelect").value = selectedCostume;
+                $("start").disabled = false;
+                $("costumeHint").textContent = "Perfecto: todos los que aparezcan en la foto usarán el tema “" + selectedCostume + "”.";
+            }
+            try { await ensureCam(); } catch(e) {}
+            try { await syncStartPreview(); } catch(e) {}
+        })();
+    </script>
 </body>
-
-
 
 </html>
