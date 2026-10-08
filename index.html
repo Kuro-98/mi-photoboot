@@ -313,72 +313,192 @@
             margin: 0
         }
 
-        /* ===== HALLOWEEN KIOSCO VERTICAL ===== */
+        /* ===== HALLOWEEN KIOSCO VERTICAL — 9:16 ===== */
         #s-idle { position: relative; overflow: hidden; }
         #s-idle::before {
             content: ""; position:absolute; inset:0; pointer-events:none; opacity:.22;
-            background: radial-gradient(circle at 20% 25%, #8f4cff 0 2px, transparent 3px),
-                        radial-gradient(circle at 80% 65%, #ff7a00 0 2px, transparent 3px);
+            background:
+                radial-gradient(circle at 18% 22%, #8f4cff 0 2px, transparent 3px),
+                radial-gradient(circle at 82% 62%, #ff7a00 0 2px, transparent 3px);
             background-size: 120px 120px, 150px 150px;
         }
+
         .halloween-home {
-            position:relative; z-index:2; width:min(90vw,760px); height:100vh;
-            min-height:0; padding:34px 0 28px; justify-content:space-evenly; gap:0;
+            position:relative;
+            z-index:2;
+            width:min(90vw, 760px);
+            height:100svh;
+            min-height:0;
+            padding:76px 0 34px;
+            display:grid;
+            grid-template-rows:auto auto auto minmax(0,1fr) auto auto auto;
+            align-content:stretch;
+            justify-items:center;
+            gap:0;
         }
-        .brand-mark { position:absolute; top:22px; left:28px; color:#d9c7e8; font-weight:900; font-size:.78rem; letter-spacing:.18em; z-index:5; }
-        .moon { position:absolute; right:7vw; top:5vh; width:clamp(60px,9vw,105px); aspect-ratio:1; border-radius:50%; background:#f8edc8; box-shadow:0 0 45px rgba(248,237,200,.25); opacity:.9; }
-        .moon::after { content:""; position:absolute; width:100%; height:100%; border-radius:50%; background:#09060d; left:-18%; top:-10%; }
-        .bats { position:absolute; top:9vh; left:8vw; font-size:clamp(1.8rem,4vw,3.4rem); letter-spacing:.35em; opacity:.75; transform:rotate(-8deg); }
-        .pumpkin { position:absolute; left:6vw; bottom:9vh; font-size:clamp(2.8rem,7vw,6rem); filter:drop-shadow(0 12px 20px rgba(0,0,0,.55)); opacity:.75; transform:rotate(-8deg); }
-        .web { position:absolute; right:-20px; bottom:-20px; width:180px; height:180px; opacity:.24; background:repeating-radial-gradient(circle at 100% 100%, transparent 0 16px, #fff 17px 18px); border-radius:100% 0 0 0; }
-        .halloween-kicker { color:#bfa9cc; font-size:.72rem; font-weight:900; letter-spacing:.24em; text-transform:uppercase; }
-        .halloween-home h1 { font-size:clamp(3rem,7vw,5.8rem); line-height:.9; text-transform:uppercase; text-shadow:0 8px 35px rgba(0,0,0,.55); }
+
+        .brand-mark {
+            position:absolute; top:22px; left:28px; color:#d9c7e8;
+            font-weight:900; font-size:.78rem; letter-spacing:.18em; z-index:5;
+        }
+        .moon {
+            position:absolute; right:7vw; top:5vh; width:clamp(60px,9vw,105px);
+            aspect-ratio:1; border-radius:50%; background:#f8edc8;
+            box-shadow:0 0 45px rgba(248,237,200,.25); opacity:.9;
+        }
+        .moon::after {
+            content:""; position:absolute; width:100%; height:100%; border-radius:50%;
+            background:#09060d; left:-18%; top:-10%;
+        }
+        .bats {
+            position:absolute; top:9vh; left:8vw; font-size:clamp(1.8rem,4vw,3.4rem);
+            letter-spacing:.35em; opacity:.75; transform:rotate(-8deg);
+        }
+        .pumpkin {
+            position:absolute; left:6vw; bottom:9vh; font-size:clamp(2.8rem,7vw,6rem);
+            filter:drop-shadow(0 12px 20px rgba(0,0,0,.55)); opacity:.75; transform:rotate(-8deg);
+        }
+        .web {
+            position:absolute; right:-20px; bottom:-20px; width:180px; height:180px; opacity:.24;
+            background:repeating-radial-gradient(circle at 100% 100%, transparent 0 16px, #fff 17px 18px);
+            border-radius:100% 0 0 0;
+        }
+
+        .halloween-kicker {
+            align-self:center;
+            color:#bfa9cc; font-size:.72rem; font-weight:900;
+            letter-spacing:.24em; text-transform:uppercase;
+            margin:0 0 5px;
+        }
+        .halloween-home h1 {
+            font-size:clamp(2.8rem,6vw,5rem);
+            line-height:.9; text-transform:uppercase;
+            text-shadow:0 8px 35px rgba(0,0,0,.55);
+            margin:0;
+        }
         .halloween-home h1 span { color:#ff7a00; }
-        .halloween-home p.sub { color:#c9bdcf; font-size:clamp(1rem,2.4vw,1.5rem); }
-        .live-preview-wrap { width:min(61vw,390px); display:flex; flex-direction:column; align-items:center; gap:7px; flex:0 0 auto; }
-        .preview-label { color:#d9c7e8; font-size:.68rem; font-weight:900; letter-spacing:.2em; }
-        #start-preview { position:relative; width:100%; overflow:hidden; border:2px solid rgba(255,122,0,.72); border-radius:16px; background:#000; box-shadow:0 0 0 1px #24172b, 0 18px 50px rgba(0,0,0,.5); aspect-ratio:2/3; }
-        #start-preview video { width:100%; height:100%; display:block; object-fit:cover; background:#000; }
-        #start-preview::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(to bottom,rgba(0,0,0,.1),transparent 25%,transparent 75%,rgba(0,0,0,.35)); }
-        .preview-guide { position:absolute; inset:7% 8%; border:2px dashed rgba(255,255,255,.55); border-radius:12px; pointer-events:none; display:flex; align-items:flex-end; justify-content:center; padding-bottom:10px; z-index:2; }
-        .preview-guide::before,.preview-guide::after { content:""; position:absolute; width:26px; height:26px; border-color:#ff7a00; border-style:solid; }
+        .halloween-home p.sub {
+            color:#c9bdcf; font-size:clamp(1rem,2.2vw,1.45rem);
+            margin:7px 0 0;
+        }
+
+        /* El preview es el elemento principal, pero nunca debe comerse la pantalla. */
+        .live-preview-wrap {
+            grid-row:4;
+            align-self:center;
+            width:min(54vw,350px);
+            max-height:40vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            gap:7px;
+            min-height:0;
+        }
+        .preview-label {
+            color:#d9c7e8; font-size:.68rem; font-weight:900; letter-spacing:.2em;
+        }
+        #start-preview {
+            position:relative; width:100%; max-height:36vh; aspect-ratio:2/3;
+            overflow:hidden; border:2px solid rgba(255,122,0,.72); border-radius:16px;
+            background:#000; box-shadow:0 0 0 1px #24172b, 0 18px 50px rgba(0,0,0,.5);
+        }
+        #start-preview video {
+            width:100%; height:100%; display:block; object-fit:cover; background:#000;
+        }
+        #start-preview::after {
+            content:""; position:absolute; inset:0; pointer-events:none;
+            background:linear-gradient(to bottom,rgba(0,0,0,.1),transparent 25%,transparent 75%,rgba(0,0,0,.35));
+        }
+        .preview-guide {
+            position:absolute; inset:7% 8%; border:2px dashed rgba(255,255,255,.55);
+            border-radius:12px; pointer-events:none; display:flex; align-items:flex-end;
+            justify-content:center; padding-bottom:10px; z-index:2;
+        }
+        .preview-guide::before,.preview-guide::after {
+            content:""; position:absolute; width:26px; height:26px;
+            border-color:#ff7a00; border-style:solid;
+        }
         .preview-guide::before { top:-2px; left:-2px; border-width:4px 0 0 4px; }
         .preview-guide::after { right:-2px; bottom:-2px; border-width:0 4px 4px 0; }
-        .guide-text { padding:6px 11px; border-radius:5px; background:rgba(9,6,13,.82); color:#fff; font-size:.61rem; font-weight:900; letter-spacing:.12em; }
-        .preview-status { margin:0; min-height:1em; color:#b7a8bd; font-size:.66rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
-        .preview-status.ready { color:#bde58f; } .preview-status.error { color:#ff9a9a; }
-        .costume-picker { width:min(78vw,650px); padding:14px 18px; border:1px solid rgba(143,76,255,.55); border-radius:16px; background:rgba(16,10,23,.82); box-shadow:0 16px 45px rgba(0,0,0,.35); backdrop-filter:blur(8px); }
-        .costume-picker label { display:block; color:#eadcf1; font-size:.76rem; font-weight:900; letter-spacing:.18em; margin-bottom:8px; }
-        #costumeSelect { width:100%; border:2px solid #ff7a00; border-radius:10px; padding:13px 15px; background:#fff8ef; color:#17111f; font:inherit; font-weight:900; font-size:clamp(1rem,2vw,1.2rem); cursor:pointer; }
+        .guide-text {
+            padding:6px 11px; border-radius:5px; background:rgba(9,6,13,.82);
+            color:#fff; font-size:.61rem; font-weight:900; letter-spacing:.12em;
+        }
+        .preview-status {
+            margin:0; min-height:1em; color:#b7a8bd; font-size:.66rem; font-weight:800;
+            letter-spacing:.08em; text-transform:uppercase;
+        }
+        .preview-status.ready { color:#bde58f; }
+        .preview-status.error { color:#ff9a9a; }
+
+        /* Controles juntos y claramente debajo de la cámara. */
+        .costume-picker {
+            grid-row:5;
+            width:min(78vw,650px);
+            padding:13px 18px;
+            border:1px solid rgba(143,76,255,.55); border-radius:16px;
+            background:rgba(16,10,23,.86); box-shadow:0 16px 45px rgba(0,0,0,.35);
+            backdrop-filter:blur(8px);
+        }
+        .costume-picker label {
+            display:block; color:#eadcf1; font-size:.76rem; font-weight:900;
+            letter-spacing:.18em; margin-bottom:8px;
+        }
+        #costumeSelect {
+            width:100%; border:2px solid #ff7a00; border-radius:10px; padding:13px 15px;
+            background:#fff8ef; color:#17111f; font:inherit; font-weight:900;
+            font-size:clamp(1rem,2vw,1.2rem); cursor:pointer;
+        }
         #costumeHint { margin:7px 0 0; color:#b7a8bd; font-size:.78rem; }
-        #start:disabled { opacity:.38; cursor:not-allowed; transform:none; animation:none; box-shadow:none; }
-        .start-hint { color:#a996b0; font-size:.68rem; font-weight:800; letter-spacing:.12em; }
+
+        .halloween-home #start {
+            grid-row:6;
+            width:min(60vw,430px);
+            min-height:76px;
+            margin-top:12px;
+        }
+        #start:disabled {
+            opacity:.38; cursor:not-allowed; transform:none; animation:none; box-shadow:none;
+        }
+        .start-hint {
+            grid-row:7;
+            margin:9px 0 0;
+            color:#a996b0; font-size:.68rem; font-weight:800; letter-spacing:.12em;
+        }
         #gear button { opacity:.4; background:#17111f; border-color:#33263b; }
         #gear button:hover,#gear button:focus-visible { opacity:1; }
         #home { background:transparent; color:#b7a8bd; }
+
         @media (orientation:portrait) {
-            .halloween-home { width:min(90vw,760px); padding:72px 0 42px; }
-            .live-preview-wrap { width:min(58vw,390px); }
-            .costume-picker { width:min(78vw,650px); }
-            .moon { right:4vw; top:7vh; } .bats { left:4vw; top:11vh; }
+            .halloween-home { width:min(90vw,760px); padding:76px 0 34px; }
         }
         @media (max-height:1200px) and (orientation:portrait) {
-            .halloween-home { padding-top:66px; padding-bottom:34px; }
-            .halloween-home h1 { font-size:clamp(2.4rem,5.8vw,4.6rem); }
-            .live-preview-wrap { width:min(52vw,330px); }
+            .halloween-home { padding-top:66px; padding-bottom:28px; }
+            .halloween-home h1 { font-size:clamp(2.35rem,5.6vw,4.4rem); }
+            .live-preview-wrap { width:min(50vw,320px); max-height:36vh; }
+            #start-preview { max-height:33vh; }
             .costume-picker { padding:11px 14px; }
             #costumeSelect { padding:11px 13px; }
-            .halloween-home button.big { min-height:66px; }
+            .halloween-home #start { min-height:68px; margin-top:9px; }
         }
         @media (max-height:900px) and (orientation:portrait) {
-            .halloween-home { padding-top:58px; padding-bottom:24px; }
-            .halloween-home h1 { font-size:clamp(2rem,5.2vw,3.4rem); }
-            .halloween-home p.sub { font-size:.92rem; }
-            .live-preview-wrap { width:min(45vw,285px); }
+            .halloween-home { padding-top:58px; padding-bottom:20px; }
+            .halloween-home h1 { font-size:clamp(2rem,5.2vw,3.3rem); }
+            .halloween-home p.sub { font-size:.9rem; }
+            .live-preview-wrap { width:min(45vw,270px); max-height:32vh; }
+            #start-preview { max-height:29vh; }
             .preview-status { display:none; }
-            .costume-picker { padding:9px 12px; }
+            .costume-picker { padding:8px 11px; }
             #costumeSelect { padding:9px 11px; }
-            .halloween-home button.big { min-height:58px; padding:.45em 1.15em; }
+            .halloween-home #start { min-height:58px; padding:.45em 1.15em; }
+            .start-hint { margin-top:6px; }
+        }
+        @media (max-width:700px) and (orientation:portrait) {
+            .halloween-home { width:92vw; }
+            .live-preview-wrap { width:min(62vw,300px); }
+            .costume-picker { width:92vw; }
+            .halloween-home #start { width:82vw; }
         }
 
         .f {
@@ -628,8 +748,8 @@
         const FF = [["x", "Ventana: X %", 0, 100, .5], ["y", "Ventana: Y %", 0, 100, .5], ["w", "Ventana: ancho %", 1, 100, .5], ["h", "Ventana: alto %", 1, 100, .5]];
         const $ = id => document.getElementById(id);
         let cfg = { ...DEF }, frames = [], imgCache = {}, lastCanvas = null;
-        try { const s = localStorage.getItem("pb-cfg"); if (s) cfg = { ...DEF, ...JSON.parse(s) } } catch (e) { }
-        const save = () => { try { localStorage.setItem("pb-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
+        try { const s = localStorage.getItem("pb-halloween-cfg"); if (s) cfg = { ...DEF, ...JSON.parse(s) } } catch (e) { }
+        const save = () => { try { localStorage.setItem("pb-halloween-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
 
         /* ---------- IndexedDB (marcos) ---------- */
         const idb = () => new Promise((res, rej) => { const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) });
