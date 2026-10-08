@@ -505,6 +505,157 @@
             .halloween-home #start { width:82vw; }
         }
 
+
+        /* ===== HALLOWEEN V2 — composición de kiosco vertical ===== */
+        .halloween-home {
+            width: min(92vw, 560px);
+            height: 100svh;
+            padding: clamp(92px, 10svh, 150px) 0 clamp(34px, 4svh, 64px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0;
+        }
+
+        .halloween-home .halloween-kicker {
+            margin: 0 0 6px;
+            line-height: 1.1;
+        }
+
+        .halloween-home h1 {
+            font-size: clamp(2.55rem, 5.6vw, 4.25rem);
+            line-height: .9;
+            margin: 0;
+        }
+
+        .halloween-home p.sub {
+            margin: 9px 0 20px;
+            font-size: clamp(.98rem, 2vw, 1.25rem);
+        }
+
+        /* Una sola columna visual: cámara → selector → CTA. */
+        .live-preview-wrap {
+            width: min(46vw, 410px);
+            flex: 0 0 auto;
+            gap: 8px;
+        }
+
+        #start-preview {
+            width: 100%;
+            /* JS actualiza aspect-ratio con el mismo AR de la captura. */
+            aspect-ratio: 3 / 4;
+            border-radius: 18px;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,.05),
+                0 20px 55px rgba(0,0,0,.48),
+                0 0 38px rgba(255,122,0,.10);
+        }
+
+        .preview-label {
+            font-size: .66rem;
+            letter-spacing: .24em;
+        }
+
+        .preview-status {
+            font-size: .62rem;
+        }
+
+        /* El panel de elección comparte exactamente el ancho de la cámara. */
+        .costume-picker {
+            width: min(46vw, 410px);
+            margin-top: 16px;
+            padding: 14px 15px 12px;
+            border-radius: 15px;
+            background: linear-gradient(180deg, rgba(20,12,29,.94), rgba(12,8,18,.91));
+            border: 1px solid rgba(143,76,255,.52);
+            box-shadow: 0 14px 35px rgba(0,0,0,.28);
+        }
+
+        .costume-picker label {
+            margin-bottom: 7px;
+            font-size: .69rem;
+            letter-spacing: .20em;
+        }
+
+        #costumeSelect {
+            height: 52px;
+            padding: 0 14px;
+            font-size: 1rem;
+            border-radius: 10px;
+        }
+
+        #costumeHint {
+            margin: 7px 2px 0;
+            font-size: .70rem;
+            line-height: 1.25;
+        }
+
+        .halloween-home #start {
+            width: min(46vw, 410px);
+            min-height: 68px;
+            margin-top: 13px;
+            border-radius: 14px;
+            font-size: clamp(1.45rem, 3.2vw, 2rem);
+        }
+
+        .start-hint {
+            width: min(46vw, 410px);
+            margin: 9px 0 0;
+            font-size: .61rem;
+            line-height: 1.25;
+            letter-spacing: .10em;
+        }
+
+        /* La decoración queda fuera del eje de interacción. */
+        .moon { top: 5vh; right: 7vw; }
+        .bats { top: 13vh; left: 7vw; }
+        .pumpkin { left: 5vw; bottom: 8vh; }
+
+        @media (max-height: 1200px) and (orientation: portrait) {
+            .halloween-home {
+                padding-top: 72px;
+                padding-bottom: 22px;
+            }
+            .halloween-home p.sub { margin-bottom: 13px; }
+            .live-preview-wrap,
+            .costume-picker,
+            .halloween-home #start,
+            .start-hint {
+                width: min(48vw, 380px);
+            }
+            #costumeSelect { height: 48px; }
+            .costume-picker { margin-top: 12px; padding: 12px 13px 10px; }
+            .halloween-home #start { min-height: 62px; margin-top: 10px; }
+        }
+
+        @media (max-height: 900px) and (orientation: portrait) {
+            .halloween-home { padding-top: 54px; }
+            .halloween-home h1 { font-size: clamp(2rem, 5.3vw, 3rem); }
+            .halloween-home p.sub { font-size: .86rem; margin: 7px 0 10px; }
+            .live-preview-wrap,
+            .costume-picker,
+            .halloween-home #start,
+            .start-hint {
+                width: min(43vw, 310px);
+            }
+            .preview-status { display: none; }
+            .costume-picker { margin-top: 9px; padding: 9px 11px; }
+            .costume-picker label { margin-bottom: 5px; font-size: .63rem; }
+            #costumeSelect { height: 44px; padding: 0 10px; font-size: .9rem; }
+            #costumeHint { margin-top: 5px; font-size: .62rem; }
+            .halloween-home #start { min-height: 54px; margin-top: 8px; }
+            .start-hint { margin-top: 6px; font-size: .55rem; }
+        }
+
+        @media (max-width: 700px) and (orientation: portrait) {
+            .halloween-home { width: 92vw; padding-top: 70px; }
+            .live-preview-wrap,
+            .costume-picker,
+            .halloween-home #start,
+            .start-hint { width: min(72vw, 330px); }
+        }
+
         .f {
             display: grid;
             grid-template-columns: 1fr 1.2fr;
