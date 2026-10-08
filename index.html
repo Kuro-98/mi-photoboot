@@ -1,499 +1,1053 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Photobooth Halloween</title>
-<style>
-:root{--bg:#0a0710;--ink:#fff4e6;--card:#171022;--muted:#b9a9c7;--accent:#ff7a00;--accent-dark:#a83a00;--purple:#8f4cff;--green:#9be15d;--line:#35254a;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{background:radial-gradient(ellipse at 50% -10%,rgba(143,76,255,.30),transparent 55%),radial-gradient(ellipse at 0% 100%,rgba(255,122,0,.18),transparent 45%),var(--bg);color:var(--ink);font-family:"Trebuchet MS",system-ui,sans-serif;overflow:hidden}
-.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;gap:16px}
-.screen.on{display:flex}
-p.sub{font-size:clamp(1rem,2.4vw,1.5rem);margin:0;color:var(--muted)}
-button{font:inherit;cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:14px 26px;font-size:1.1rem;font-weight:800;background:var(--card);color:var(--ink);box-shadow:0 4px 0 rgba(0,0,0,.4);transition:transform .15s,border-color .15s}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-button:hover{border-color:var(--accent)}
-button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
-button.big{background:linear-gradient(180deg,#ff9a2e,#f05b00);color:#fff;border:0;border-radius:16px;font-size:clamp(1.4rem,4vw,2.2rem);padding:.55em 1.5em;box-shadow:0 6px 0 var(--accent-dark),0 14px 40px rgba(255,122,0,.3);letter-spacing:.04em}
-.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.row[hidden],.spin[hidden]{display:none}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Photobooth</title>
+    <style>
+        :root {
+            --bg: #09060d;
+            --ink: #fff8ef;
+            --card: #17111f;
+            --muted: #b7a8bd;
+            --accent: #ff7a00;
+            --accent-dark: #b43f00;
+            --purple: #8f4cff;
+            --green: #86d44b;
+            --line: #33263b;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
 
-/* ===== INICIO ===== */
-#s-idle{padding:0;overflow:hidden;justify-content:flex-start}
-#s-idle::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background:radial-gradient(circle,rgba(255,255,255,.5) 0 1px,transparent 1.5px) 0 0/90px 90px,radial-gradient(circle,rgba(255,122,0,.5) 0 1.5px,transparent 2px) 40px 50px/130px 130px}
-.deco{position:absolute;pointer-events:none;z-index:1}
-.moon{right:5vw;top:3vh;width:clamp(56px,9vw,100px);aspect-ratio:1;border-radius:50%;background:#f8edc8;box-shadow:0 0 50px rgba(248,237,200,.35);overflow:hidden}
-.moon::after{content:"";position:absolute;inset:0;border-radius:50%;background:#0a0710;left:-22%;top:-12%}
-.bats{left:5vw;top:3vh;font-size:clamp(1.6rem,4vw,3rem);opacity:.8;animation:fly 5s ease-in-out infinite}
-.pump{left:3vw;bottom:2vh;font-size:clamp(2.4rem,7vw,5.5rem);opacity:.9;filter:drop-shadow(0 0 18px rgba(255,122,0,.6));animation:glow 3s ease-in-out infinite}
-.ghost{right:3vw;bottom:2vh;font-size:clamp(2.4rem,7vw,5.5rem);opacity:.85;animation:fly 4s ease-in-out infinite reverse}
-@keyframes fly{50%{transform:translateY(-10px) rotate(-4deg)}}
-@keyframes glow{50%{filter:drop-shadow(0 0 32px rgba(255,122,0,.95))}}
-.home{position:relative;z-index:2;width:min(94vw,720px);height:100%;display:flex;flex-direction:column;align-items:center;gap:10px;padding:clamp(16px,3vh,40px) 0 clamp(14px,2.5vh,30px)}
-.home h1{margin:0;font-family:Georgia,"Palatino Linotype",serif;font-weight:900;font-style:italic;font-size:clamp(2.2rem,6.5vw,4.6rem);line-height:.95;color:var(--accent);text-shadow:0 0 30px rgba(255,122,0,.55),0 4px 0 #5a1f00;animation:flick 6s steps(1) infinite}
-@keyframes flick{0%,92%,96%,100%{opacity:1}94%{opacity:.55}98%{opacity:.8}}
-.preview-wrap{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;gap:6px}
-#start-preview{position:relative;flex:1;min-height:0;max-width:100%;aspect-ratio:2/3;overflow:hidden;border-radius:18px;background:#000;border:3px solid var(--accent);box-shadow:0 0 0 6px rgba(143,76,255,.25),0 0 40px rgba(255,122,0,.3),0 20px 50px rgba(0,0,0,.6)}
-#start-preview video{width:100%;height:100%;display:block;object-fit:cover}
-.guide{position:absolute;inset:7% 8%;border:2px dashed rgba(255,255,255,.45);border-radius:12px;pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px}
-.guide span{padding:5px 12px;border-radius:6px;background:rgba(10,7,16,.8);font-size:.8rem;font-weight:700}
-.preview-status{margin:0;font-size:.8rem;color:var(--muted);min-height:1.1em}
-.preview-status.ready{color:var(--green)}.preview-status.error{color:#ff8a8a}
-.picker{width:100%}
-.picker h2{margin:0 0 8px;font-size:clamp(.95rem,2.2vw,1.2rem);font-weight:800}
-.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;font-size:clamp(.68rem,1.6vw,.9rem);line-height:1.1;border-radius:14px;box-shadow:none;min-height:60px;justify-content:center}
-.chip b{font-size:clamp(1.3rem,3.4vw,2rem);line-height:1}
-.chip[aria-pressed=true]{background:linear-gradient(180deg,#3b1d66,#26124a);border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),0 0 22px rgba(255,122,0,.45)}
-#costumeHint{margin:8px 0 0;min-height:1.2em;font-size:.85rem;color:var(--muted)}
-#start:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
-#start:not(:disabled){animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(1.04)}}
-@media (max-width:520px){.chips{grid-template-columns:repeat(3,1fr)}}
-@media (max-height:760px){.chip{min-height:48px;padding:5px 3px}#costumeHint{display:none}.preview-status{display:none}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+        @media (prefers-color-scheme:dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #1a1233;
+                --ink: #f1edff;
+                --card: #2a1f4d;
+                --muted: #b3a9e6
+            }
+        }
 
-/* ===== CAPTURA ===== */
-#cam{position:relative;width:min(92vw,calc((100vh - 170px)*.75),1000px);aspect-ratio:3/4;border-radius:24px;overflow:hidden;background:#000;border:3px solid var(--accent);box-shadow:0 0 50px rgba(255,122,0,.3)}
-#cam video{width:100%;height:100%;object-fit:cover;display:block}
-#count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(6rem,30vw,20rem);font-weight:900;color:#fff;text-shadow:0 0 40px var(--accent),0 6px 30px rgba(0,0,0,.7)}
-#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .35s}
-#flash.go{opacity:1;transition:none}
+        :root[data-theme="dark"] {
+            --bg: #1a1233;
+            --ink: #f1edff;
+            --card: #2a1f4d;
+            --muted: #b3a9e6
+        }
 
-/* ===== IA ===== */
-#aipic{max-height:42vh;max-width:70vw;border-radius:16px;filter:blur(6px) brightness(.8);border:2px solid var(--purple)}
-.spin{width:56px;height:56px;border:6px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:rot 1s linear infinite}
-@keyframes rot{to{transform:rotate(360deg)}}
-.hint{font-size:.85rem;color:var(--muted);margin:0}
+        * {
+            box-sizing: border-box
+        }
 
-/* ===== RESULTADO ===== */
-#resrow{display:flex;gap:28px;align-items:center;justify-content:center;flex-wrap:wrap}
-#result{max-height:calc(100vh - 210px);max-width:92vw;border-radius:6px;box-shadow:0 0 50px rgba(255,122,0,.35),0 12px 40px rgba(0,0,0,.5);background:#fff;animation:drop .6s cubic-bezier(.2,1.2,.4,1)}
-@keyframes drop{from{transform:translateY(-60px) rotate(-4deg);opacity:0}}
-#qrbox{background:#fff;color:#1b1340;border-radius:20px;padding:16px;width:min(260px,80vw);display:grid;gap:10px}
-#qrbox[hidden]{display:none}
-#qrimg img{width:100%;height:auto;display:block;image-rendering:pixelated}
-#qrmsg{margin:0;font-weight:700}
-.timer{font-size:1rem;color:var(--muted)}
+        html,
+        body {
+            height: 100%;
+            margin: 0
+        }
 
-/* ===== BOTONES FLOTANTES (arriba, lejos del botón principal) ===== */
-#gear{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 6px);z-index:5;display:flex;gap:8px}
-#gear button{padding:6px 12px;opacity:.35;font-size:.8rem;box-shadow:none;background:rgba(23,16,34,.8)}
-#gear button:hover,#gear button:focus-visible{opacity:1}
+        body {
+            background:
+                radial-gradient(circle at 50% 8%, rgba(143,76,255,.20), transparent 25%),
+                radial-gradient(circle at 10% 85%, rgba(255,122,0,.14), transparent 28%),
+                linear-gradient(135deg, rgba(255,255,255,.018) 25%, transparent 25%) 0 0 / 30px 30px,
+                var(--bg);
+            color: var(--ink);
+            font-family: "Trebuchet MS", system-ui, sans-serif;
+            overflow: hidden
+        }
 
-/* ===== AJUSTES ===== */
-dialog{border:1px solid var(--line);border-radius:20px;padding:0;background:var(--card);color:var(--ink);width:min(600px,94vw);max-height:90vh;overflow:auto}
-dialog::backdrop{background:rgba(5,2,12,.75)}
-.dlg{padding:22px;display:grid;gap:12px}.dlg h2,.dlg h3{margin:0}
-.f{display:grid;grid-template-columns:1fr 1.2fr;gap:10px;align-items:center;font-size:.95rem;margin-bottom:8px}
-.f input,.f select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--muted);background:var(--bg);color:var(--ink);min-width:0}
-.f input[type=color]{padding:2px;height:38px}.f input[type=checkbox]{width:24px;height:24px}.f input[type=range]{padding:0}
-textarea{width:100%;height:70px;font:12px monospace;border-radius:10px;padding:8px;background:var(--bg);color:var(--ink)}
-#flist{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.fb{padding:6px 10px;border-radius:12px;font-size:.9rem;background:var(--bg)}
-.fb.sel{outline:3px solid var(--accent)}
-.fb img{height:70px;display:block;background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0/12px 12px}
-#fprev{max-width:100%;border-radius:8px;border:1px solid var(--muted)}
-@media print{body *{visibility:hidden}#result{visibility:visible;position:fixed;inset:0;margin:auto;max-height:100vh;box-shadow:none}}
-</style>
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            gap: 18px
+        }
+
+        .screen.on {
+            display: flex
+        }
+
+        h1 {
+            font-size: clamp(2.4rem, 8vw, 6rem);
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -.02em
+        }
+
+        p.sub {
+            font-size: clamp(1.1rem, 2.6vw, 1.8rem);
+            margin: 0;
+            color: var(--muted)
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: var(--card);
+            color: var(--ink);
+            box-shadow: 0 5px 0 rgba(0,0,0,.35);
+            transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px
+        }
+
+        button:hover { transform: translateY(-2px); border-color: rgba(255,122,0,.65) }
+        button:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(0,0,0,.35) }
+
+        button.big {
+            background: linear-gradient(180deg, #ff8a1c, #f05b00);
+            color: #fff;
+            border: 0;
+            border-radius: 14px;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            padding: .58em 1.55em;
+            box-shadow: 0 6px 0 var(--accent-dark), 0 15px 45px rgba(255,122,0,.22);
+            animation: pulse 2.4s ease-in-out infinite
+        }
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.05)
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            button.big {
+                animation: none
+            }
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .row[hidden],
+        .spin[hidden] {
+            display: none
+        }
+
+        #cam {
+            position: relative;
+            width: min(92vw, calc((100vh - 170px)*.75), 1000px);
+            aspect-ratio: 3/4;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .3)
+        }
+
+        #cam video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block
+        }
+
+        #count {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(6rem, 30vw, 20rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 6px 30px rgba(0, 0, 0, .6)
+        }
+
+        #flash {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .35s
+        }
+
+        #flash.go {
+            opacity: 1;
+            transition: none
+        }
+
+        #aipic {
+            max-height: 42vh;
+            max-width: 70vw;
+            border-radius: 16px;
+            filter: blur(6px) brightness(.85)
+        }
+
+        .spin {
+            width: 54px;
+            height: 54px;
+            border: 6px solid var(--muted);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: rot 1s linear infinite
+        }
+
+        @keyframes rot {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .hint {
+            font-size: .85rem;
+            color: var(--muted);
+            margin: 0
+        }
+
+        #resrow {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        #result {
+            max-height: calc(100vh - 210px);
+            max-width: 92vw;
+            border-radius: 6px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .35);
+            background: #fff;
+            animation: drop .6s cubic-bezier(.2, 1.2, .4, 1)
+        }
+
+        @keyframes drop {
+            from {
+                transform: translateY(-60px) rotate(-4deg);
+                opacity: 0
+            }
+        }
+
+        #qrbox {
+            background: #fff;
+            color: #1b1340;
+            border-radius: 20px;
+            padding: 16px;
+            width: min(260px, 80vw);
+            display: grid;
+            gap: 10px
+        }
+
+        #qrbox[hidden] {
+            display: none
+        }
+
+        #qrimg img {
+            width: 100%;
+            height: auto;
+            display: block;
+            image-rendering: pixelated
+        }
+
+        #qrmsg {
+            margin: 0;
+            font-weight: 600
+        }
+
+        #gear {
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            z-index: 5;
+            display: flex;
+            gap: 8px
+        }
+
+        #gear button {
+            padding: 10px 14px;
+            opacity: .4;
+            font-size: 1rem
+        }
+
+        #gear button:hover,
+        #gear button:focus-visible {
+            opacity: 1
+        }
+
+        dialog {
+            border: 0;
+            border-radius: 20px;
+            padding: 0;
+            background: var(--card);
+            color: var(--ink);
+            width: min(600px, 94vw);
+            max-height: 90vh;
+            overflow: auto
+        }
+
+        dialog::backdrop {
+            background: rgba(10, 5, 30, .6)
+        }
+
+        .dlg {
+            padding: 22px;
+            display: grid;
+            gap: 12px
+        }
+
+        .dlg h2,
+        .dlg h3 {
+            margin: 0
+        }
+
+        /* ===== HALLOWEEN KIOSCO VERTICAL — 9:16 ===== */
+        #s-idle { position: relative; overflow: hidden; }
+        #s-idle::before {
+            content:""; position:absolute; inset:0; pointer-events:none; opacity:.20;
+            background:
+                radial-gradient(circle at 18% 22%, #8f4cff 0 2px, transparent 3px),
+                radial-gradient(circle at 82% 62%, #ff7a00 0 2px, transparent 3px);
+            background-size:120px 120px,150px 150px;
+        }
+
+        .halloween-home {
+            position:relative;
+            z-index:2;
+            width:min(88vw,720px);
+            height:100svh;
+            padding:clamp(72px,6svh,108px) 0 clamp(26px,3svh,48px);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            gap:0;
+        }
+
+        .brand-mark {
+            position:absolute; top:22px; left:28px; color:#d9c7e8;
+            font-weight:900; font-size:.78rem; letter-spacing:.18em; z-index:5;
+        }
+        .moon {
+            position:absolute; right:7vw; top:5vh; width:clamp(60px,9vw,105px);
+            aspect-ratio:1; border-radius:50%; background:#f8edc8;
+            box-shadow:0 0 45px rgba(248,237,200,.25); opacity:.9;
+        }
+        .moon::after {
+            content:""; position:absolute; width:100%; height:100%; border-radius:50%;
+            background:#09060d; left:-18%; top:-10%;
+        }
+        .bats {
+            position:absolute; top:10vh; left:8vw; font-size:clamp(1.8rem,4vw,3.4rem);
+            letter-spacing:.35em; opacity:.75; transform:rotate(-8deg);
+        }
+        .pumpkin {
+            position:absolute; left:6vw; bottom:9vh; font-size:clamp(2.8rem,7vw,6rem);
+            filter:drop-shadow(0 12px 20px rgba(0,0,0,.55)); opacity:.75; transform:rotate(-8deg);
+        }
+        .web {
+            position:absolute; right:-20px; bottom:-20px; width:180px; height:180px; opacity:.24;
+            background:repeating-radial-gradient(circle at 100% 100%, transparent 0 16px, #fff 17px 18px);
+            border-radius:100% 0 0 0;
+        }
+
+        .halloween-kicker {
+            color:#bfa9cc; font-size:.72rem; font-weight:900;
+            letter-spacing:.24em; text-transform:uppercase;
+            margin:0 0 5px;
+        }
+        .halloween-home h1 {
+            font-size:clamp(2.6rem,6vw,4.8rem);
+            line-height:.9; text-transform:uppercase;
+            text-shadow:0 8px 35px rgba(0,0,0,.55);
+            margin:0;
+        }
+        .halloween-home h1 span { color:#ff7a00; }
+        .halloween-home p.sub {
+            color:#c9bdcf; font-size:clamp(1rem,2.2vw,1.35rem);
+            margin:7px 0 14px;
+        }
+
+        /*
+         * PREVIEW = MISMA PROPORCIÓN QUE LA CAPTURA.
+         * La captura usa #cam con el mismo aspect-ratio calculado por captureAspect().
+         * No fijamos 2/3 aquí: el valor base debe ser 3/4, igual que la pantalla de captura.
+         */
+        .live-preview-wrap {
+            width:min(52vw,390px);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:7px;
+            flex:0 0 auto;
+        }
+        .preview-label {
+            color:#d9c7e8; font-size:.68rem; font-weight:900; letter-spacing:.2em;
+        }
+        #start-preview {
+            position:relative;
+            width:100%;
+            aspect-ratio:3 / 4;
+            overflow:hidden;
+            border:2px solid rgba(255,122,0,.82);
+            border-radius:16px;
+            background:#000;
+            box-shadow:0 0 0 1px #24172b, 0 18px 50px rgba(0,0,0,.5);
+        }
+        #start-preview video {
+            width:100%; height:100%; display:block; object-fit:cover; background:#000;
+        }
+        #start-preview::after {
+            content:""; position:absolute; inset:0; pointer-events:none;
+            background:linear-gradient(to bottom,rgba(0,0,0,.08),transparent 25%,transparent 75%,rgba(0,0,0,.35));
+        }
+        .preview-guide {
+            position:absolute; inset:7% 8%; border:2px dashed rgba(255,255,255,.55);
+            border-radius:12px; pointer-events:none; display:flex; align-items:flex-end;
+            justify-content:center; padding-bottom:10px; z-index:2;
+        }
+        .preview-guide::before,.preview-guide::after {
+            content:""; position:absolute; width:26px; height:26px;
+            border-color:#ff7a00; border-style:solid;
+        }
+        .preview-guide::before { top:-2px; left:-2px; border-width:4px 0 0 4px; }
+        .preview-guide::after { right:-2px; bottom:-2px; border-width:0 4px 4px 0; }
+        .guide-text {
+            padding:6px 11px; border-radius:5px; background:rgba(9,6,13,.82);
+            color:#fff; font-size:.61rem; font-weight:900; letter-spacing:.12em;
+        }
+        .preview-status {
+            margin:0; min-height:1em; color:#b7a8bd; font-size:.66rem; font-weight:800;
+            letter-spacing:.08em; text-transform:uppercase;
+        }
+        .preview-status.ready { color:#bde58f; }
+        .preview-status.error { color:#ff9a9a; }
+
+        /* Bloque de interacción: selector + CTA. Siempre permanece pegado al preview. */
+        .costume-picker {
+            width:min(88vw,600px);
+            margin-top:clamp(12px,2svh,24px);
+            padding:12px 16px 13px;
+            border:1px solid rgba(143,76,255,.55); border-radius:16px;
+            background:rgba(16,10,23,.90);
+            box-shadow:0 16px 45px rgba(0,0,0,.35);
+            backdrop-filter:blur(8px);
+        }
+        .costume-picker label {
+            display:block; color:#eadcf1; font-size:.76rem; font-weight:900;
+            letter-spacing:.18em; margin-bottom:8px;
+        }
+        #costumeSelect {
+            width:100%; border:2px solid #ff7a00; border-radius:10px; padding:13px 15px;
+            background:#fff8ef; color:#17111f; font:inherit; font-weight:900;
+            font-size:clamp(1rem,2vw,1.2rem); cursor:pointer;
+        }
+        #costumeHint { margin:7px 0 0; color:#b7a8bd; font-size:.78rem; }
+
+        .halloween-home #start {
+            width:min(62vw,410px);
+            min-height:76px;
+            margin-top:12px;
+        }
+        #start:disabled {
+            opacity:.38; cursor:not-allowed; transform:none; animation:none; box-shadow:none;
+        }
+        .start-hint {
+            margin:8px 0 0;
+            color:#a996b0; font-size:.68rem; font-weight:800; letter-spacing:.10em;
+        }
+        #gear button { opacity:.4; background:#17111f; border-color:#33263b; }
+        #gear button:hover,#gear button:focus-visible { opacity:1; }
+        #home { background:transparent; color:#b7a8bd; }
+
+        /* Portrait 9:16: todo el conjunto debe verse como una sola composición. */
+        @media (orientation:portrait) {
+            .halloween-home { width:min(88vw,720px); }
+        }
+        @media (max-height:1200px) and (orientation:portrait) {
+            .halloween-home { padding-top:64px; padding-bottom:22px; }
+            .halloween-home h1 { font-size:clamp(2.3rem,5.5vw,4rem); }
+            .halloween-home p.sub { margin-bottom:10px; }
+            .live-preview-wrap { width:min(47vw,330px); }
+            .costume-picker { margin-top:10px; padding:10px 13px 11px; }
+            #costumeSelect { padding:10px 12px; }
+            .halloween-home #start { min-height:64px; margin-top:9px; }
+        }
+        @media (max-height:950px) and (orientation:portrait) {
+            .halloween-home { padding-top:58px; padding-bottom:16px; }
+            .halloween-home h1 { font-size:clamp(2rem,5.1vw,3.2rem); }
+            .halloween-home p.sub { font-size:.88rem; margin-bottom:7px; }
+            .live-preview-wrap { width:min(39vw,265px); }
+            .preview-status { display:none; }
+            .costume-picker { margin-top:8px; padding:8px 10px 9px; }
+            .costume-picker label { margin-bottom:6px; }
+            #costumeSelect { padding:8px 10px; }
+            #costumeHint { margin-top:5px; font-size:.7rem; }
+            .halloween-home #start { min-height:56px; padding:.42em 1.1em; margin-top:7px; }
+            .start-hint { margin-top:5px; font-size:.6rem; }
+        }
+        @media (max-width:700px) and (orientation:portrait) {
+            .halloween-home { width:92vw; }
+            .live-preview-wrap { width:min(60vw,300px); }
+            .costume-picker { width:92vw; }
+            .halloween-home #start { width:82vw; }
+        }
+
+        .f {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 10px;
+            align-items: center;
+            font-size: .95rem;
+            margin-bottom: 8px
+        }
+
+        .f input,
+        .f select {
+            font: inherit;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--muted);
+            background: var(--bg);
+            color: var(--ink);
+            min-width: 0
+        }
+
+        .f input[type=color] {
+            padding: 2px;
+            height: 38px
+        }
+
+        .f input[type=checkbox] {
+            width: 24px;
+            height: 24px
+        }
+
+        .f input[type=range] {
+            padding: 0
+        }
+
+        textarea {
+            width: 100%;
+            height: 70px;
+            font: 12px monospace;
+            border-radius: 10px;
+            padding: 8px;
+            background: var(--bg);
+            color: var(--ink)
+        }
+
+        .timer {
+            font-size: 1rem;
+            color: var(--muted)
+        }
+
+        #flist {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .fb {
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-size: .9rem;
+            background: var(--bg)
+        }
+
+        .fb.sel {
+            outline: 3px solid var(--accent)
+        }
+
+        .fb img {
+            height: 70px;
+            display: block;
+            background: repeating-conic-gradient(#ccc 0 25%, #fff 0 50%) 0/12px 12px
+        }
+
+        #fprev {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--muted)
+        }
+
+        @media print {
+            body * {
+                visibility: hidden
+            }
+
+            #result {
+                visibility: visible;
+                position: fixed;
+                inset: 0;
+                margin: auto;
+                max-height: 100vh;
+                box-shadow: none
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<section id="s-idle" class="screen on">
-  <div class="deco moon" aria-hidden="true"></div>
-  <div class="deco bats" aria-hidden="true">🦇 🦇</div>
-  <div class="deco pump" aria-hidden="true">🎃</div>
-  <div class="deco ghost" aria-hidden="true">👻</div>
-  <div class="home">
-    <h1 id="t-title">¡DISFRÁZATE!</h1>
-    <p class="sub" id="t-sub">Elige tu disfraz y vive una noche diferente</p>
-    <div class="preview-wrap">
-      <div id="start-preview" aria-label="Vista previa de la cámara">
-        <video id="pv" autoplay playsinline muted></video>
-        <div class="guide"><span>Colócate aquí</span></div>
-      </div>
-      <p class="preview-status" id="preview-status">Activando cámara…</p>
+    <section id="s-idle" class="screen on">
+        <div class="moon" aria-hidden="true"></div>
+        <div class="bats" aria-hidden="true">⌁ 🦇 ⌁</div>
+        <div class="pumpkin" aria-hidden="true">🎃</div>
+        <div class="web" aria-hidden="true"></div>
+        <div class="brand-mark">HALLOWEEN PHOTOBOOTH</div>
+        <div class="start-content halloween-home">
+            <div class="halloween-kicker">Noche de Halloween · Edición especial</div>
+            <h1 id="t-title">DISFRÁZATE <span>DE NOCHE</span></h1>
+            <p class="sub" id="t-sub">Elige tu disfraz y deja que la magia haga el resto</p>
+            <div class="live-preview-wrap">
+                <div class="preview-label">VISTA PREVIA</div>
+                <div id="start-preview" aria-label="Vista previa de la cámara">
+                    <video id="pv" autoplay playsinline muted></video>
+                    <div class="preview-guide"><div class="guide-text">ACOMÓDATE AQUÍ</div></div>
+                </div>
+                <p class="preview-status" id="preview-status">Activando cámara…</p>
+            </div>
+            <div class="costume-picker">
+                <label for="costumeSelect">¿DE QUÉ QUIEREN DISFRAZARSE?</label>
+                <select id="costumeSelect" aria-label="Selecciona el disfraz">
+                    <option value="">Selecciona un disfraz…</option>
+                    <option value="Vampiros">🧛 Vampiros</option>
+                    <option value="Brujas">🧙 Brujas</option>
+                    <option value="Esqueletos">💀 Esqueletos</option>
+                    <option value="Zombis">🧟 Zombis</option>
+                    <option value="Hombres lobo">🐺 Hombres lobo</option>
+                    <option value="Fantasmas">👻 Fantasmas</option>
+                    <option value="Momias">🧟 Momias</option>
+                    <option value="Demonios">😈 Demonios</option>
+                    <option value="Payasos siniestros">🤡 Payasos siniestros</option>
+                    <option value="Cazadores de monstruos">🗡️ Cazadores de monstruos</option>
+                    <option value="Calabazas de Halloween">🎃 Calabazas de Halloween</option>
+                    <option value="Drácula clásico">🧛 Drácula clásico</option>
+                </select>
+                <p id="costumeHint">Todos los que aparezcan en la foto usarán el mismo tema de disfraz.</p>
+            </div>
+            <button class="big" id="start" disabled>TOMAR FOTO</button>
+            <p class="start-hint">TODOS LOS QUE APAREZCAN EN LA FOTO SE TRANSFORMARÁN EN EL DISFRAZ ELEGIDO</p>
+        </div>
+    </section>
+
+    <section id="s-cap" class="screen">
+        <div id="cam"><video id="v" autoplay playsinline muted></video>
+            <div id="count"></div>
+            <div id="flash"></div>
+        </div>
+    </section>
+
+    <section id="s-ai" class="screen">
+        <img id="aipic" alt="">
+        <div id="aispin" class="spin" aria-hidden="true"></div>
+        <p class="sub" id="aimsg" aria-live="polite"></p>
+        <p class="hint">Puede tardar hasta un minuto</p>
+        <div class="row" id="aiact" hidden>
+            <button id="airetry" class="big"
+                style="animation:none;font-size:1.15rem;padding:14px 28px">Reintentar</button>
+            <button id="aiorig">Usar mi foto original</button>
+        </div>
+    </section>
+
+    <section id="s-res" class="screen">
+        <div id="resrow">
+            <img id="result" alt="Tu foto lista">
+            <div id="qrbox" hidden>
+                <div id="qrimg"></div>
+                <p id="qrmsg"></p>
+                <button id="qrretry" hidden>Reintentar</button>
+            </div>
+        </div>
+        <div class="row">
+            <button id="dl">Descargar</button>
+            <button id="pr">Imprimir</button>
+        </div>
+        <div class="timer" id="timer"></div>
+    </section>
+
+    <div id="gear">
+        <button id="fs" aria-label="Pantalla completa">⛶ Pantalla completa</button>
+        <button id="cfg" aria-label="Ajustes">⚙ Ajustes</button>
     </div>
-    <div class="picker">
-      <h2>¿De qué se van a disfrazar?</h2>
-      <div class="chips" id="chips" role="group" aria-label="Disfraz"></div>
-      <p id="costumeHint"></p>
-    </div>
-    <button class="big" id="start" disabled>TOMAR FOTO</button>
-  </div>
-</section>
 
-<section id="s-cap" class="screen">
-  <div id="cam"><video id="v" autoplay playsinline muted></video><div id="count"></div><div id="flash"></div></div>
-</section>
+    <dialog id="dlg">
+        <div class="dlg">
+            <h2>Ajustes del photobooth</h2>
+            <div id="fields"></div>
 
-<section id="s-ai" class="screen">
-  <img id="aipic" alt="">
-  <div id="aispin" class="spin" aria-hidden="true"></div>
-  <p class="sub" id="aimsg" aria-live="polite"></p>
-  <p class="hint">Puede tardar hasta un minuto</p>
-  <div class="row" id="aiact" hidden>
-    <button id="airetry" class="big" style="animation:none;font-size:1.15rem;padding:14px 28px">Reintentar</button>
-    <button id="aiorig">Usar mi foto original</button>
-  </div>
-</section>
+            <h3>Marcos PNG</h3>
+            <p class="hint">Sube PNG con una ventana transparente (cualquier forma y tamaño). La cámara y la IA se
+                adaptan a la proporción de esa ventana. Se guardan solo en este navegador.</p>
+            <input type="file" id="fup" accept="image/png" multiple hidden>
+            <div class="row" style="justify-content:flex-start"><button id="fupb">+ Subir marcos PNG</button></div>
+            <div id="flist"></div>
+            <div id="fedit" hidden>
+                <div id="ffields"></div>
+                <canvas id="fprev"></canvas>
+                <div class="row"><button id="fdel">Borrar este marco</button></div>
+            </div>
 
-<section id="s-res" class="screen">
-  <div id="resrow">
-    <img id="result" alt="Tu foto lista">
-    <div id="qrbox" hidden><div id="qrimg"></div><p id="qrmsg"></p><button id="qrretry" hidden>Reintentar</button></div>
-  </div>
-  <div class="row"><button id="dl">Descargar</button><button id="pr">Imprimir</button></div>
-  <div class="timer" id="timer"></div>
-</section>
+            <details>
+                <summary>Guardar o cargar configuración</summary>
+                <textarea id="json" aria-label="Configuración en JSON"></textarea>
+                <p class="hint">No incluye los marcos PNG: esos se suben en cada equipo.</p>
+                <div class="row"><button id="imp">Cargar</button></div>
+            </details>
+            <div class="row"><button id="reset">Restaurar valores</button><button id="close"
+                    style="background:var(--accent);color:#fff">Listo</button></div>
+        </div>
+    </dialog>
 
-<div id="gear">
-  <button id="fs" aria-label="Pantalla completa">⛶ Pantalla completa</button>
-  <button id="cfg" aria-label="Ajustes">⚙ Ajustes</button>
-</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script>
+        /* ====== CLOUDINARY ====== */
+        const CLOUD = { name: "cgt2nq8m", preset: "creaxid" };
 
-<dialog id="dlg">
-  <div class="dlg">
-    <h2>Ajustes del photobooth</h2>
-    <div id="fields"></div>
-    <h3>Marcos PNG</h3>
-    <p class="hint">Sube PNG con una ventana transparente (cualquier forma y tamaño). La cámara y la IA se adaptan a la proporción de esa ventana. Se guardan solo en este navegador.</p>
-    <input type="file" id="fup" accept="image/png" multiple hidden>
-    <div class="row" style="justify-content:flex-start"><button id="fupb">+ Subir marcos PNG</button></div>
-    <div id="flist"></div>
-    <div id="fedit" hidden><div id="ffields"></div><canvas id="fprev"></canvas><div class="row"><button id="fdel">Borrar este marco</button></div></div>
-    <details><summary>Guardar o cargar configuración</summary>
-      <textarea id="json" aria-label="Configuración en JSON"></textarea>
-      <p class="hint">No incluye los marcos PNG: esos se suben en cada equipo.</p>
-      <div class="row"><button id="imp">Cargar</button></div></details>
-    <div class="row"><button id="reset">Restaurar valores</button><button id="close" style="background:var(--accent);color:#fff">Listo</button></div>
-  </div>
-</dialog>
+        /* ====== TEMÁTICA IA: HALLOWEEN SEMI-REALISTA ====== */
+        const COSTUMES = ["Vampiros","Brujas","Esqueletos","Zombis","Hombres lobo","Fantasmas","Momias","Demonios","Payasos siniestros","Cazadores de monstruos","Calabazas de Halloween","Drácula clásico"];
+        let selectedCostume = localStorage.getItem("pb-halloween-costume") || "";
+        const THEME = {
+            loading: ["Preparando la noche…", "Eligiendo tu disfraz…", "Añadiendo la atmósfera de Halloween…", "Revelando tu transformación…"],
+            style: "fotografía cinematográfica de Halloween con estilo semi-realista estilizado: un punto intermedio entre fotografía real y arte digital, rostros y personas claramente reconocibles, materiales y ropa detallados, iluminación dramática de noche, sombras suaves, niebla sutil, luces de luna y tonos cálidos de Halloween; NO fotorrealismo extremo, NO aspecto de fotografía documental, NO caricatura, NO cartoon, NO anime, NO chibi, NO ilustración infantil"
+        };
+        const AI_ENDPOINT = "/api/ai";
+        const buildPrompt = () => {
+            const costume = selectedCostume || "un disfraz clásico de Halloween";
+            return (
+                "TRANSFORMA ESTA FOTOGRAFÍA EN UNA FOTO DE HALLOWEEN SEMI-REALISTA ESTILIZADA. " +
+                "La cantidad de personas debe permanecer EXACTAMENTE igual a la fotografía original. No elimines, dupliques, fusiones ni agregues personas. " +
+                "Cada persona visible debe seguir siendo claramente la misma persona: conserva identidad, estructura y forma del rostro, ojos, cejas, nariz, boca, tono de piel, edad aparente, peinado, barba y proporciones corporales. No embellezcas ni cambies sus rasgos. " +
+                "DISFRAZ: todas las personas deben llevar el mismo concepto de disfraz seleccionado: " + costume + ". Adapta el disfraz individualmente al cuerpo y postura de cada persona, con ropa, maquillaje, accesorios y materiales creíbles y bien integrados. " +
+                "La transformación debe sentirse como un disfraz real y elaborado, no como un filtro aplicado encima de la foto. " +
+                "ESCENA: ambiente de Halloween nocturno, elegante y ligeramente misterioso, iluminación cinematográfica, atmósfera de fiesta de Halloween, decoración sutil, niebla ligera y profundidad de campo natural. " +
+                "ESTILO: " + THEME.style + ". " +
+                "Mantén composición, encuadre y posiciones generales de las personas de la fotografía. No añadas personajes secundarios. No añadas texto, nombres, marcas de agua ni logotipos inventados."
+            );
+        };
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script>
-/* ====== CLOUDINARY ====== */
-const CLOUD = { name: "cgt2nq8m", preset: "creaxid" };
+        const DEF = { title: "¡DISFRÁZATE!", sub: "Elige tu disfraz y vive una noche diferente", footer: "Halloween · 2026", stickers: "🎃🦇👻", ai: true, count: 3, filter: "none", frame: "#09060d", ink: "#fff8ef", accent: "#ff7a00", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
+        const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
+        const FIELDS = [
+            ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
+            ["footer", "Texto al pie (sin marco PNG)", "text"], ["stickers", "Stickers (sin marco PNG)", "text"],
+            ["count", "Cuenta regresiva (seg)", "select", [2, 3, 5]], ["filter", "Filtro", "select", FILTERS],
+            ["frame", "Color de fondo del marco", "color"], ["ink", "Color del texto", "color"], ["accent", "Color de acento", "color"],
+            ["mirror", "Efecto espejo", "checkbox"], ["reset", "Reinicio automático (seg, 0 = nunca)", "number"],
+            ["qr", "Mostrar QR de descarga", "checkbox"], ["qrText", "Texto bajo el QR", "text"]];
+        const FF = [["x", "Ventana: X %", 0, 100, .5], ["y", "Ventana: Y %", 0, 100, .5], ["w", "Ventana: ancho %", 1, 100, .5], ["h", "Ventana: alto %", 1, 100, .5]];
+        const $ = id => document.getElementById(id);
+        let cfg = { ...DEF }, frames = [], imgCache = {}, lastCanvas = null;
+        try { const s = localStorage.getItem("pb-halloween-cfg"); if (s) cfg = { ...DEF, ...JSON.parse(s) } } catch (e) { }
+        const save = () => { try { localStorage.setItem("pb-halloween-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
 
-/* ====== TEMÁTICA IA ====== */
-const COSTUMES = [["Vampiros","🧛"],["Brujas","🧙"],["Esqueletos","💀"],["Zombis","🧟"],["Hombres lobo","🐺"],["Fantasmas","👻"],["Momias","🩹"],["Demonios","😈"],["Payasos siniestros","🤡"],["Cazadores de monstruos","🗡️"],["Calabazas de Halloween","🎃"],["Drácula clásico","🦇"]];
-const HINT_DEFAULT = "Todos los de la foto llevarán el mismo disfraz.";
-const SUB_DEFAULT = "Elige tu disfraz y vive una noche diferente";
-let selectedCostume = ""; try { selectedCostume = localStorage.getItem("pb-halloween-costume") || "" } catch (e) { }
-const THEME = {
-  loading: ["Preparando la noche…", "Eligiendo tu disfraz…", "Añadiendo la atmósfera de Halloween…", "Revelando tu transformación…"],
-  style: "fotografía cinematográfica de Halloween con estilo semi-realista estilizado: un punto intermedio entre fotografía real y arte digital, rostros y personas claramente reconocibles, materiales y ropa detallados, iluminación dramática de noche, sombras suaves, niebla sutil, luces de luna y tonos cálidos de Halloween; NO fotorrealismo extremo, NO aspecto de fotografía documental, NO caricatura, NO cartoon, NO anime, NO chibi, NO ilustración infantil"
-};
-const AI_ENDPOINT = "/api/ai";
-const buildPrompt = () => {
-  const costume = selectedCostume || "un disfraz clásico de Halloween";
-  return "TRANSFORMA ESTA FOTOGRAFÍA EN UNA FOTO DE HALLOWEEN SEMI-REALISTA ESTILIZADA. " +
-    "La cantidad de personas debe permanecer EXACTAMENTE igual a la fotografía original. No elimines, dupliques, fusiones ni agregues personas. " +
-    "Cada persona visible debe seguir siendo claramente la misma persona: conserva identidad, estructura y forma del rostro, ojos, cejas, nariz, boca, tono de piel, edad aparente, peinado, barba y proporciones corporales. No embellezcas ni cambies sus rasgos. " +
-    "DISFRAZ: todas las personas deben llevar el mismo concepto de disfraz seleccionado: " + costume + ". Adapta el disfraz individualmente al cuerpo y postura de cada persona, con ropa, maquillaje, accesorios y materiales creíbles y bien integrados. " +
-    "La transformación debe sentirse como un disfraz real y elaborado, no como un filtro aplicado encima de la foto. " +
-    "ESCENA: ambiente de Halloween nocturno, elegante y ligeramente misterioso, iluminación cinematográfica, atmósfera de fiesta de Halloween, decoración sutil, niebla ligera y profundidad de campo natural. " +
-    "ESTILO: " + THEME.style + ". " +
-    "Mantén composición, encuadre y posiciones generales de las personas de la fotografía. No añadas personajes secundarios. No añadas texto, nombres, marcas de agua ni logotipos inventados.";
-};
+        /* ---------- IndexedDB (marcos) ---------- */
+        const idb = () => new Promise((res, rej) => { const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) });
+        const tx = async (mode, fn) => { const d = await idb(); return new Promise((res, rej) => { const t = d.transaction("frames", mode), q = fn(t.objectStore("frames")); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error) }) };
+        const dbAll = () => tx("readonly", s => s.getAll());
+        const dbPut = f => tx("readwrite", s => s.put(f));
+        const dbDel = id => tx("readwrite", s => s.delete(id));
+        const loadImg = f => imgCache[f.id] || (imgCache[f.id] = new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f.blob) }));
+        const curFrame = () => frames.find(f => f.id === cfg.frameId);
 
-const DEF = { title: "¡DISFRÁZATE!", sub: SUB_DEFAULT, footer: "Halloween · 2026", stickers: "🎃🦇👻", ai: true, count: 3, filter: "none", frame: "#0a0710", ink: "#fff4e6", accent: "#ff7a00", mirror: true, reset: 60, frameId: "", qr: true, qrText: "Escanea y llévate tu foto" };
-const FILTERS = [["none", "Natural"], ["grayscale(1) contrast(1.1)", "Blanco y negro"], ["sepia(.8) contrast(1.05)", "Sepia"], ["saturate(1.7) contrast(1.05)", "Vívido"]];
-const FIELDS = [
-  ["title", "Título", "text"], ["sub", "Subtítulo", "text"], ["ai", "Edición con IA", "checkbox"],
-  ["footer", "Texto al pie (sin marco PNG)", "text"], ["stickers", "Stickers (sin marco PNG)", "text"],
-  ["count", "Cuenta regresiva (seg)", "select", [2, 3, 5]], ["filter", "Filtro", "select", FILTERS],
-  ["frame", "Color de fondo del marco", "color"], ["ink", "Color del texto", "color"], ["accent", "Color de acento", "color"],
-  ["mirror", "Efecto espejo", "checkbox"], ["reset", "Reinicio automático (seg, 0 = nunca)", "number"],
-  ["qr", "Mostrar QR de descarga", "checkbox"], ["qrText", "Texto bajo el QR", "text"]];
-const FF = [["x", "Ventana: X %", 0, 100, .5], ["y", "Ventana: Y %", 0, 100, .5], ["w", "Ventana: ancho %", 1, 100, .5], ["h", "Ventana: alto %", 1, 100, .5]];
-const $ = id => document.getElementById(id);
-let cfg = { ...DEF }, frames = [], imgCache = {}, lastCanvas = null;
-try { const s = localStorage.getItem("pb-halloween-cfg"); if (s) cfg = { ...DEF, ...JSON.parse(s) } } catch (e) { }
-const save = () => { try { localStorage.setItem("pb-halloween-cfg", JSON.stringify(cfg)) } catch (e) { } $("json").value = JSON.stringify(cfg) };
+        /* ---------- Geometría ---------- */
+        const win = (f, W, H) => [f.x / 100 * W, f.y / 100 * H, f.w / 100 * W, f.h / 100 * H];
+        function cover(x, s, dx, dy, dw, dh) {
+            const sw0 = s.naturalWidth || s.width, sh0 = s.naturalHeight || s.height, r = dw / dh, sr = sw0 / sh0; let sw = sw0, sh = sh0;
+            if (sr > r) sw = sh * r; else sh = sw / r;
+            x.drawImage(s, (sw0 - sw) / 2, (sh0 - sh) / 2, sw, sh, dx, dy, dw, dh);
+        }
+        function detect(img) {
+            const s = Math.min(1, 400 / Math.max(img.width, img.height)), w = Math.round(img.width * s), h = Math.round(img.height * s);
+            const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.drawImage(img, 0, 0, w, h);
+            const d = x.getImageData(0, 0, w, h).data; let x0 = w, y0 = h, x1 = -1, y1 = -1;
+            for (let j = 0; j < h; j++)for (let i = 0; i < w; i++)if (d[(j * w + i) * 4 + 3] < 20) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (j < y0) y0 = j; if (j > y1) y1 = j }
+            if (x1 < 0 || (x1 - x0) * (y1 - y0) < w * h * .02) return { x: 5, y: 5, w: 90, h: 90 };
+            const r = v => Math.round(v * 10) / 10;
+            return { x: r(x0 / w * 100), y: r(y0 / h * 100), w: r((x1 - x0 + 1) / w * 100), h: r((y1 - y0 + 1) / h * 100) };
+        }
 
-/* ---------- IndexedDB (marcos) ---------- */
-const idb = () => new Promise((res, rej) => { const r = indexedDB.open("pb-db", 1); r.onupgradeneeded = () => r.result.createObjectStore("frames", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error) });
-const tx = async (mode, fn) => { const d = await idb(); return new Promise((res, rej) => { const t = d.transaction("frames", mode), q = fn(t.objectStore("frames")); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error) }) };
-const dbAll = () => tx("readonly", s => s.getAll());
-const dbPut = f => tx("readwrite", s => s.put(f));
-const dbDel = id => tx("readwrite", s => s.delete(id));
-const loadImg = f => imgCache[f.id] || (imgCache[f.id] = new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f.blob) }));
-const curFrame = () => frames.find(f => f.id === cfg.frameId);
+        /* ---------- Ajustes ---------- */
+        function apply() {
+            $("t-title").textContent = cfg.title; $("t-sub").textContent = cfg.sub;
+            document.documentElement.style.setProperty("--accent", cfg.accent);
+            $("v").style.transform = cfg.mirror ? "scaleX(-1)" : "none";
+            $("v").style.filter = cfg.filter;
+            const cs = $("costumeSelect");
+            if (cs) cs.value = selectedCostume;
+            syncStartPreview();
+            save();
+        }
+        function buildFields() {
+            const box = $("fields"); box.innerHTML = "";
+            FIELDS.forEach(([k, label, type, opts]) => {
+                const w = document.createElement("label"); w.className = "f"; w.append(label);
+                let el;
+                if (type === "select") { el = document.createElement("select"); opts.forEach(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; el.add(new Option(t, v)) }); el.value = cfg[k] }
+                else { el = document.createElement("input"); el.type = type; if (type === "checkbox") el.checked = cfg[k]; else el.value = cfg[k] }
+                el.onchange = el.oninput = () => {
+                    let v = type === "checkbox" ? el.checked : el.value;
+                    if (["count", "reset"].includes(k)) v = Number(v) || 0;
+                    cfg[k] = v; apply();
+                };
+                w.append(el); box.append(w);
+            });
+        }
 
-/* ---------- Geometría ---------- */
-const win = (f, W, H) => [f.x / 100 * W, f.y / 100 * H, f.w / 100 * W, f.h / 100 * H];
-function cover(x, s, dx, dy, dw, dh) {
-  const sw0 = s.naturalWidth || s.width, sh0 = s.naturalHeight || s.height, r = dw / dh, sr = sw0 / sh0; let sw = sw0, sh = sh0;
-  if (sr > r) sw = sh * r; else sh = sw / r;
-  x.drawImage(s, (sw0 - sw) / 2, (sh0 - sh) / 2, sw, sh, dx, dy, dw, dh);
-}
-function detect(img) {
-  const s = Math.min(1, 400 / Math.max(img.width, img.height)), w = Math.round(img.width * s), h = Math.round(img.height * s);
-  const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.drawImage(img, 0, 0, w, h);
-  const d = x.getImageData(0, 0, w, h).data; let x0 = w, y0 = h, x1 = -1, y1 = -1;
-  for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) if (d[(j * w + i) * 4 + 3] < 20) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (j < y0) y0 = j; if (j > y1) y1 = j }
-  if (x1 < 0 || (x1 - x0) * (y1 - y0) < w * h * .02) return { x: 5, y: 5, w: 90, h: 90 };
-  const r = v => Math.round(v * 10) / 10;
-  return { x: r(x0 / w * 100), y: r(y0 / h * 100), w: r((x1 - x0 + 1) / w * 100), h: r((y1 - y0 + 1) / h * 100) };
-}
+        /* ---------- Gestor de marcos ---------- */
+        async function renderFrames() {
+            try { frames = await dbAll() } catch (e) { frames = [] }
+            const l = $("flist"); l.innerHTML = "";
+            const none = document.createElement("button"); none.textContent = "Sin marco"; none.className = "fb" + (!curFrame() ? " sel" : "");
+            none.onclick = () => { cfg.frameId = ""; apply(); renderFrames() }; l.append(none);
+            frames.forEach(f => {
+                const b = document.createElement("button"); b.className = "fb" + (cfg.frameId === f.id ? " sel" : "");
+                const im = new Image(); im.src = URL.createObjectURL(f.blob); im.alt = f.name; b.title = f.name; b.append(im);
+                b.onclick = () => { cfg.frameId = f.id; apply(); renderFrames() }; l.append(b);
+            });
+            const cur = curFrame(); $("fedit").hidden = !cur; if (cur) buildFrameEditor(cur);
+        }
+        function buildFrameEditor(f) {
+            const b = $("ffields"); b.innerHTML = "";
+            FF.forEach(([k, label, mn, mx, st]) => {
+                const w = document.createElement("label"); w.className = "f"; const t = document.createTextNode(label + ": " + f[k]); w.append(t);
+                const el = document.createElement("input"); el.type = "range"; el.min = mn; el.max = mx; el.step = st; el.value = f[k];
+                el.oninput = () => { f[k] = Number(el.value); t.nodeValue = label + ": " + f[k]; prev(f) };
+                el.onchange = () => dbPut(f);
+                w.append(el); b.append(w);
+            });
+            prev(f);
+        }
+        async function prev(f) {
+            const img = await loadImg(f), c = $("fprev"), s = Math.min(1, 360 / img.width);
+            c.width = img.width * s; c.height = img.height * s;
+            const x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, c.width, c.height);
+            x.fillStyle = "#e0527a"; x.fillRect(...win(f, c.width, c.height));
+            x.drawImage(img, 0, 0, c.width, c.height);
+        }
+        $("fupb").onclick = () => $("fup").click();
+        $("fup").onchange = async e => {
+            for (const file of e.target.files) {
+                if (file.type !== "image/png") continue;
+                const f = { id: "f" + Date.now() + Math.random().toString(36).slice(2, 6), name: file.name.replace(/\.png$/i, ""), blob: file };
+                Object.assign(f, detect(await loadImg(f)));
+                try { await dbPut(f) } catch (err) { alert("No se pudo guardar el marco en este navegador."); continue }
+                cfg.frameId = f.id;
+            }
+            e.target.value = ""; apply(); renderFrames();
+        };
+        $("fdel").onclick = async () => {
+            const f = curFrame(); if (!f || !confirm("¿Borrar este marco?")) return;
+            await dbDel(f.id); delete imgCache[f.id]; cfg.frameId = ""; apply(); renderFrames();
+        };
 
-/* ---------- Ajustes ---------- */
-function apply() {
-  $("t-title").textContent = cfg.title; $("t-sub").textContent = cfg.sub;
-  document.documentElement.style.setProperty("--accent", cfg.accent);
-  $("v").style.transform = cfg.mirror ? "scaleX(-1)" : "none";
-  $("v").style.filter = cfg.filter;
-  syncStartPreview(); save();
-}
-function buildFields() {
-  const box = $("fields"); box.innerHTML = "";
-  FIELDS.forEach(([k, label, type, opts]) => {
-    const w = document.createElement("label"); w.className = "f"; w.append(label);
-    let el;
-    if (type === "select") { el = document.createElement("select"); opts.forEach(o => { const [v, t] = Array.isArray(o) ? o : [o, o]; el.add(new Option(t, v)) }); el.value = cfg[k] }
-    else { el = document.createElement("input"); el.type = type; if (type === "checkbox") el.checked = cfg[k]; else el.value = cfg[k] }
-    el.onchange = el.oninput = () => {
-      let v = type === "checkbox" ? el.checked : el.value;
-      if (["count", "reset"].includes(k)) v = Number(v) || 0;
-      cfg[k] = v; apply();
-    };
-    w.append(el); box.append(w);
-  });
-}
+        /* ---------- Cámara y captura ---------- */
+        function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)) }
+        const wait = ms => new Promise(r => setTimeout(r, ms));
+        let stream = null, busy = false, resetT = null;
 
-/* ---------- Gestor de marcos ---------- */
-async function renderFrames() {
-  try { frames = await dbAll() } catch (e) { frames = [] }
-  const l = $("flist"); l.innerHTML = "";
-  const none = document.createElement("button"); none.textContent = "Sin marco"; none.className = "fb" + (!curFrame() ? " sel" : "");
-  none.onclick = () => { cfg.frameId = ""; apply(); renderFrames() }; l.append(none);
-  frames.forEach(f => {
-    const b = document.createElement("button"); b.className = "fb" + (cfg.frameId === f.id ? " sel" : "");
-    const im = new Image(); im.src = URL.createObjectURL(f.blob); im.alt = f.name; b.title = f.name; b.append(im);
-    b.onclick = () => { cfg.frameId = f.id; apply(); renderFrames() }; l.append(b);
-  });
-  const cur = curFrame(); $("fedit").hidden = !cur; if (cur) buildFrameEditor(cur);
-}
-function buildFrameEditor(f) {
-  const b = $("ffields"); b.innerHTML = "";
-  FF.forEach(([k, label, mn, mx, st]) => {
-    const w = document.createElement("label"); w.className = "f"; const t = document.createTextNode(label + ": " + f[k]); w.append(t);
-    const el = document.createElement("input"); el.type = "range"; el.min = mn; el.max = mx; el.step = st; el.value = f[k];
-    el.oninput = () => { f[k] = Number(el.value); t.nodeValue = label + ": " + f[k]; prev(f) };
-    el.onchange = () => dbPut(f);
-    w.append(el); b.append(w);
-  });
-  prev(f);
-}
-async function prev(f) {
-  const img = await loadImg(f), c = $("fprev"), s = Math.min(1, 360 / img.width);
-  c.width = img.width * s; c.height = img.height * s;
-  const x = c.getContext("2d"); x.fillStyle = "#888"; x.fillRect(0, 0, c.width, c.height);
-  x.fillStyle = "#e0527a"; x.fillRect(...win(f, c.width, c.height));
-  x.drawImage(img, 0, 0, c.width, c.height);
-}
-$("fupb").onclick = () => $("fup").click();
-$("fup").onchange = async e => {
-  for (const file of e.target.files) {
-    if (file.type !== "image/png") continue;
-    const f = { id: "f" + Date.now() + Math.random().toString(36).slice(2, 6), name: file.name.replace(/\.png$/i, ""), blob: file };
-    Object.assign(f, detect(await loadImg(f)));
-    try { await dbPut(f) } catch (err) { alert("No se pudo guardar el marco en este navegador."); continue }
-    cfg.frameId = f.id;
-  }
-  e.target.value = ""; apply(); renderFrames();
-};
-$("fdel").onclick = async () => {
-  const f = curFrame(); if (!f || !confirm("¿Borrar este marco?")) return;
-  await dbDel(f.id); delete imgCache[f.id]; cfg.frameId = ""; apply(); renderFrames();
-};
+        async function captureAspect() {
+            const f = curFrame();
+            let ar = 3 / 4;
+            if (f) { const img = await loadImg(f); ar = (f.w * img.width) / (f.h * img.height); }
+            return Math.min(2, Math.max(.5, ar));
+        }
 
-/* ---------- Cámara y captura ---------- */
-function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)) }
-const wait = ms => new Promise(r => setTimeout(r, ms));
-let stream = null, busy = false, resetT = null;
+        async function syncStartPreview() {
+            const preview = $("start-preview"), pv = $("pv");
+            if (!preview || !pv) return;
+            const ar = await captureAspect();
+            preview.style.aspectRatio = ar;
+            pv.style.transform = cfg.mirror ? "scaleX(-1)" : "none";
+            pv.style.filter = cfg.filter;
+        }
 
-async function captureAspect() {
-  const f = curFrame(); let ar = 2 / 3;
-  if (f) { const img = await loadImg(f); ar = (f.w * img.width) / (f.h * img.height) }
-  return Math.min(2, Math.max(.5, ar));
-}
-async function syncStartPreview() {
-  const p = $("start-preview"), pv = $("pv"); if (!p || !pv) return;
-  p.style.aspectRatio = await captureAspect();
-  pv.style.transform = cfg.mirror ? "scaleX(-1)" : "none";
-  pv.style.filter = cfg.filter;
-}
-function setStatus(t, cls) { const s = $("preview-status"); s.textContent = t; s.className = "preview-status " + (cls || "") }
-async function ensureCam() {
-  const pv = $("pv");
-  if (stream) {
-    if (pv.srcObject !== stream) pv.srcObject = stream;
-    try { await pv.play() } catch (e) { }
-    setStatus("Cámara lista", "ready"); return true;
-  }
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" }, audio: false });
-    $("v").srcObject = stream; pv.srcObject = stream;
-    await $("v").play(); try { await pv.play() } catch (e) { }
-    setStatus("Cámara lista", "ready"); return true;
-  } catch (e) {
-    setStatus("Cámara no disponible", "error");
-    $("t-sub").textContent = "No se pudo abrir la cámara. Permite el acceso en el navegador y abre la página con https.";
-    return false;
-  }
-}
-function grab(ar) {
-  const v = $("v"), vw = v.videoWidth, vh = v.videoHeight;
-  let sw = vw, sh = vw / ar; if (sh > vh) { sh = vh; sw = vh * ar }
-  const L = 1280, w = ar >= 1 ? L : Math.round(L * ar), h = ar >= 1 ? Math.round(L / ar) : L;
-  const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d");
-  if (cfg.filter !== "none") x.filter = cfg.filter;
-  if (cfg.mirror) { x.translate(w, 0); x.scale(-1, 1) }
-  x.drawImage(v, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, w, h);
-  return c;
-}
+        async function ensureCam() {
+            const pv = $("pv"), status = $("preview-status");
+            if (stream) {
+                if (pv.srcObject !== stream) pv.srcObject = stream;
+                try { await pv.play(); } catch(e) {}
+                if (status) { status.textContent = "Cámara lista · acomódate en el recuadro"; status.className = "preview-status ready"; }
+                return true;
+            }
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 960 }, facingMode: "user" }, audio: false });
+                $("v").srcObject = stream;
+                pv.srcObject = stream;
+                await $("v").play();
+                try { await pv.play(); } catch(e) {}
+                if (status) { status.textContent = "Cámara lista · acomódate en el recuadro"; status.className = "preview-status ready"; }
+                return true;
+            } catch (e) {
+                if (status) { status.textContent = "Cámara no disponible"; status.className = "preview-status error"; }
+                $("t-sub").textContent = "No se pudo abrir la cámara. Permite el acceso en el navegador y abre la página con https.";
+                return false;
+            }
+        }
+        function grab(ar) {
+            const v = $("v"), vw = v.videoWidth, vh = v.videoHeight;
+            let sw = vw, sh = vw / ar; if (sh > vh) { sh = vh; sw = vh * ar }
+            const L = 1280, w = ar >= 1 ? L : Math.round(L * ar), h = ar >= 1 ? Math.round(L / ar) : L;
+            const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d");
+            if (cfg.filter !== "none") x.filter = cfg.filter; // Safari iOS no soporta ctx.filter
+            if (cfg.mirror) { x.translate(w, 0); x.scale(-1, 1) }
+            x.drawImage(v, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, w, h);
+            return c;
+        }
 
-/* ---------- IA ---------- */
-async function runAI(shot, ar) {
-  const size = ar > 1.2 ? "1536x1024" : ar < .83 ? "1024x1536" : "1024x1024";
-  const k = 1024 / Math.max(shot.width, shot.height), c = document.createElement("canvas");
-  c.width = Math.round(shot.width * k); c.height = Math.round(shot.height * k);
-  c.getContext("2d").drawImage(shot, 0, 0, c.width, c.height);
-  const dataUrl = c.toDataURL("image/jpeg", .85);
-  $("aipic").src = dataUrl; show("s-ai");
-  while (true) {
-    $("aiact").hidden = true; $("aispin").hidden = false;
-    let i = 0; $("aimsg").textContent = THEME.loading[0];
-    const iv = setInterval(() => { $("aimsg").textContent = THEME.loading[++i % THEME.loading.length] }, 3500);
-    try {
-      const ac = new AbortController(), to = setTimeout(() => ac.abort(), 115000);
-      const r = await fetch(AI_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, prompt: buildPrompt(), size }), signal: ac.signal });
-      clearTimeout(to);
-      const j = await r.json();
-      if (!r.ok || !j.image) throw new Error(j.error || "Error");
-      clearInterval(iv);
-      return await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = j.image });
-    } catch (e) {
-      clearInterval(iv); console.error("IA:", e);
-      $("aimsg").textContent = "No pudimos crear tu foto con IA.";
-      $("aispin").hidden = true; $("aiact").hidden = false;
-      const choice = await new Promise(res => { $("airetry").onclick = () => res("retry"); $("aiorig").onclick = () => res("orig") });
-      if (choice === "orig") return shot;
-    }
-  }
-}
+        /* ---------- IA ---------- */
+        async function runAI(shot, ar) {
+            const size = ar > 1.2 ? "1536x1024" : ar < .83 ? "1024x1536" : "1024x1024";
+            const k = 1024 / Math.max(shot.width, shot.height), c = document.createElement("canvas");
+            c.width = Math.round(shot.width * k); c.height = Math.round(shot.height * k);
+            c.getContext("2d").drawImage(shot, 0, 0, c.width, c.height);
+            const dataUrl = c.toDataURL("image/jpeg", .85);
+            $("aipic").src = dataUrl; show("s-ai");
+            while (true) {
+                $("aiact").hidden = true; $("aispin").hidden = false;
+                let i = 0; $("aimsg").textContent = THEME.loading[0];
+                const iv = setInterval(() => { $("aimsg").textContent = THEME.loading[++i % THEME.loading.length] }, 3500);
+                try {
+                    const ac = new AbortController(), to = setTimeout(() => ac.abort(), 115000);
+                    const r = await fetch(AI_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl, prompt: buildPrompt(), size }), signal: ac.signal });
+                    clearTimeout(to);
+                    const j = await r.json();
+                    if (!r.ok || !j.image) throw new Error(j.error || "Error");
+                    clearInterval(iv);
+                    return await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = j.image });
+                } catch (e) {
+                    clearInterval(iv); console.error("IA:", e);
+                    $("aimsg").textContent = "No pudimos crear tu foto con IA.";
+                    $("aispin").hidden = true; $("aiact").hidden = false;
+                    const choice = await new Promise(res => { $("airetry").onclick = () => res("retry"); $("aiorig").onclick = () => res("orig") });
+                    if (choice === "orig") return shot;
+                }
+            }
+        }
 
-/* ---------- Sesión ---------- */
-async function session() {
-  if (busy || !selectedCostume) return; busy = true; clearTimeout(resetT);
-  try {
-    if (!(await ensureCam())) return;
-    const ar = await captureAspect();
-    const cam = $("cam"); cam.style.aspectRatio = ar;
-    cam.style.width = "min(92vw,calc((100vh - 170px)*" + ar + "),1000px)";
-    show("s-cap");
-    for (let c = cfg.count; c > 0; c--) { $("count").textContent = c; await wait(1000) }
-    $("count").textContent = "";
-    const fl = $("flash"); fl.classList.add("go");
-    const shot = grab(ar);
-    await wait(60); fl.classList.remove("go"); await wait(700);
-    const out = cfg.ai ? await runAI(shot, ar) : shot;
-    await finish(out, ar);
-  } finally { busy = false }
-}
-async function finish(photo, ar) {
-  const f = curFrame(), c = document.createElement("canvas");
-  let W, H, x;
-  if (f) {
-    const img = await loadImg(f), s = Math.min(1, 2000 / Math.max(img.width, img.height));
-    W = c.width = Math.round(img.width * s); H = c.height = Math.round(img.height * s); x = c.getContext("2d");
-    x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
-    cover(x, photo, ...win(f, W, H));
-    x.drawImage(img, 0, 0, W, H);
-  } else {
-    const pad = 30, cw = 540, ch = Math.round(cw / ar), foot = 130;
-    W = c.width = cw + pad * 2; H = c.height = ch + pad * 2 + foot; x = c.getContext("2d");
-    x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
-    cover(x, photo, pad, pad, cw, ch);
-    x.strokeStyle = cfg.accent; x.lineWidth = 4; x.strokeRect(pad - 2, pad - 2, cw + 4, ch + 4);
-    x.fillStyle = cfg.ink; x.textAlign = "center"; x.textBaseline = "middle";
-    x.font = "700 34px 'Trebuchet MS',sans-serif"; x.fillText(cfg.title, W / 2, H - foot + 38, W - 60);
-    x.font = "500 22px 'Trebuchet MS',sans-serif"; x.fillText(cfg.footer, W / 2, H - foot + 78, W - 60);
-    const st = [...cfg.stickers].filter(s => s.trim());
-    x.font = "46px sans-serif";
-    const pos = [[46, 46], [W - 46, 46], [46, pad + ch - 6], [W - 46, pad + ch - 6], [W / 2, H - 24]];
-    st.slice(0, 5).forEach((e, i) => x.fillText(e, pos[i][0], pos[i][1]));
-  }
-  lastCanvas = c;
-  $("result").src = c.toDataURL("image/png");
-  show("s-res"); uploadQR(c);
-  if (cfg.reset > 0) { let t = cfg.reset; const tick = () => { $("timer").textContent = "Volviendo al inicio en " + t + " s"; if (t-- <= 0) return home(); resetT = setTimeout(tick, 1000) }; tick() }
-  else $("timer").textContent = "";
-}
+        /* ---------- Sesión ---------- */
+        async function session() {
+            if (busy) return; busy = true; clearTimeout(resetT);
+            try {
+                if (!(await ensureCam())) return;
+                const f = curFrame(); let ar = 3 / 4;
+                if (f) { const img = await loadImg(f); ar = (f.w * img.width) / (f.h * img.height) }
+                ar = Math.min(2, Math.max(.5, ar));
+                const cam = $("cam"); cam.style.aspectRatio = ar;
+                cam.style.width = "min(92vw,calc((100vh - 170px)*" + ar + "),1000px)";
+                show("s-cap");
+                for (let c = cfg.count; c > 0; c--) { $("count").textContent = c; await wait(1000) }
+                $("count").textContent = "";
+                const fl = $("flash"); fl.classList.add("go");
+                const shot = grab(ar);
+                await wait(60); fl.classList.remove("go"); await wait(700);
+                const out = cfg.ai ? await runAI(shot, ar) : shot;
+                await finish(out, ar);
+            } finally { busy = false }
+        }
+        async function finish(photo, ar) {
+            const f = curFrame(), c = document.createElement("canvas");
+            let W, H, x;
+            if (f) {
+                const img = await loadImg(f), s = Math.min(1, 2000 / Math.max(img.width, img.height));
+                W = c.width = Math.round(img.width * s); H = c.height = Math.round(img.height * s); x = c.getContext("2d");
+                x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
+                cover(x, photo, ...win(f, W, H));
+                x.drawImage(img, 0, 0, W, H);
+            } else {
+                const pad = 30, cw = 540, ch = Math.round(cw / ar), foot = 130;
+                W = c.width = cw + pad * 2; H = c.height = ch + pad * 2 + foot; x = c.getContext("2d");
+                x.fillStyle = cfg.frame; x.fillRect(0, 0, W, H);
+                cover(x, photo, pad, pad, cw, ch);
+                x.fillStyle = cfg.ink; x.textAlign = "center"; x.textBaseline = "middle";
+                x.font = "700 34px 'Trebuchet MS',sans-serif"; x.fillText(cfg.title, W / 2, H - foot + 38, W - 60);
+                x.font = "500 22px 'Trebuchet MS',sans-serif"; x.fillText(cfg.footer, W / 2, H - foot + 78, W - 60);
+                const st = [...cfg.stickers].filter(s => s.trim());
+                x.font = "46px sans-serif";
+                const pos = [[46, 46], [W - 46, 46], [46, pad + ch - 6], [W - 46, pad + ch - 6], [W / 2, H - 24]];
+                st.slice(0, 5).forEach((e, i) => x.fillText(e, pos[i][0], pos[i][1]));
+            }
+            lastCanvas = c;
+            $("result").src = c.toDataURL("image/png");
+            show("s-res");
+            uploadQR(c);
+            if (cfg.reset > 0) { let t = cfg.reset; const tick = () => { $("timer").textContent = "Volviendo al inicio en " + t + " s"; if (t-- <= 0) return home(); resetT = setTimeout(tick, 1000) }; tick() }
+            else $("timer").textContent = "";
+        }
 
-/* ---------- Subida + QR ---------- */
-async function uploadQR(canvas) {
-  const box = $("qrbox");
-  if (!cfg.qr) { box.hidden = true; return }
-  box.hidden = false; $("qrimg").innerHTML = ""; $("qrmsg").textContent = "Preparando tu QR…"; $("qrretry").hidden = true;
-  try {
-    const blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .88));
-    const fd = new FormData(); fd.append("file", blob); fd.append("upload_preset", CLOUD.preset);
-    const r = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", { method: "POST", body: fd });
-    const j = await r.json();
-    if (!j.secure_url) throw new Error(j.error && j.error.message || "Error");
-    const qr = qrcode(0, "M"); qr.addData(j.secure_url); qr.make();
-    $("qrimg").innerHTML = qr.createImgTag(6, 2);
-    $("qrmsg").textContent = cfg.qrText;
-  } catch (e) {
-    console.error("Cloudinary:", e);
-    $("qrmsg").textContent = "No se pudo subir la foto. Revisa el internet.";
-    $("qrretry").hidden = false;
-  }
-}
-$("qrretry").onclick = () => lastCanvas && uploadQR(lastCanvas);
+        /* ---------- Subida + QR ---------- */
+        async function uploadQR(canvas) {
+            const box = $("qrbox");
+            if (!cfg.qr) { box.hidden = true; return }
+            box.hidden = false; $("qrimg").innerHTML = ""; $("qrmsg").textContent = "Preparando tu QR…"; $("qrretry").hidden = true;
+            try {
+                const blob = await new Promise(r => canvas.toBlob(r, "image/jpeg", .88));
+                const fd = new FormData(); fd.append("file", blob); fd.append("upload_preset", CLOUD.preset);
+                const r = await fetch("https://api.cloudinary.com/v1_1/" + encodeURIComponent(CLOUD.name) + "/image/upload", { method: "POST", body: fd });
+                const j = await r.json();
+                if (!j.secure_url) throw new Error(j.error && j.error.message || "Error");
+                const qr = qrcode(0, "M"); qr.addData(j.secure_url); qr.make();
+                $("qrimg").innerHTML = qr.createImgTag(6, 2);
+                $("qrmsg").textContent = cfg.qrText;
+            } catch (e) {
+                console.error("Cloudinary:", e);
+                $("qrmsg").textContent = "No se pudo subir la foto. Revisa el internet.";
+                $("qrretry").hidden = false;
+            }
+        }
+        $("qrretry").onclick = () => lastCanvas && uploadQR(lastCanvas);
 
-/* ---------- Selector de disfraz (botones táctiles) ---------- */
-function setCostume(v, persist) {
-  selectedCostume = v;
-  if (persist) { try { localStorage.setItem("pb-halloween-costume", v) } catch (e) { } }
-  document.querySelectorAll(".chip").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v));
-  $("start").disabled = !v;
-  $("costumeHint").textContent = v ? "Listo: todos serán «" + v + "». ¡Toca Tomar foto!" : HINT_DEFAULT;
-}
-COSTUMES.forEach(([name, emoji]) => {
-  const b = document.createElement("button"); b.className = "chip"; b.dataset.v = name; b.setAttribute("aria-pressed", "false");
-  b.innerHTML = "<b>" + emoji + "</b><span>" + name + "</span>";
-  b.onclick = () => setCostume(name, true);
-  $("chips").append(b);
-});
-window.addEventListener("resize", syncStartPreview);
+        /* ---------- Selector de disfraz + preview ---------- */
+        $("costumeSelect").onchange = async () => {
+            selectedCostume = $("costumeSelect").value;
+            try { localStorage.setItem("pb-halloween-costume", selectedCostume); } catch(e) {}
+            $("start").disabled = !selectedCostume;
+            $("costumeHint").textContent = selectedCostume
+                ? "Perfecto: todos los que aparezcan en la foto usarán el tema “" + selectedCostume + "”."
+                : "Todos los que aparezcan en la foto usarán el mismo tema de disfraz.";
+        };
+        window.addEventListener("resize", syncStartPreview);
+        window.addEventListener("orientationchange", syncStartPreview);
 
-/* ---------- Eventos ---------- */
-function home() { clearTimeout(resetT); $("t-sub").textContent = cfg.sub; show("s-idle"); ensureCam() }
-$("start").onclick = session;
-$("dl").onclick = () => { clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click() };
-$("pr").onclick = () => { clearTimeout(resetT); window.print() };
-$("fs").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen() } catch (e) { } };
-$("cfg").onclick = () => { clearTimeout(resetT); buildFields(); renderFrames(); $("json").value = JSON.stringify(cfg); $("dlg").showModal() };
-$("close").onclick = () => $("dlg").close();
-$("reset").onclick = () => { cfg = { ...DEF }; apply(); buildFields(); renderFrames() };
-$("imp").onclick = () => { try { cfg = { ...DEF, ...JSON.parse($("json").value) }; apply(); buildFields(); renderFrames() } catch (e) { alert("La configuración no es válida.") } };
-document.addEventListener("keydown", e => {
-  if ((e.key === " " || e.key === "Enter") && $("s-idle").classList.contains("on") && !$("dlg").open && selectedCostume && document.activeElement.tagName !== "BUTTON") { e.preventDefault(); session() }
-});
-(async () => {
-  try { frames = await dbAll() } catch (e) { frames = [] }
-  apply();
-  setCostume(COSTUMES.some(c => c[0] === selectedCostume) ? selectedCostume : "", false);
-  try { await ensureCam() } catch (e) { }
-  try { await syncStartPreview() } catch (e) { }
-})();
-</script>
+        /* ---------- Eventos ---------- */
+        function home() { clearTimeout(resetT); show("s-idle") }
+        $("start").onclick = session;
+        $("dl").onclick = () => { clearTimeout(resetT); const a = document.createElement("a"); a.href = $("result").src; a.download = "photobooth-" + Date.now() + ".png"; a.click() };
+        $("pr").onclick = () => { clearTimeout(resetT); window.print() };
+        $("fs").onclick = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen() } catch (e) { } };
+        $("cfg").onclick = () => { clearTimeout(resetT); buildFields(); renderFrames(); $("json").value = JSON.stringify(cfg); $("dlg").showModal() };
+        $("close").onclick = () => $("dlg").close();
+        $("reset").onclick = () => { cfg = { ...DEF }; apply(); buildFields(); renderFrames() };
+        $("imp").onclick = () => { try { cfg = { ...DEF, ...JSON.parse($("json").value) }; apply(); buildFields(); renderFrames() } catch (e) { alert("La configuración no es válida.") } };
+        document.addEventListener("keydown", e => {
+            if ((e.key === " " || e.key === "Enter") && $("s-idle").classList.contains("on") && !$("dlg").open && selectedCostume) { e.preventDefault(); session() }
+        });
+        (async () => {
+            try { frames = await dbAll() } catch (e) { frames = [] }
+            apply();
+            if (selectedCostume && COSTUMES.includes(selectedCostume)) {
+                $("costumeSelect").value = selectedCostume;
+                $("start").disabled = false;
+                $("costumeHint").textContent = "Perfecto: todos los que aparezcan en la foto usarán el tema “" + selectedCostume + "”.";
+            }
+            try { await ensureCam(); } catch(e) {}
+            try { await syncStartPreview(); } catch(e) {}
+        })();
+    </script>
 </body>
+
 </html>
